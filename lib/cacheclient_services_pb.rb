@@ -14,25 +14,25 @@ module CacheClient
       self.unmarshal_class_method = :decode
       self.service_name = 'cache_client.Scs'
 
-      rpc :Get, ::CacheClient::_GetRequest, ::CacheClient::_GetResponse
-      rpc :Set, ::CacheClient::_SetRequest, ::CacheClient::_SetResponse
-      rpc :Delete, ::CacheClient::_DeleteRequest, ::CacheClient::_DeleteResponse
-      rpc :DictionaryGet, ::CacheClient::_DictionaryGetRequest, ::CacheClient::_DictionaryGetResponse
-      rpc :DictionaryFetch, ::CacheClient::_DictionaryFetchRequest, ::CacheClient::_DictionaryFetchResponse
-      rpc :DictionarySet, ::CacheClient::_DictionarySetRequest, ::CacheClient::_DictionarySetResponse
-      rpc :DictionaryIncrement, ::CacheClient::_DictionaryIncrementRequest, ::CacheClient::_DictionaryIncrementResponse
-      rpc :DictionaryDelete, ::CacheClient::_DictionaryDeleteRequest, ::CacheClient::_DictionaryDeleteResponse
-      rpc :SetFetch, ::CacheClient::_SetFetchRequest, ::CacheClient::_SetFetchResponse
-      rpc :SetUnion, ::CacheClient::_SetUnionRequest, ::CacheClient::_SetUnionResponse
-      rpc :SetDifference, ::CacheClient::_SetDifferenceRequest, ::CacheClient::_SetDifferenceResponse
-      rpc :ListPushFront, ::CacheClient::_ListPushFrontRequest, ::CacheClient::_ListPushFrontResponse
-      rpc :ListPushBack, ::CacheClient::_ListPushBackRequest, ::CacheClient::_ListPushBackResponse
-      rpc :ListPopFront, ::CacheClient::_ListPopFrontRequest, ::CacheClient::_ListPopFrontResponse
-      rpc :ListPopBack, ::CacheClient::_ListPopBackRequest, ::CacheClient::_ListPopBackResponse
-      rpc :ListErase, ::CacheClient::_ListEraseRequest, ::CacheClient::_ListEraseResponse
-      rpc :ListRemove, ::CacheClient::_ListRemoveRequest, ::CacheClient::_ListRemoveResponse
-      rpc :ListFetch, ::CacheClient::_ListFetchRequest, ::CacheClient::_ListFetchResponse
-      rpc :ListLength, ::CacheClient::_ListLengthRequest, ::CacheClient::_ListLengthResponse
+      rpc :Get, ::CacheClient::GetRequest, ::CacheClient::GetResponse
+      rpc :Set, ::CacheClient::SetRequest, ::CacheClient::SetResponse
+      rpc :Delete, ::CacheClient::DeleteRequest, ::CacheClient::DeleteResponse
+      rpc :DictionaryGet, ::CacheClient::DictionaryGetRequest, ::CacheClient::DictionaryGetResponse
+      rpc :DictionaryFetch, ::CacheClient::DictionaryFetchRequest, ::CacheClient::DictionaryFetchResponse
+      rpc :DictionarySet, ::CacheClient::DictionarySetRequest, ::CacheClient::DictionarySetResponse
+      rpc :DictionaryIncrement, ::CacheClient::DictionaryIncrementRequest, ::CacheClient::DictionaryIncrementResponse
+      rpc :DictionaryDelete, ::CacheClient::DictionaryDeleteRequest, ::CacheClient::DictionaryDeleteResponse
+      rpc :SetFetch, ::CacheClient::SetFetchRequest, ::CacheClient::SetFetchResponse
+      rpc :SetUnion, ::CacheClient::SetUnionRequest, ::CacheClient::SetUnionResponse
+      rpc :SetDifference, ::CacheClient::SetDifferenceRequest, ::CacheClient::SetDifferenceResponse
+      rpc :ListPushFront, ::CacheClient::ListPushFrontRequest, ::CacheClient::ListPushFrontResponse
+      rpc :ListPushBack, ::CacheClient::ListPushBackRequest, ::CacheClient::ListPushBackResponse
+      rpc :ListPopFront, ::CacheClient::ListPopFrontRequest, ::CacheClient::ListPopFrontResponse
+      rpc :ListPopBack, ::CacheClient::ListPopBackRequest, ::CacheClient::ListPopBackResponse
+      rpc :ListErase, ::CacheClient::ListEraseRequest, ::CacheClient::ListEraseResponse
+      rpc :ListRemove, ::CacheClient::ListRemoveRequest, ::CacheClient::ListRemoveResponse
+      rpc :ListFetch, ::CacheClient::ListFetchRequest, ::CacheClient::ListFetchResponse
+      rpc :ListLength, ::CacheClient::ListLengthRequest, ::CacheClient::ListLengthResponse
     end
 
     Stub = Service.rpc_stub_class

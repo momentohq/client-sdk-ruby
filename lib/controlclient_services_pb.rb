@@ -14,12 +14,12 @@ module ControlClient
       self.unmarshal_class_method = :decode
       self.service_name = 'control_client.ScsControl'
 
-      rpc :CreateCache, ::ControlClient::_CreateCacheRequest, ::ControlClient::_CreateCacheResponse
-      rpc :DeleteCache, ::ControlClient::_DeleteCacheRequest, ::ControlClient::_DeleteCacheResponse
-      rpc :ListCaches, ::ControlClient::_ListCachesRequest, ::ControlClient::_ListCachesResponse
-      rpc :CreateSigningKey, ::ControlClient::_CreateSigningKeyRequest, ::ControlClient::_CreateSigningKeyResponse
-      rpc :RevokeSigningKey, ::ControlClient::_RevokeSigningKeyRequest, ::ControlClient::_RevokeSigningKeyResponse
-      rpc :ListSigningKeys, ::ControlClient::_ListSigningKeysRequest, ::ControlClient::_ListSigningKeysResponse
+      rpc :CreateCache, ::ControlClient::CreateCacheRequest, ::ControlClient::CreateCacheResponse
+      rpc :DeleteCache, ::ControlClient::DeleteCacheRequest, ::ControlClient::DeleteCacheResponse
+      rpc :ListCaches, ::ControlClient::ListCachesRequest, ::ControlClient::ListCachesResponse
+      rpc :CreateSigningKey, ::ControlClient::CreateSigningKeyRequest, ::ControlClient::CreateSigningKeyResponse
+      rpc :RevokeSigningKey, ::ControlClient::RevokeSigningKeyRequest, ::ControlClient::RevokeSigningKeyResponse
+      rpc :ListSigningKeys, ::ControlClient::ListSigningKeysRequest, ::ControlClient::ListSigningKeysResponse
     end
 
     Stub = Service.rpc_stub_class

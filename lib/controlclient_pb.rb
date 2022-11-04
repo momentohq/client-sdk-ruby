@@ -52,18 +52,18 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
 end
 
 module ControlClient
-  PB__DeleteCacheRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._DeleteCacheRequest").msgclass
-  PB__DeleteCacheResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._DeleteCacheResponse").msgclass
-  PB__CreateCacheRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._CreateCacheRequest").msgclass
-  PB__CreateCacheResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._CreateCacheResponse").msgclass
-  PB__ListCachesRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._ListCachesRequest").msgclass
-  PB__Cache = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._Cache").msgclass
-  PB__ListCachesResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._ListCachesResponse").msgclass
-  PB__CreateSigningKeyRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._CreateSigningKeyRequest").msgclass
-  PB__CreateSigningKeyResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._CreateSigningKeyResponse").msgclass
-  PB__RevokeSigningKeyRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._RevokeSigningKeyRequest").msgclass
-  PB__RevokeSigningKeyResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._RevokeSigningKeyResponse").msgclass
-  PB__SigningKey = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._SigningKey").msgclass
-  PB__ListSigningKeysRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._ListSigningKeysRequest").msgclass
-  PB__ListSigningKeysResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._ListSigningKeysResponse").msgclass
+  DeleteCacheRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._DeleteCacheRequest").msgclass
+  DeleteCacheResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._DeleteCacheResponse").msgclass
+  CreateCacheRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._CreateCacheRequest").msgclass
+  CreateCacheResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._CreateCacheResponse").msgclass
+  ListCachesRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._ListCachesRequest").msgclass
+  Cache = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._Cache").msgclass
+  ListCachesResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._ListCachesResponse").msgclass
+  CreateSigningKeyRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._CreateSigningKeyRequest").msgclass
+  CreateSigningKeyResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._CreateSigningKeyResponse").msgclass
+  RevokeSigningKeyRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._RevokeSigningKeyRequest").msgclass
+  RevokeSigningKeyResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._RevokeSigningKeyResponse").msgclass
+  SigningKey = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._SigningKey").msgclass
+  ListSigningKeysRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._ListSigningKeysRequest").msgclass
+  ListSigningKeysResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("control_client._ListSigningKeysResponse").msgclass
 end
