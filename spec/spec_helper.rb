@@ -2,7 +2,14 @@
 
 require 'factory_bot'
 require 'faker'
-require "momento/client"
+require 'simplecov'
+
+SimpleCov.start do
+  enable_coverage :branch
+  add_filter "spec/"
+end
+
+Dir["./spec/support/**/*.rb"].sort.each { |f| require f }
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
