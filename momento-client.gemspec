@@ -37,6 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop-performance', '~> 1.15'
   spec.add_development_dependency 'rubocop-rake', '~> 0.6.0'
   spec.add_development_dependency 'rubocop-rspec', '~> 2.15'
+  spec.add_development_dependency 'simplecov', '~> 0.21'
 
   spec.add_dependency "grpc"
   spec.add_dependency 'jwt'

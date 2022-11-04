@@ -3,6 +3,9 @@
 require 'factory_bot'
 require 'faker'
 require "momento/client"
+require 'simplecov'
+
+SimpleCov.start
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
