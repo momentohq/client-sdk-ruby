@@ -1,12 +1,29 @@
-AllCops:
-  TargetRubyVersion: 2.7
+require:
+  - 'rubocop-performance'
+  - 'rubocop-rake'
+  - 'rubocop-rspec'
 
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 2.7
+  Exclude:
+    # Generated protobuf files
+    - 'lib/*_pb.rb'
+
+# end.method looks really weird, and the other styles are too fussy
+Style/BlockDelimiters:
+  Enabled: false
+
+# Enable it if they ever do anything with it.
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# Too fussy, doesn't solve a problem
 Style/StringLiterals:
   Enabled: false
 
 Style/StringLiteralsInInterpolation:
-  Enabled: true
-  EnforcedStyle: double_quotes
+  Enabled: false
 
 Layout/LineLength:
   Max: 120

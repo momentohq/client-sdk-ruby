@@ -15,6 +15,7 @@ Gem::Specification.new do |spec|
   spec.license = "Apache-2.0"
 
   spec.metadata["homepage_uri"] = spec.homepage
+  spec.metadata['rubygems_mfa_required'] = 'true'
   spec.metadata["source_code_uri"] = "https://github.com/momentohq/client-sdk-ruby"
 
   # Specify which files should be added to the gem when it is released.
@@ -31,6 +32,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler', "~> 2.3"
   spec.add_development_dependency "rspec", "~> 3.12"
   spec.add_development_dependency "rubocop", "~> 3.18"
+  spec.add_development_dependency 'rubocop-performance', '~> 1.15'
+  spec.add_development_dependency 'rubocop-rake', '~> 0.6.0'
+  spec.add_development_dependency 'rubocop-rspec', '~> 2.15'
 
   spec.add_dependency "grpc"
 end
