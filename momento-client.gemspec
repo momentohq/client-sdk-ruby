@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary = "Client for Momento Serverless Cache"
   spec.description = "Momento is a fast, simple, pay-as-you-go caching solution."
-  spec.homepage = "https://momentohq.com"
+  spec.homepage = "https://github.com/momentohq/client-sdk-ruby"
   spec.required_ruby_version = ">= 2.7.0"
   spec.license = "Apache-2.0"
 
