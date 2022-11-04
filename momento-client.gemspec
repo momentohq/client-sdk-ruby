@@ -29,4 +29,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "rspec", "~> 3.12"
+
+  spec.add_dependency "grpc"
 end
