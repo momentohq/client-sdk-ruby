@@ -1,4 +1,4 @@
-RSpec.describe CacheClient::Scs::Service do
+RSpec.describe 'CacheClient::Scs::Service' do
   it "loads" do
     expect {
       require "cacheclient_services_pb"

@@ -1,4 +1,4 @@
-RSpec.describe ControlClient::Scs::Service do
+RSpec.describe 'ControlClient::Scs::Service' do
   it "loads" do
     expect {
       require "controlclient_services_pb"
