@@ -18,6 +18,11 @@ Style/BlockDelimiters:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
+# In a language which returns it's last evaluated expression,
+# it's useful to know when you intend to return vs when you don't.
+Style/RedundantReturn:
+  Enabled: false
+
 # Too fussy, doesn't solve a problem
 Style/StringLiterals:
   Enabled: false
