@@ -1,31 +1,58 @@
 require 'jwt'
-require 'cacheclient_services_pb'
+require 'controlclient_services_pb'
 
 module Momento
   # A simple client for Momento.
   class SimpleCacheClient
-    attr_accessor :auth_token, :control_endpoint, :cache_endpoint, :cache_stub
-
     def initialize(auth_token:)
-      self.auth_token = auth_token
+      @auth_token = auth_token
       load_endpoints_from_token
 
-      channel_creds = GRPC::Core::ChannelCredentials.new
-      auth_proc = proc do
-        { authorization: auth_token }
-      end
-      call_creds = GRPC::Core::CallCredentials.new(auth_proc)
-      combined_creds = channel_creds.compose(call_creds)
-      self.cache_stub = CacheClient::Scs::Stub.new(cache_endpoint, combined_creds)
+      @control_stub = ControlClient::ScsControl::Stub.new(@control_endpoint, combined_credentials)
+    end
+
+    def create_cache(name:)
+      req = ControlClient::CreateCacheRequest.new(cache_name: name)
+
+      # Right now this will throw exceptions.
+      # GRPC::AlreadyExists
+      # GRPC::InvalidArgument
+      @control_stub.create_cache(req)
+
+      return true
+    end
+
+    def delete_cache(name:)
+      req = ControlClient::DeleteCacheRequest.new(cache_name: name)
+
+      # Right now this will throw exceptions.
+      # GRPC::NotFound
+      @control_stub.delete_cache(req)
+
+      return true
     end
 
     private
 
-    def load_endpoints_from_token
-      claim = JWT.decode(auth_token, nil, false).first
+    def combined_credentials
+      @combined_credentials ||= make_combined_credentials
+    end
 
-      self.control_endpoint = claim["cp"]
-      self.cache_endpoint = claim["c"]
+    def load_endpoints_from_token
+      claim = JWT.decode(@auth_token, nil, false).first
+
+      @control_endpoint = claim["cp"]
+      @cache_endpoint = claim["c"]
+    end
+
+    def make_combined_credentials
+      channel_creds = GRPC::Core::ChannelCredentials.new
+      auth_proc = proc do
+        { authorization: @auth_token }
+      end
+      call_creds = GRPC::Core::CallCredentials.new(auth_proc)
+
+      return channel_creds.compose(call_creds)
     end
   end
 end
