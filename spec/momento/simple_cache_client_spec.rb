@@ -4,14 +4,12 @@ RSpec.describe Momento::SimpleCacheClient do
   let(:token) {
     build(:auth_token, c: cache_endpoint, cp: control_endpoint)
   }
-  let(:client) {
-    described_class.new(auth_token: token)
-  }
 
-  it 'parses the auth_token' do
-    expect(client).to have_attributes(
-      control_endpoint: control_endpoint,
-      cache_endpoint: cache_endpoint
-    )
+  describe '#new' do
+    it 'can be created' do
+      expect(
+        described_class.new(auth_token: token)
+      ).to be_a described_class
+    end
   end
 end
