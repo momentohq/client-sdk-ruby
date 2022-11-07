@@ -1,3 +1,5 @@
+require 'grpc'
+
 module Momento
   # A wrapper around Momento gRPC responses.
   class Response
@@ -7,16 +9,16 @@ module Momento
     # rubocop:disable Metrics/MethodLength
     def self.wrap_grpc_exception(grpc_exception)
       case grpc_exception
-      when GRPC::InvalidArgument
-        InvalidArgument.new(grpc_exception: grpc_exception)
       when GRPC::AlreadyExists
-        AlreadyExists.new(grpc_exception: grpc_exception)
-      when GRPC::PermissionDenied
-        PermissionDenied.new(grpc_exception: grpc_exception)
+        Response::AlreadyExists.new(grpc_exception: grpc_exception)
+      when GRPC::InvalidArgument
+        Response::InvalidArgument.new(grpc_exception: grpc_exception)
       when GRPC::NotFound
-        NotFound.new(grpc_exception: grpc_exception)
+        Response::NotFound.new(grpc_exception: grpc_exception)
+      when GRPC::PermissionDenied
+        Response::PermissionDenied.new(grpc_exception: grpc_exception)
       else
-        raise "Unknown GRPC exception: #{grpc_status}"
+        raise "Unknown GRPC exception: #{grpc_exception}"
       end
     end
     # rubocop:enable Metrics/MethodLength
@@ -100,6 +102,21 @@ module Momento
     # The item was not found. (GRPC::NotFound)
     class NotFound < Error
       def not_found?
+        true
+      end
+    end
+
+    def as_permission_denied
+      return self if permission_denied?
+    end
+
+    def permission_denied?
+      false
+    end
+
+    # Permission was denied to make the gRPC call.
+    class PermissionDenied < Error
+      def permission_denied?
         true
       end
     end
