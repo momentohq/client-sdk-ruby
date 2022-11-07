@@ -2,7 +2,6 @@
 
 require 'factory_bot'
 require 'faker'
-require "momento/client"
 require 'simplecov'
 
 SimpleCov.start
