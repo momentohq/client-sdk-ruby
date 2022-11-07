@@ -1,5 +1,6 @@
 require 'jwt'
 require 'controlclient_services_pb'
+require 'momento/response'
 
 module Momento
   # A simple client for Momento.
@@ -13,25 +14,28 @@ module Momento
       @control_stub = ControlClient::ScsControl::Stub.new(@control_endpoint, combined_credentials)
     end
 
-    def create_cache(name:)
+    def create_cache(name)
       req = ControlClient::CreateCacheRequest.new(cache_name: name)
 
-      # Right now this will throw exceptions.
-      # GRPC::AlreadyExists
-      # GRPC::InvalidArgument
-      @control_stub.create_cache(req)
-
-      return true
+      begin
+        @control_stub.create_cache(req)
+      rescue GRPC::BadStatus => e
+        Momento::Response.wrap_grpc_exception(e)
+      else
+        return Momento::Response::Success.new
+      end
     end
 
-    def delete_cache(name:)
+    def delete_cache(name)
       req = ControlClient::DeleteCacheRequest.new(cache_name: name)
 
-      # Right now this will throw exceptions.
-      # GRPC::NotFound
-      @control_stub.delete_cache(req)
-
-      return true
+      begin
+        @control_stub.delete_cache(req)
+      rescue GRPC::BadStatus => e
+        Momento::Response.wrap_grpc_exception(e)
+      else
+        return Momento::Response::Success.new
+      end
     end
 
     private
