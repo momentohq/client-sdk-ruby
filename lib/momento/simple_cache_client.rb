@@ -4,9 +4,22 @@ require 'momento/response'
 
 module Momento
   # A simple client for Momento.
+  #
+  # @example
+  #   client = Momento::SimpleCacheClient.new(auth_token: jwt)
+  #   response = client.create_cache(cache_name)
+  #   case response
+  #   when Momento::Response::Success
+  #     p "Cache created!"
+  #   when Momento::Response::AlreadyExists
+  #     p "Cache already exists."
+  #   when Momento::Response::InvalidArgument
+  #     p "Cache name is invalid."
+  #   end
   class SimpleCacheClient
     VERSION = Momento::Client::VERSION
 
+    # @param auth_token [String] the JWT for your Momento account
     def initialize(auth_token:)
       @auth_token = auth_token
       load_endpoints_from_token
@@ -14,6 +27,10 @@ module Momento
       @control_stub = ControlClient::ScsControl::Stub.new(@control_endpoint, combined_credentials)
     end
 
+    # Create a new Momento cache.
+    #
+    # @param name [String] the name of the cache to create.
+    # @return [Momento::Response] the response from Momento.
     def create_cache(name)
       req = ControlClient::CreateCacheRequest.new(cache_name: name)
 
@@ -26,6 +43,10 @@ module Momento
       end
     end
 
+    # Delete an existing Momento cache.
+    #
+    # @param name [String] the name of the cache to delete.
+    # @return [Momento::Response] the response from Momento.
     def delete_cache(name)
       req = ControlClient::DeleteCacheRequest.new(cache_name: name)
 
