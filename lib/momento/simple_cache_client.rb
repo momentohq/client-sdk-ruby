@@ -4,6 +4,8 @@ require 'controlclient_services_pb'
 module Momento
   # A simple client for Momento.
   class SimpleCacheClient
+    VERSION = Momento::Client::VERSION
+
     def initialize(auth_token:)
       @auth_token = auth_token
       load_endpoints_from_token
@@ -46,13 +48,12 @@ module Momento
     end
 
     def make_combined_credentials
-      channel_creds = GRPC::Core::ChannelCredentials.new
       auth_proc = proc do
-        { authorization: @auth_token }
+        { authorization: @auth_token, agent: "ruby:#{VERSION}" }
       end
       call_creds = GRPC::Core::CallCredentials.new(auth_proc)
 
-      return channel_creds.compose(call_creds)
+      return GRPC::Core::ChannelCredentials.new.compose(call_creds)
     end
   end
 end
