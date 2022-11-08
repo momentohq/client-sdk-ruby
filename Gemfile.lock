@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    momento-client (0.1.0)
+    momento (0.1.0)
       grpc
       jwt
 
@@ -98,7 +98,7 @@ DEPENDENCIES
   bundler (~> 2.3)
   factory_bot (~> 6.2.1)
   faker (~> 3.0)
-  momento-client!
+  momento!
   pry-byebug
   rake (~> 13.0)
   rspec (~> 3.0)

@@ -1,4 +1,4 @@
-require 'momento/client'
+require 'momento'
 
 RSpec.describe Momento::SimpleCacheClient do
   let(:client) { build(:momento_simple_cache_client) }

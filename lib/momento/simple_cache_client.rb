@@ -17,7 +17,7 @@ module Momento
   #     p "Cache name is invalid."
   #   end
   class SimpleCacheClient
-    VERSION = Momento::Client::VERSION
+    VERSION = Momento::VERSION
     CONTROL_CLIENT_STUB_CLASS = ControlClient::ScsControl::Stub
 
     # @param auth_token [String] the JWT for your Momento account

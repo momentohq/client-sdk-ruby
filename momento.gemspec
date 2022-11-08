@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/momento/client/version"
+require_relative "lib/momento/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "momento-client"
-  spec.version = Momento::Client::VERSION
+  spec.name = "momento"
+  spec.version = Momento::VERSION
   spec.authors = ["Michael G. Schwern"]
   spec.email = ["schwern@pobox.com"]
 
