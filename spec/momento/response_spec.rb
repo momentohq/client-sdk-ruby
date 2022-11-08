@@ -1,6 +1,10 @@
 require 'momento/response'
 
 RSpec.describe Momento::Response do
+  it_behaves_like 'response has status methods' do
+    let(:response) { build(:momento_response) }
+  end
+
   describe '.wrap_grpc_exception' do
     shared_examples 'it wraps GRPC exceptions' do
       it 'returns the approriate response' do
@@ -51,35 +55,6 @@ RSpec.describe Momento::Response do
         expect {
           described_class.wrap_grpc_exception(grpc_exception)
         }.to raise_error(/Unknown GRPC exception/)
-      end
-    end
-  end
-
-  describe 'status methods' do
-    let(:response) { described_class.new }
-
-    [
-      :success,
-      :error,
-      :permission_denied,
-      :already_exists,
-      :invalid_argument,
-      :not_found
-    ].each do |status|
-      describe "#{status}?" do
-        method = :"#{status}?"
-
-        it 'is false' do
-          expect(response.public_send(method)).to be false
-        end
-      end
-
-      describe "as_#{status}" do
-        method = :"as_#{status}"
-
-        it 'is nil' do
-          expect(response.public_send(method)).to be_nil
-        end
       end
     end
   end
