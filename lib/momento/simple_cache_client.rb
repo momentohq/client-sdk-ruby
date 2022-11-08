@@ -18,13 +18,12 @@ module Momento
   #   end
   class SimpleCacheClient
     VERSION = Momento::Client::VERSION
+    CONTROL_CLIENT_STUB_CLASS = ControlClient::ScsControl::Stub
 
     # @param auth_token [String] the JWT for your Momento account
     def initialize(auth_token:)
       @auth_token = auth_token
       load_endpoints_from_token
-
-      @control_stub = ControlClient::ScsControl::Stub.new(@control_endpoint, combined_credentials)
     end
 
     # Create a new Momento cache.
@@ -35,7 +34,7 @@ module Momento
       req = ControlClient::CreateCacheRequest.new(cache_name: name)
 
       begin
-        @control_stub.create_cache(req)
+        control_stub.create_cache(req)
       rescue GRPC::BadStatus => e
         Momento::Response.wrap_grpc_exception(e)
       else
@@ -51,7 +50,7 @@ module Momento
       req = ControlClient::DeleteCacheRequest.new(cache_name: name)
 
       begin
-        @control_stub.delete_cache(req)
+        control_stub.delete_cache(req)
       rescue GRPC::BadStatus => e
         Momento::Response.wrap_grpc_exception(e)
       else
@@ -60,6 +59,10 @@ module Momento
     end
 
     private
+
+    def control_stub
+      @control_stub ||= CONTROL_CLIENT_STUB_CLASS.new(@control_endpoint, combined_credentials)
+    end
 
     def combined_credentials
       @combined_credentials ||= make_combined_credentials
@@ -73,9 +76,12 @@ module Momento
     end
 
     def make_combined_credentials
+      # :nocov:
       auth_proc = proc do
         { authorization: @auth_token, agent: "ruby:#{VERSION}" }
       end
+      # :nocov:
+
       call_creds = GRPC::Core::CallCredentials.new(auth_proc)
 
       return GRPC::Core::ChannelCredentials.new.compose(call_creds)
