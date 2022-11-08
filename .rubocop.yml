@@ -9,6 +9,7 @@ AllCops:
   Exclude:
     # Generated protobuf files
     - 'lib/*_pb.rb'
+    - 'vendor/**/*'
 
 RSpec/ExampleLength:
   Max: 10
