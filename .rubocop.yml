@@ -10,6 +10,9 @@ AllCops:
     # Generated protobuf files
     - 'lib/*_pb.rb'
 
+RSpec/ExampleLength:
+  Max: 10
+
 # end.method looks really weird, and the other styles are too fussy
 Style/BlockDelimiters:
   Enabled: false
