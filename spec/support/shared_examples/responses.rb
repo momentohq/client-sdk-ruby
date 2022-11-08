@@ -1,3 +1,9 @@
+# Test the common Response status methods like #success? and #as_success.
+#
+# Every status will be false or nil, except the ones given in
+# `true_statuses`.
+#
+# You must build a `response` object to use.
 shared_examples 'response has status methods' do |true_statuses: []|
   statuses = [
     :success,
