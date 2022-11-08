@@ -35,14 +35,14 @@ RSpec.describe Momento::SimpleCacheClient do
 
     it 'sends a CreateCacheRequest with the cache name' do
       allow(stub).to receive(:create_cache)
-        .and_return(ControlClient::CreateCacheResponse.new)
+        .and_return(Momento::ControlClient::CreateCacheResponse.new)
 
       client.create_cache(cache_name)
 
       expect(stub).to have_received(:create_cache)
         .with(
           satisfy { |v|
-            v.is_a?(ControlClient::CreateCacheRequest) && v["cache_name"] == cache_name
+            v.is_a?(Momento::ControlClient::CreateCacheRequest) && v["cache_name"] == cache_name
           }
         )
     end
@@ -83,14 +83,14 @@ RSpec.describe Momento::SimpleCacheClient do
 
     it 'sends a DeleteCacheRequest with the cache name' do
       allow(stub).to receive(:delete_cache)
-        .and_return(ControlClient::DeleteCacheResponse.new)
+        .and_return(Momento::ControlClient::DeleteCacheResponse.new)
 
       client.delete_cache(cache_name)
 
       expect(stub).to have_received(:delete_cache)
         .with(
           satisfy { |v|
-            v.is_a?(ControlClient::DeleteCacheRequest) && v["cache_name"] == cache_name
+            v.is_a?(Momento::ControlClient::DeleteCacheRequest) && v["cache_name"] == cache_name
           }
         )
     end

@@ -1,5 +1,5 @@
 require 'jwt'
-require 'controlclient_services_pb'
+require 'momento/controlclient_services_pb'
 require 'momento/response'
 
 module Momento
