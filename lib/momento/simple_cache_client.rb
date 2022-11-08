@@ -36,9 +36,9 @@ module Momento
       begin
         control_stub.create_cache(req)
       rescue GRPC::BadStatus => e
-        Momento::Response.wrap_grpc_exception(e)
+        Momento::Response::CreateCache.build_response(e)
       else
-        return Momento::Response::Success.new
+        return Momento::Response::CreateCache::Created.new
       end
     end
 
@@ -52,9 +52,9 @@ module Momento
       begin
         control_stub.delete_cache(req)
       rescue GRPC::BadStatus => e
-        Momento::Response.wrap_grpc_exception(e)
+        Momento::Response::DeleteCache.build_response(e)
       else
-        return Momento::Response::Success.new
+        return Momento::Response::DeleteCache::Deleted.new
       end
     end
 

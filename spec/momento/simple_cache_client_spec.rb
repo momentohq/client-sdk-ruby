@@ -48,12 +48,12 @@ RSpec.describe Momento::SimpleCacheClient do
     end
 
     context 'when the response is a bad status' do
-      let(:grpc_error) { GRPC::NotFound.new }
-      let(:response_class) { Momento::Response::NotFound }
+      let(:grpc_error) { GRPC::InvalidArgument.new }
+      let(:response_class) { Momento::Response::CreateCache::InvalidArgument }
 
       before do
         allow(stub).to receive(:create_cache)
-          .and_raise(GRPC::NotFound)
+          .and_raise(grpc_error)
       end
 
       it 'returns the appropriate Response' do
@@ -97,11 +97,11 @@ RSpec.describe Momento::SimpleCacheClient do
 
     context 'when the response is a bad status' do
       let(:grpc_error) { GRPC::NotFound.new }
-      let(:response_class) { Momento::Response::NotFound }
+      let(:response_class) { Momento::Response::DeleteCache::NotFound }
 
       before do
         allow(stub).to receive(:delete_cache)
-          .and_raise(GRPC::NotFound)
+          .and_raise(grpc_error)
       end
 
       it 'returns the appropriate Response' do
