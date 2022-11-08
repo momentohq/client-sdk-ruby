@@ -1,7 +1,7 @@
 require 'momento/response'
 
 RSpec.describe Momento::Response do
-  it_behaves_like 'response has status methods' do
+  it_behaves_like described_class do
     let(:response) { build(:momento_response) }
   end
 
