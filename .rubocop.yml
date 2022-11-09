@@ -8,7 +8,11 @@ AllCops:
   TargetRubyVersion: 2.7
   Exclude:
     # Generated protobuf files
-    - 'lib/*_pb.rb'
+    - 'lib/**/*_pb.rb'
+    - 'vendor/**/*'
+
+RSpec/ExampleLength:
+  Max: 10
 
 # end.method looks really weird, and the other styles are too fussy
 Style/BlockDelimiters:
@@ -18,11 +22,20 @@ Style/BlockDelimiters:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
+# In a language which returns it's last evaluated expression,
+# it's useful to know when you intend to return vs when you don't.
+Style/RedundantReturn:
+  Enabled: false
+
 # Too fussy, doesn't solve a problem
 Style/StringLiterals:
   Enabled: false
 
 Style/StringLiteralsInInterpolation:
+  Enabled: false
+
+# I find the %x arrays hard to remember.
+Style/SymbolArray:
   Enabled: false
 
 Layout/LineLength:

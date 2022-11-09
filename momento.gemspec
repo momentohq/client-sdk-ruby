@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/momento/client/version"
+require_relative "lib/momento/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "momento-client"
-  spec.version = Momento::Client::VERSION
+  spec.name = "momento"
+  spec.version = Momento::VERSION
   spec.authors = ["Michael G. Schwern"]
   spec.email = ["schwern@pobox.com"]
 
@@ -30,11 +30,15 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency 'bundler', "~> 2.3"
+  spec.add_development_dependency 'factory_bot', "~> 6.2.1"
+  spec.add_development_dependency 'faker', "~> 3.0"
   spec.add_development_dependency "rspec", "~> 3.12"
   spec.add_development_dependency "rubocop", "~> 3.18"
   spec.add_development_dependency 'rubocop-performance', '~> 1.15'
   spec.add_development_dependency 'rubocop-rake', '~> 0.6.0'
   spec.add_development_dependency 'rubocop-rspec', '~> 2.15'
+  spec.add_development_dependency 'simplecov', '~> 0.21'
 
   spec.add_dependency "grpc"
+  spec.add_dependency 'jwt'
 end
