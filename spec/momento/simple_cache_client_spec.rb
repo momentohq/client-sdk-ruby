@@ -47,6 +47,17 @@ RSpec.describe Momento::SimpleCacheClient do
         )
     end
 
+    context 'when the response is success' do
+      before do
+        allow(stub).to receive(:create_cache)
+          .and_return(Momento::ControlClient::CreateCacheResponse.new)
+      end
+
+      it 'returns the appropriate Response' do
+        expect(client.create_cache(cache_name)).to be_a Momento::Response::CreateCache::Created
+      end
+    end
+
     context 'when the response is a bad status' do
       let(:grpc_error) { GRPC::InvalidArgument.new }
       let(:response_class) { Momento::Response::CreateCache::InvalidArgument }
@@ -93,6 +104,17 @@ RSpec.describe Momento::SimpleCacheClient do
             v.is_a?(Momento::ControlClient::DeleteCacheRequest) && v["cache_name"] == cache_name
           }
         )
+    end
+
+    context 'when the response is success' do
+      before do
+        allow(stub).to receive(:delete_cache)
+          .and_return(Momento::ControlClient::DeleteCacheResponse.new)
+      end
+
+      it 'returns the appropriate Response' do
+        expect(client.delete_cache(cache_name)).to be_a Momento::Response::DeleteCache::Deleted
+      end
     end
 
     context 'when the response is a bad status' do
