@@ -8,10 +8,26 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
-  test:
+  rubocop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1
+          bundler-cache: true
+      - name: rubocop
+        uses: reviewdog/action-rubocop@v2
+        with:
+          rubocop_version: gemfile
+          rubocop_extensions: rubocop-performance:gemfile rubocop-rake:gemfile rubocop-rspec:gemfile
+          reporter: github-pr-review
 
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
