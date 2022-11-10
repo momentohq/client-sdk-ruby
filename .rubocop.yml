@@ -37,6 +37,8 @@ Style/StringLiteralsInInterpolation:
 # I find the %x arrays hard to remember.
 Style/SymbolArray:
   Enabled: false
+Style/WordArray:
+  Enabled: false
 
 Layout/LineLength:
   Max: 120
