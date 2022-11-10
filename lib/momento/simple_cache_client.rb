@@ -58,6 +58,25 @@ module Momento
       end
     end
 
+    # List a page of your caches.
+    #
+    # The next_token indicates which page to fetch.
+    # If nil or "" it will fetch the first page. Default is to fetch the first page.
+    #
+    # @params next_token [String, nil] the token of the page to request
+    # @return [Momento::Response::ListCaches]
+    def list_caches(next_token: "")
+      req = ControlClient::ListCachesRequest.new(next_token: next_token)
+
+      begin
+        response = control_stub.list_caches(req)
+      rescue GRPC::BadStatus => e
+        Momento::Response::ListCaches.build_response(e)
+      else
+        Momento::Response::ListCaches::Caches.new(response)
+      end
+    end
+
     private
 
     def control_stub

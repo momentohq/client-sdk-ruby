@@ -21,7 +21,7 @@ module Momento
         # rubocop:enable Lint/MissingSuper
 
         def cache_names
-          @grpc_response.cache.map { |c| c.cache_name }
+          @grpc_response.cache.map(&:cache_name)
         end
 
         def next_token

@@ -4,6 +4,14 @@ FactoryBot.define do
     class: "Momento::Response::ListCaches::Caches"
   ) do
     momento_response
+
+    grpc_response {
+      build(:momento_control_client_list_caches_response)
+    }
+
+    initialize_with {
+      Momento::Response::ListCaches::Caches.new(grpc_response)
+    }
   end
 
   factory(

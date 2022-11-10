@@ -146,4 +146,64 @@ RSpec.describe Momento::SimpleCacheClient do
       end
     end
   end
+
+  describe '#list_caches' do
+    let(:stub) { client.send(:control_stub) }
+    let(:next_token) { "abc123" }
+
+    it 'sends a ListCachesRequest with the token' do
+      allow(stub).to receive(:list_caches)
+        .and_return(build(:momento_control_client_list_caches_response))
+
+      client.list_caches(next_token: next_token)
+
+      expect(stub).to have_received(:list_caches)
+        .with(
+          satisfy { |v|
+            v.is_a?(Momento::ControlClient::ListCachesRequest) && v["next_token"] == next_token
+          }
+        )
+    end
+
+    it 'defaults to the first page' do
+      allow(stub).to receive(:list_caches)
+        .and_return(build(:momento_control_client_list_caches_response))
+
+      client.list_caches(next_token: "")
+
+      expect(stub).to have_received(:list_caches)
+        .with(
+          satisfy { |v|
+            v.is_a?(Momento::ControlClient::ListCachesRequest) && v["next_token"] == ""
+          }
+        )
+    end
+
+    it 'returns Deleted when the response is successful' do
+      allow(stub).to receive(:list_caches)
+        .and_return(build(:momento_control_client_list_caches_response))
+
+      expect(client.list_caches).to be_a Momento::Response::ListCaches::Caches
+    end
+
+    it 'returns an error response for a gRPC error' do
+      allow(stub).to receive(:list_caches)
+        .and_raise(GRPC::PermissionDenied.new)
+
+      expect(client.list_caches).to be_a Momento::Response::ListCaches::PermissionDenied
+    end
+
+    it 'raises on an unknown stub error' do
+      stub_error = StandardError.new("the front fell off")
+
+      allow(stub).to receive(:list_caches)
+        .and_raise(stub_error)
+
+      expect {
+        client.list_caches
+      }.to raise_error(stub_error)
+    end
+  end
+
+  describe '#caches'
 end
