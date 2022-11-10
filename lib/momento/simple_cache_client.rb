@@ -77,6 +77,31 @@ module Momento
       end
     end
 
+    # Lists the names of all your caches.
+    #
+    # @return [Enumerator::Lazy<String>] the cache names
+    # @raise [GRPC::BadStatus]
+    # rubocop:disable Metrics/MethodLength
+    def caches
+      Enumerator.new do |yielder|
+        next_token = ""
+
+        loop do
+          response = list_caches(next_token: next_token)
+          raise response.grpc_exception if response.is_a? Momento::Response::Error
+
+          response.cache_names.each do |name|
+            yielder << name
+          end
+
+          break if response.next_token == ''
+
+          next_token = response.next_token
+        end
+      end.lazy
+    end
+    # rubocop:enable Metrics/MethodLength
+
     private
 
     def control_stub

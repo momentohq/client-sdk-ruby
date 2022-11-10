@@ -205,5 +205,53 @@ RSpec.describe Momento::SimpleCacheClient do
     end
   end
 
-  describe '#caches'
+  describe '#caches' do
+    let(:grpc_responses) {
+      [
+        build(:momento_control_client_list_caches_response, next_token: "abc123"),
+        build(:momento_control_client_list_caches_response, next_token: "")
+      ]
+    }
+
+    let(:responses) {
+      grpc_responses.map { |gr|
+        build(:momento_response_list_caches_caches, grpc_response: gr)
+      }
+    }
+
+    before do
+      allow(client).to receive(:list_caches)
+        .with(next_token: "").and_return(responses[0])
+      allow(client).to receive(:list_caches)
+        .with(next_token: responses[0].next_token).and_return(responses[1])
+    end
+
+    it 'iterates through the responses' do
+      cache_names = responses.flat_map(&:cache_names)
+
+      expect(client.caches.to_a).to eq cache_names
+    end
+
+    it 'when list_caches has an error response, it raises the grpc exception' do
+      error_response = build(:momento_response_list_caches_permission_denied)
+
+      allow(client).to receive(:list_caches)
+        .and_return(error_response)
+
+      expect {
+        client.caches.to_a
+      }.to raise_error(error_response.grpc_exception)
+    end
+
+    it 'when list_caches raises, it raises' do
+      error = "the front fell off"
+
+      allow(client).to receive(:list_caches)
+        .and_raise(error)
+
+      expect {
+        client.caches.to_a
+      }.to raise_error(error)
+    end
+  end
 end
