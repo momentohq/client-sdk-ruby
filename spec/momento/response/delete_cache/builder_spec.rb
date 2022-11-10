@@ -1,7 +1,7 @@
 require 'momento/response'
 
-RSpec.describe Momento::Response::DeleteCache do
-  it_behaves_like 'it handles unexpected exceptions'
+RSpec.describe Momento::Response::DeleteCache::Builder do
+  it_behaves_like Momento::Response::Builder
 
   describe '.build_response' do
     context 'when it is InvalidArgument' do

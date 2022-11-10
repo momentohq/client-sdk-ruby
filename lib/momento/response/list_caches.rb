@@ -1,13 +1,20 @@
 module Momento
   class Response
-    # Responses for create_cache
-    class ListCaches < Response
-      def self.build_response(grpc_exception)
-        case grpc_exception
-        when GRPC::PermissionDenied
-          ListCaches::PermissionDenied.new(grpc_exception: grpc_exception)
-        else
-          raise "Unknown GRPC exception: #{grpc_exception}"
+    module ListCaches
+      # Build a Momento::Response::ListCaches::Error from a
+      # gRPC exception.
+      #
+      # @param [GRPC::BadStatus]
+      # @return [Momento::Response::ListCaches::Error]
+      # @raise [StandardError] when the gRPC exception is not recognized.
+      class Builder < Builder
+        def self.build_response(grpc_exception)
+          case grpc_exception
+          when GRPC::PermissionDenied
+            ListCaches::PermissionDenied.new(grpc_exception: grpc_exception)
+          else
+            super
+          end
         end
       end
 

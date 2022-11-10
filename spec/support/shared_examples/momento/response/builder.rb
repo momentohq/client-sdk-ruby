@@ -1,3 +1,5 @@
+require 'momento/response'
+
 RSpec.shared_examples 'it wraps GRPC exceptions' do
   it 'returns the approriate response' do
     expect(
@@ -12,7 +14,7 @@ RSpec.shared_examples 'it wraps GRPC exceptions' do
   end
 end
 
-RSpec.shared_examples 'it handles unexpected exceptions' do
+RSpec.shared_examples Momento::Response::Builder do
   context 'when the exception is unexpected' do
     let(:grpc_exception) { instance_double(StandardError) }
 

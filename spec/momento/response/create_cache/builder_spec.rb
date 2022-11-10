@@ -1,7 +1,7 @@
 require 'momento/response'
 
-RSpec.describe Momento::Response::CreateCache do
-  it_behaves_like 'it handles unexpected exceptions'
+RSpec.describe Momento::Response::CreateCache::Builder do
+  it_behaves_like Momento::Response::Builder
 
   describe '.build_response' do
     context 'when it is AlreadyExists' do
