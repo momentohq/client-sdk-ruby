@@ -11,3 +11,15 @@ RSpec.shared_examples 'it wraps GRPC exceptions' do
     ).to eq grpc_exception
   end
 end
+
+RSpec.shared_examples 'it handles unexpected exceptions' do
+  context 'when the exception is unexpected' do
+    let(:grpc_exception) { instance_double(StandardError) }
+
+    it 'raises' do
+      expect {
+        described_class.build_response(grpc_exception)
+      }.to raise_error(/Unknown GRPC exception/)
+    end
+  end
+end
