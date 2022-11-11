@@ -1,3 +1,6 @@
+require 'momento/response'
+require 'momento/controlclient_pb'
+
 RSpec.describe Momento::Response::ListCaches::Caches do
   let(:cache_names) { ["foo", "bar", "baz"] }
   let(:next_token) { "abcd123" }
