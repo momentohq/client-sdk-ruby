@@ -20,13 +20,6 @@ module Momento
 
       # Response wrapper for ListCachesResponse.
       class Caches < Success
-        # rubocop:disable Lint/MissingSuper
-        # @params [Momento::ControlClient::ListCachesResponse] the response to wrap
-        def initialize(grpc_response)
-          @grpc_response = grpc_response
-        end
-        # rubocop:enable Lint/MissingSuper
-
         def cache_names
           @grpc_response.cache.map(&:cache_name)
         end
