@@ -1,5 +1,6 @@
 module Momento
   class Response
+    # Responses specific to list_caches.
     module ListCaches
       # Build a Momento::Response::ListCaches from a block of code
       # which returns a Momento::ControlClient::ListCachesResponse.

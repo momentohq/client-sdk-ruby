@@ -1,5 +1,6 @@
 module Momento
   class Response
+    # Responses specific to delete_cache
     module DeleteCache
       # Build a Momento::Response::CreateCache from a block of code
       # which returns a Momento::ControlClient::DeleteCacheResponse..

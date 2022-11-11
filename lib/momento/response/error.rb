@@ -1,6 +1,6 @@
 module Momento
   class Response
-    # Superclass for all GRPC::BadStatus responses.
+    # Superclass for all Responses wrapping an exception.
     class Error < Response
       attr_accessor :grpc_exception
 
