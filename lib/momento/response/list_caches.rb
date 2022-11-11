@@ -15,7 +15,7 @@ module Momento
       else
         raise TypeError unless response.is_a?(Momento::ControlClient::ListCachesResponse)
 
-        return Momento::Response::ListCaches::Caches.new(response)
+        return ListCaches::Caches.new(response)
       end
 
       # Response wrapper for ListCachesResponse.

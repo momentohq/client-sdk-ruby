@@ -19,7 +19,7 @@ module Momento
       else
         raise TypeError unless response.is_a?(Momento::ControlClient::DeleteCacheResponse)
 
-        return Momento::Response::DeleteCache::Success.new(response)
+        return DeleteCache::Success.new(response)
       end
 
       class Error < Error
