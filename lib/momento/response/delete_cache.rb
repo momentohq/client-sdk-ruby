@@ -25,9 +25,6 @@ module Momento
       class Error < Error
       end
 
-      class Success < Success
-      end
-
       class InvalidArgument < Error
       end
 
@@ -35,6 +32,9 @@ module Momento
       end
 
       class PermissionDenied < Error
+      end
+
+      class Success < Success
       end
     end
   end

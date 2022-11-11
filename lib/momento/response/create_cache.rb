@@ -22,19 +22,19 @@ module Momento
         return Momento::Response::CreateCache::Success.new
       end
 
-      class Error < Error
-      end
-
       class AlreadyExists < Error
       end
 
-      class Success < Success
+      class Error < Error
       end
 
       class InvalidArgument < Error
       end
 
       class PermissionDenied < Error
+      end
+
+      class Success < Success
       end
     end
   end
