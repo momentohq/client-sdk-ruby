@@ -1,21 +1,20 @@
 module Momento
   class Response
     module ListCaches
-      # Build a Momento::Response::ListCaches::Error from a
-      # gRPC exception.
+      # Build a Momento::Response::ListCaches from a block of code
+      # which returns a Momento::ControlClient::ListCachesResponse.
       #
-      # @param [GRPC::BadStatus]
-      # @return [Momento::Response::ListCaches::Error]
-      # @raise [StandardError] when the gRPC exception is not recognized.
-      class Builder < Builder
-        def self.build_response(grpc_exception)
-          case grpc_exception
-          when GRPC::PermissionDenied
-            ListCaches::PermissionDenied.new(grpc_exception: grpc_exception)
-          else
-            super
-          end
-        end
+      # @return [Momento::Response::ListCaches]
+      # @raise [StandardError] when the exception is not recognized.
+      # @raise [TypeError] when the response is not recognized.
+      def self.from_block
+        response = yield
+      rescue GRPC::PermissionDenied => e
+        ListCaches::PermissionDenied.new(grpc_exception: e)
+      else
+        raise TypeError unless response.is_a?(Momento::ControlClient::ListCachesResponse)
+
+        return Momento::Response::ListCaches::Caches.new(response)
       end
 
       # Response wrapper for ListCachesResponse.

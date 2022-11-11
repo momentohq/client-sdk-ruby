@@ -1,25 +1,24 @@
 module Momento
   class Response
     module CreateCache
-      # Build a Momento::Response::CreateCache::Error from a
-      # gRPC exception.
+      # Build a Momento::Response::CreateCache from a block of code
+      # which returns a Momento::ControlClient::CreateCacheResponse.
       #
-      # @param [GRPC::BadStatus]
-      # @return [Momento::Response::CreateCache::Error]
-      # @raise [StandardError] when the gRPC exception is not recognized.
-      class Builder < Builder
-        def self.build_response(grpc_exception)
-          case grpc_exception
-          when GRPC::AlreadyExists
-            CreateCache::AlreadyExists.new(grpc_exception: grpc_exception)
-          when GRPC::InvalidArgument
-            CreateCache::InvalidArgument.new(grpc_exception: grpc_exception)
-          when GRPC::PermissionDenied
-            CreateCache::PermissionDenied.new(grpc_exception: grpc_exception)
-          else
-            super
-          end
-        end
+      # @return [Momento::Response::CreateCache]
+      # @raise [StandardError] when the exception is not recognized.
+      # @raise [TypeError] when the response is not recognized.
+      def self.from_block
+        response = yield
+      rescue GRPC::AlreadyExists => e
+        CreateCache::AlreadyExists.new(grpc_exception: e)
+      rescue GRPC::InvalidArgument => e
+        CreateCache::InvalidArgument.new(grpc_exception: e)
+      rescue GRPC::PermissionDenied => e
+        CreateCache::PermissionDenied.new(grpc_exception: e)
+      else
+        raise TypeError unless response.is_a?(Momento::ControlClient::CreateCacheResponse)
+
+        return Momento::Response::CreateCache::Created.new
       end
 
       class Error < Error

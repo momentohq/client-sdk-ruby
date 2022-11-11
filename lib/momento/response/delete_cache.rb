@@ -1,25 +1,24 @@
 module Momento
   class Response
     module DeleteCache
-      # Build a Momento::Response::DeleteCache::Error from a
-      # gRPC exception.
+      # Build a Momento::Response::CreateCache from a block of code
+      # which returns a Momento::ControlClient::DeleteCacheResponse..
       #
-      # @param [GRPC::BadStatus]
-      # @return [Momento::Response::DeleteCache::Error]
-      # @raise [StandardError] when the gRPC exception is not recognized.
-      class Builder < Builder
-        def self.build_response(grpc_exception)
-          case grpc_exception
-          when GRPC::InvalidArgument
-            DeleteCache::InvalidArgument.new(grpc_exception: grpc_exception)
-          when GRPC::NotFound
-            DeleteCache::NotFound.new(grpc_exception: grpc_exception)
-          when GRPC::PermissionDenied
-            DeleteCache::PermissionDenied.new(grpc_exception: grpc_exception)
-          else
-            super
-          end
-        end
+      # @return [Momento::Response::DeleteCache]
+      # @raise [StandardError] when the exception is not recognized.
+      # @raise [TypeError] when the response is not recognized.
+      def self.from_block
+        response = yield
+      rescue GRPC::InvalidArgument => e
+        DeleteCache::InvalidArgument.new(grpc_exception: e)
+      rescue GRPC::NotFound => e
+        DeleteCache::NotFound.new(grpc_exception: e)
+      rescue GRPC::PermissionDenied => e
+        DeleteCache::PermissionDenied.new(grpc_exception: e)
+      else
+        raise TypeError unless response.is_a?(Momento::ControlClient::DeleteCacheResponse)
+
+        Momento::Response::DeleteCache::Deleted.new
       end
 
       class Error < Error
