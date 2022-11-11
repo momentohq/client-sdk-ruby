@@ -25,7 +25,7 @@ module Momento
       class Error < Error
       end
 
-      class Success < ::Momento::Response
+      class Success < Success
       end
 
       class InvalidArgument < Error

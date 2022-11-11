@@ -19,7 +19,7 @@ module Momento
       end
 
       # Response wrapper for ListCachesResponse.
-      class Caches < ::Momento::Response
+      class Caches < Success
         # rubocop:disable Lint/MissingSuper
         # @params [Momento::ControlClient::ListCachesResponse] the response to wrap
         def initialize(grpc_response)
