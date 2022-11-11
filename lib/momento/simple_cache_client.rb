@@ -6,15 +6,19 @@ module Momento
   # A simple client for Momento.
   #
   # @example
-  #   client = Momento::SimpleCacheClient.new(auth_token: jwt)
-  #   response = client.create_cache(cache_name)
+  #   client = Momento::SimpleCacheClient.new(
+  #     auth_token: jwt,
+  #     default_ttl: 10_000
+  #   )
+  #
+  #   response = client.get("my_cache", "key")
   #   case response
-  #   when Momento::Response::Success
-  #     p "Cache created!"
-  #   when Momento::Response::AlreadyExists
-  #     p "Cache already exists."
-  #   when Momento::Response::InvalidArgument
-  #     p "Cache name is invalid."
+  #   when Momento::Response::Get::Hit
+  #     p response
+  #   when Momento::Response::Get::Miss
+  #     p client.set(cache_name, key, "default")
+  #   when Momento::Response::Error
+  #     p "The front fell off."
   #   end
   class SimpleCacheClient
     VERSION = Momento::VERSION
