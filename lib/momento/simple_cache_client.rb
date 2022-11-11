@@ -58,6 +58,50 @@ module Momento
       end
     end
 
+    # List a page of your caches.
+    #
+    # The next_token indicates which page to fetch.
+    # If nil or "" it will fetch the first page. Default is to fetch the first page.
+    #
+    # @params next_token [String, nil] the token of the page to request
+    # @return [Momento::Response::ListCaches]
+    def list_caches(next_token: "")
+      req = ControlClient::ListCachesRequest.new(next_token: next_token)
+
+      begin
+        response = control_stub.list_caches(req)
+      rescue GRPC::BadStatus => e
+        Momento::Response::ListCaches.build_response(e)
+      else
+        Momento::Response::ListCaches::Caches.new(response)
+      end
+    end
+
+    # Lists the names of all your caches.
+    #
+    # @return [Enumerator::Lazy<String>] the cache names
+    # @raise [GRPC::BadStatus]
+    # rubocop:disable Metrics/MethodLength
+    def caches
+      Enumerator.new do |yielder|
+        next_token = ""
+
+        loop do
+          response = list_caches(next_token: next_token)
+          raise response.grpc_exception if response.is_a? Momento::Response::Error
+
+          response.cache_names.each do |name|
+            yielder << name
+          end
+
+          break if response.next_token == ''
+
+          next_token = response.next_token
+        end
+      end.lazy
+    end
+    # rubocop:enable Metrics/MethodLength
+
     private
 
     def control_stub
