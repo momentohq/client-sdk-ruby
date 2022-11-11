@@ -31,7 +31,7 @@ RSpec.describe Momento::Response::DeleteCache do
         Momento::ControlClient::DeleteCacheResponse.new
       }
       let(:response_class) {
-        Momento::Response::DeleteCache::Deleted
+        Momento::Response::DeleteCache::Success
       }
 
       it_behaves_like 'it wraps gRPC responses'

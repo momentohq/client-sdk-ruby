@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory(
-    :momento_response_delete_cache_deleted,
-    class: "Momento::Response::DeleteCache::Deleted"
+    :momento_response_delete_cache_success,
+    class: "Momento::Response::DeleteCache::Success"
   ) do
     momento_response
   end

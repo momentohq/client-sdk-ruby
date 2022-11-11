@@ -18,7 +18,7 @@ module Momento
       else
         raise TypeError unless response.is_a?(Momento::ControlClient::CreateCacheResponse)
 
-        return Momento::Response::CreateCache::Created.new
+        return Momento::Response::CreateCache::Success.new
       end
 
       class Error < Error
@@ -27,7 +27,7 @@ module Momento
       class AlreadyExists < Error
       end
 
-      class Created < Momento::Response
+      class Success < Momento::Response
       end
 
       class InvalidArgument < Error

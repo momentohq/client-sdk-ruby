@@ -18,13 +18,13 @@ module Momento
       else
         raise TypeError unless response.is_a?(Momento::ControlClient::DeleteCacheResponse)
 
-        Momento::Response::DeleteCache::Deleted.new
+        Momento::Response::DeleteCache::Success.new
       end
 
       class Error < Error
       end
 
-      class Deleted < ::Momento::Response
+      class Success < ::Momento::Response
       end
 
       class InvalidArgument < Error

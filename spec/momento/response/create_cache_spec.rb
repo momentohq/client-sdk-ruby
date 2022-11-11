@@ -31,7 +31,7 @@ RSpec.describe Momento::Response::CreateCache do
         Momento::ControlClient::CreateCacheResponse.new
       }
       let(:response_class) {
-        Momento::Response::CreateCache::Created
+        Momento::Response::CreateCache::Success
       }
 
       it_behaves_like 'it wraps gRPC responses'

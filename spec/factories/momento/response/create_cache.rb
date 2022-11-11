@@ -7,8 +7,8 @@ FactoryBot.define do
   end
 
   factory(
-    :momento_response_create_cache_created,
-    class: "Momento::Response::CreateCache::Created"
+    :momento_response_create_cache_success,
+    class: "Momento::Response::CreateCache::Success"
   ) do
     momento_response
   end
