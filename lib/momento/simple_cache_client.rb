@@ -1,4 +1,5 @@
 require 'jwt'
+require 'momento/cacheclient_services_pb'
 require 'momento/controlclient_services_pb'
 require 'momento/response'
 
@@ -22,6 +23,7 @@ module Momento
   #   end
   class SimpleCacheClient
     VERSION = Momento::VERSION
+    CACHE_CLIENT_STUB_CLASS = CacheClient::Scs::Stub
     CONTROL_CLIENT_STUB_CLASS = ControlClient::ScsControl::Stub
 
     # @param auth_token [String] the JWT for your Momento account
@@ -95,6 +97,10 @@ module Momento
     # rubocop:enable Metrics/MethodLength
 
     private
+
+    def cache_stub
+      @cache_stub ||= CACHE_CLIENT_STUB_CLASS.new(@cache_endpoint, combined_credentials)
+    end
 
     def control_stub
       @control_stub ||= CONTROL_CLIENT_STUB_CLASS.new(@control_endpoint, combined_credentials)

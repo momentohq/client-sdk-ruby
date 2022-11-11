@@ -9,24 +9,38 @@ RSpec.describe Momento::SimpleCacheClient do
     it { is_expected.to be_a described_class }
   end
 
-  describe '#control_stub' do
-    subject(:stub) { client.send(:control_stub) }
+  shared_examples 'a gRPC stub' do
+    subject(:stub) { client.send(stub_method) }
 
-    let(:control_client_stub_class) { described_class.const_get(:CONTROL_CLIENT_STUB_CLASS) }
-    let(:control_endpoint) { Faker::Internet.domain_name }
-    let(:token) { build(:auth_token, cp: control_endpoint) }
     let(:client) { build(:momento_simple_cache_client, auth_token: token) }
+    let(:endpoint) { Faker::Internet.domain_name }
 
-    it { is_expected.to be_a control_client_stub_class }
+    it { is_expected.to be_a stub_class }
 
-    it 'creates a control stub with the endpoint' do
-      allow(control_client_stub_class).to receive(:new).and_call_original
+    it 'creates a stub with the endpoint' do
+      allow(stub_class).to receive(:new).and_call_original
 
       stub
 
-      expect(control_client_stub_class).to have_received(:new)
-        .with(control_endpoint, instance_of(GRPC::Core::ChannelCredentials))
+      expect(stub_class).to have_received(:new)
+        .with(endpoint, instance_of(GRPC::Core::ChannelCredentials))
     end
+  end
+
+  describe '#cache_stub' do
+    let(:stub_class) { described_class.const_get(:CACHE_CLIENT_STUB_CLASS) }
+    let(:stub_method) { :cache_stub }
+    let(:token) { build(:auth_token, c: endpoint) }
+
+    it_behaves_like 'a gRPC stub'
+  end
+
+  describe '#control_stub' do
+    let(:stub_class) { described_class.const_get(:CONTROL_CLIENT_STUB_CLASS) }
+    let(:stub_method) { :control_stub }
+    let(:token) { build(:auth_token, cp: endpoint) }
+
+    it_behaves_like 'a gRPC stub'
   end
 
   describe '#create_cache' do
