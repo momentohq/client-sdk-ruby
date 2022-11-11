@@ -26,9 +26,14 @@ module Momento
     CACHE_CLIENT_STUB_CLASS = CacheClient::Scs::Stub
     CONTROL_CLIENT_STUB_CLASS = ControlClient::ScsControl::Stub
 
+    # The default time to live, in milliseconds.
+    attr_accessor :default_ttl
+
     # @param auth_token [String] the JWT for your Momento account
-    def initialize(auth_token:)
+    # @param default_ttl [Integer]
+    def initialize(auth_token:, default_ttl:)
       @auth_token = auth_token
+      @default_ttl = default_ttl
       load_endpoints_from_token
     end
 
