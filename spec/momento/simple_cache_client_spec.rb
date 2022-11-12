@@ -2,6 +2,8 @@ require 'momento'
 
 RSpec.describe Momento::SimpleCacheClient do
   let(:client) { build(:momento_simple_cache_client) }
+  let(:cache_stub) { client.send(:cache_stub) }
+  let(:control_stub) { client.send(:control_stub) }
 
   describe '#new' do
     subject { client }
@@ -45,25 +47,23 @@ RSpec.describe Momento::SimpleCacheClient do
 
   describe '#create_cache' do
     let(:cache_name) { "foobar" }
-    let(:stub) { client.send(:control_stub) }
 
     it 'sends a CreateCacheRequest with the cache name' do
-      allow(stub).to receive(:create_cache)
+      allow(control_stub).to receive(:create_cache)
         .and_return(Momento::ControlClient::CreateCacheResponse.new)
 
       client.create_cache(cache_name)
 
-      expect(stub).to have_received(:create_cache)
-        .with(
-          satisfy { |v|
-            v.is_a?(Momento::ControlClient::CreateCacheRequest) && v["cache_name"] == cache_name
-          }
-        )
+      expected_request = be_a(Momento::ControlClient::CreateCacheRequest).and have_attributes(
+        cache_name: cache_name
+      )
+
+      expect(control_stub).to have_received(:create_cache).with(expected_request)
     end
 
     context 'when the response is success' do
       before do
-        allow(stub).to receive(:create_cache)
+        allow(control_stub).to receive(:create_cache)
           .and_return(Momento::ControlClient::CreateCacheResponse.new)
       end
 
@@ -77,7 +77,7 @@ RSpec.describe Momento::SimpleCacheClient do
       let(:response_class) { Momento::Response::CreateCache::InvalidArgument }
 
       before do
-        allow(stub).to receive(:create_cache)
+        allow(control_stub).to receive(:create_cache)
           .and_raise(grpc_error)
       end
 
@@ -90,7 +90,7 @@ RSpec.describe Momento::SimpleCacheClient do
       let(:error) { StandardError.new("the front fell off") }
 
       before do
-        allow(stub).to receive(:create_cache)
+        allow(control_stub).to receive(:create_cache)
           .and_raise(error)
       end
 
@@ -104,25 +104,23 @@ RSpec.describe Momento::SimpleCacheClient do
 
   describe '#delete_cache' do
     let(:cache_name) { "foobar" }
-    let(:stub) { client.send(:control_stub) }
 
     it 'sends a DeleteCacheRequest with the cache name' do
-      allow(stub).to receive(:delete_cache)
+      allow(control_stub).to receive(:delete_cache)
         .and_return(Momento::ControlClient::DeleteCacheResponse.new)
 
       client.delete_cache(cache_name)
 
-      expect(stub).to have_received(:delete_cache)
-        .with(
-          satisfy { |v|
-            v.is_a?(Momento::ControlClient::DeleteCacheRequest) && v["cache_name"] == cache_name
-          }
-        )
+      expected_request = be_a(Momento::ControlClient::DeleteCacheRequest).and have_attributes(
+        cache_name: cache_name
+      )
+
+      expect(control_stub).to have_received(:delete_cache).with(expected_request)
     end
 
     context 'when the response is success' do
       before do
-        allow(stub).to receive(:delete_cache)
+        allow(control_stub).to receive(:delete_cache)
           .and_return(Momento::ControlClient::DeleteCacheResponse.new)
       end
 
@@ -136,7 +134,7 @@ RSpec.describe Momento::SimpleCacheClient do
       let(:response_class) { Momento::Response::DeleteCache::NotFound }
 
       before do
-        allow(stub).to receive(:delete_cache)
+        allow(control_stub).to receive(:delete_cache)
           .and_raise(grpc_error)
       end
 
@@ -149,7 +147,7 @@ RSpec.describe Momento::SimpleCacheClient do
       let(:error) { StandardError.new("the front fell off") }
 
       before do
-        allow(stub).to receive(:delete_cache)
+        allow(control_stub).to receive(:delete_cache)
           .and_raise(error)
       end
 
@@ -162,46 +160,43 @@ RSpec.describe Momento::SimpleCacheClient do
   end
 
   describe '#list_caches' do
-    let(:stub) { client.send(:control_stub) }
     let(:next_token) { "abc123" }
 
     it 'sends a ListCachesRequest with the token' do
-      allow(stub).to receive(:list_caches)
+      allow(control_stub).to receive(:list_caches)
         .and_return(build(:momento_control_client_list_caches_response))
 
       client.list_caches(next_token: next_token)
 
-      expect(stub).to have_received(:list_caches)
-        .with(
-          satisfy { |v|
-            v.is_a?(Momento::ControlClient::ListCachesRequest) && v["next_token"] == next_token
-          }
-        )
+      expected_request = be_a(Momento::ControlClient::ListCachesRequest)
+        .and have_attributes(next_token: next_token)
+
+      expect(control_stub).to have_received(:list_caches)
+        .with(expected_request)
     end
 
     it 'defaults to the first page' do
-      allow(stub).to receive(:list_caches)
+      allow(control_stub).to receive(:list_caches)
         .and_return(build(:momento_control_client_list_caches_response))
 
       client.list_caches(next_token: "")
 
-      expect(stub).to have_received(:list_caches)
-        .with(
-          satisfy { |v|
-            v.is_a?(Momento::ControlClient::ListCachesRequest) && v["next_token"] == ""
-          }
-        )
+      expected_request = be_a(Momento::ControlClient::ListCachesRequest)
+        .and have_attributes(next_token: "")
+
+      expect(control_stub).to have_received(:list_caches)
+        .with(expected_request)
     end
 
     it 'returns Success when the response is successful' do
-      allow(stub).to receive(:list_caches)
+      allow(control_stub).to receive(:list_caches)
         .and_return(build(:momento_control_client_list_caches_response))
 
       expect(client.list_caches).to be_a Momento::Response::ListCaches::Caches
     end
 
     it 'returns an error response for a gRPC error' do
-      allow(stub).to receive(:list_caches)
+      allow(control_stub).to receive(:list_caches)
         .and_raise(GRPC::PermissionDenied.new)
 
       expect(client.list_caches).to be_a Momento::Response::ListCaches::PermissionDenied
@@ -210,7 +205,7 @@ RSpec.describe Momento::SimpleCacheClient do
     it 'raises on an unknown stub error' do
       stub_error = StandardError.new("the front fell off")
 
-      allow(stub).to receive(:list_caches)
+      allow(control_stub).to receive(:list_caches)
         .and_raise(stub_error)
 
       expect {
