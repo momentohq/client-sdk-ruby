@@ -1,25 +1,25 @@
 module Momento
   class Response
-    # Responses for create_cache
-    class ListCaches < Response
-      def self.build_response(grpc_exception)
-        case grpc_exception
-        when GRPC::PermissionDenied
-          ListCaches::PermissionDenied.new(grpc_exception: grpc_exception)
-        else
-          raise "Unknown GRPC exception: #{grpc_exception}"
-        end
+    # Responses specific to list_caches.
+    module ListCaches
+      # Build a Momento::Response::ListCaches from a block of code
+      # which returns a Momento::ControlClient::ListCachesResponse.
+      #
+      # @return [Momento::Response::ListCaches]
+      # @raise [StandardError] when the exception is not recognized.
+      # @raise [TypeError] when the response is not recognized.
+      def self.from_block
+        response = yield
+      rescue GRPC::PermissionDenied => e
+        ListCaches::PermissionDenied.new(grpc_exception: e)
+      else
+        raise TypeError unless response.is_a?(Momento::ControlClient::ListCachesResponse)
+
+        return ListCaches::Caches.new(response)
       end
 
       # Response wrapper for ListCachesResponse.
-      class Caches < ::Momento::Response
-        # rubocop:disable Lint/MissingSuper
-        # @params [Momento::ControlClient::ListCachesResponse] the response to wrap
-        def initialize(grpc_response)
-          @grpc_response = grpc_response
-        end
-        # rubocop:enable Lint/MissingSuper
-
+      class Caches < Success
         def cache_names
           @grpc_response.cache.map(&:cache_name)
         end

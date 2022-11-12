@@ -54,7 +54,7 @@ RSpec.describe Momento::SimpleCacheClient do
       end
 
       it 'returns the appropriate Response' do
-        expect(client.create_cache(cache_name)).to be_a Momento::Response::CreateCache::Created
+        expect(client.create_cache(cache_name)).to be_a Momento::Response::CreateCache::Success
       end
     end
 
@@ -113,7 +113,7 @@ RSpec.describe Momento::SimpleCacheClient do
       end
 
       it 'returns the appropriate Response' do
-        expect(client.delete_cache(cache_name)).to be_a Momento::Response::DeleteCache::Deleted
+        expect(client.delete_cache(cache_name)).to be_a Momento::Response::DeleteCache::Success
       end
     end
 
@@ -179,7 +179,7 @@ RSpec.describe Momento::SimpleCacheClient do
         )
     end
 
-    it 'returns Deleted when the response is successful' do
+    it 'returns Success when the response is successful' do
       allow(stub).to receive(:list_caches)
         .and_return(build(:momento_control_client_list_caches_response))
 

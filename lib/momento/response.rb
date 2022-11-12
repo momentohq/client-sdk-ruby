@@ -1,4 +1,5 @@
 require 'grpc'
+require_relative 'response/success'
 require_relative 'response/error'
 require_relative 'response/create_cache'
 require_relative 'response/delete_cache'

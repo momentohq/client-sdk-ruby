@@ -6,15 +6,19 @@ module Momento
   # A simple client for Momento.
   #
   # @example
-  #   client = Momento::SimpleCacheClient.new(auth_token: jwt)
-  #   response = client.create_cache(cache_name)
+  #   client = Momento::SimpleCacheClient.new(
+  #     auth_token: jwt,
+  #     default_ttl: 10_000
+  #   )
+  #
+  #   response = client.get("my_cache", "key")
   #   case response
-  #   when Momento::Response::Success
-  #     p "Cache created!"
-  #   when Momento::Response::AlreadyExists
-  #     p "Cache already exists."
-  #   when Momento::Response::InvalidArgument
-  #     p "Cache name is invalid."
+  #   when Momento::Response::Get::Hit
+  #     p response
+  #   when Momento::Response::Get::Miss
+  #     p client.set(cache_name, key, "default")
+  #   when Momento::Response::Error
+  #     p "The front fell off."
   #   end
   class SimpleCacheClient
     VERSION = Momento::VERSION
@@ -31,14 +35,10 @@ module Momento
     # @param name [String] the name of the cache to create.
     # @return [Momento::Response] the response from Momento.
     def create_cache(name)
-      req = ControlClient::CreateCacheRequest.new(cache_name: name)
-
-      begin
-        control_stub.create_cache(req)
-      rescue GRPC::BadStatus => e
-        Momento::Response::CreateCache.build_response(e)
-      else
-        return Momento::Response::CreateCache::Created.new
+      return Response::CreateCache.from_block do
+        control_stub.create_cache(
+          ControlClient::CreateCacheRequest.new(cache_name: name)
+        )
       end
     end
 
@@ -47,14 +47,10 @@ module Momento
     # @param name [String] the name of the cache to delete.
     # @return [Momento::Response] the response from Momento.
     def delete_cache(name)
-      req = ControlClient::DeleteCacheRequest.new(cache_name: name)
-
-      begin
-        control_stub.delete_cache(req)
-      rescue GRPC::BadStatus => e
-        Momento::Response::DeleteCache.build_response(e)
-      else
-        return Momento::Response::DeleteCache::Deleted.new
+      return Response::DeleteCache.from_block do
+        control_stub.delete_cache(
+          ControlClient::DeleteCacheRequest.new(cache_name: name)
+        )
       end
     end
 
@@ -66,14 +62,10 @@ module Momento
     # @params next_token [String, nil] the token of the page to request
     # @return [Momento::Response::ListCaches]
     def list_caches(next_token: "")
-      req = ControlClient::ListCachesRequest.new(next_token: next_token)
-
-      begin
-        response = control_stub.list_caches(req)
-      rescue GRPC::BadStatus => e
-        Momento::Response::ListCaches.build_response(e)
-      else
-        Momento::Response::ListCaches::Caches.new(response)
+      return Response::ListCaches.from_block do
+        control_stub.list_caches(
+          ControlClient::ListCachesRequest.new(next_token: next_token)
+        )
       end
     end
 
