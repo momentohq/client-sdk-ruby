@@ -37,6 +37,49 @@ module Momento
       load_endpoints_from_token
     end
 
+    # Get a value in a cache.
+    #
+    # @param cache_name [String]
+    # @param key [String] must only contain ASCII characters
+    def get(cache_name, key)
+      return Response::Get.from_block do
+        cache_stub.get(
+          CacheClient::GetRequest.new(cache_key: key),
+          metadata: { cache: cache_name }
+        )
+      end
+    end
+
+    # Set a value in a cache.
+    #
+    # If ttl is not set, it will use the default_ttl.
+    #
+    # @param cache_name [String]
+    # @param key [String] must only contain ASCII characters
+    # @param value [String]
+    # @param ttl [Integer] time to live, in milliseconds.
+    def set(cache_name, key, value, ttl: default_ttl)
+      return Response::Set.from_block do
+        req = CacheClient::SetRequest.new(
+          cache_key: key, cache_body: value, ttl_milliseconds: ttl
+        )
+        cache_stub.set(req, metadata: { cache: cache_name })
+      end
+    end
+
+    # Delete a key in a cache.
+    #
+    # @param cache_name [String]
+    # @param key [String] must only contain ASCII characters
+    def delete(cache_name, key)
+      return Response::Delete.from_block do
+        cache_stub.delete(
+          CacheClient::DeleteRequest.new(cache_key: key),
+          metadata: { cache: cache_name }
+        )
+      end
+    end
+
     # Create a new Momento cache.
     #
     # @param name [String] the name of the cache to create.

@@ -5,6 +5,10 @@ FactoryBot.define do
     initialize_with { new }
   end
 
+  trait :momento_response_success do
+    initialize_with { new(grpc_response) }
+  end
+
   trait :momento_response_error do
     grpc_exception { GRPC::BadStatus.new }
 

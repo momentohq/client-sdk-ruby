@@ -263,4 +263,222 @@ RSpec.describe Momento::SimpleCacheClient do
       }.to raise_error(error)
     end
   end
+
+  describe '#get' do
+    it 'sends a GetRequest with the cache name and key' do
+      allow(cache_stub).to receive(:get)
+        .and_return(build(:momento_cache_client_get_response, :hit))
+
+      client.get("name", "key")
+
+      expect(cache_stub).to have_received(:get)
+        .with(
+          be_a(Momento::CacheClient::GetRequest).and(have_attributes(cache_key: "key")),
+          metadata: { cache: "name" }
+        )
+    end
+
+    context 'with a gRPC response' do
+      before do
+        allow(cache_stub).to receive(:get)
+          .and_return(grpc_response)
+      end
+
+      context 'when it is a hit' do
+        let(:grpc_response) { build(:momento_cache_client_get_response, :hit) }
+
+        it 'returns a Get::Hit' do
+          expect(
+            client.get("name", "key")
+          ).to be_a(Momento::Response::Get::Hit).and have_attributes(
+            value: grpc_response.cache_body,
+            grpc_response: grpc_response
+          )
+        end
+      end
+
+      context 'when it is a miss' do
+        let(:grpc_response) { build(:momento_cache_client_get_response, :miss) }
+
+        it 'returns a Get::Miss' do
+          expect(
+            client.get("name", "key")
+          ).to be_a(Momento::Response::Get::Miss)
+        end
+      end
+    end
+
+    context 'with an exception' do
+      before do
+        allow(cache_stub).to receive(:get)
+          .and_raise(exception)
+      end
+
+      context 'when it is a known exception' do
+        let(:exception) { GRPC::NotFound.new }
+
+        it 'returns the appropriate response' do
+          expect(
+            client.get("name", "key")
+          ).to be_a(Momento::Response::Get::NotFound).and have_attributes(
+            grpc_exception: exception
+          )
+        end
+      end
+
+      context 'when it is a unknown exception' do
+        let(:exception) { StandardError.new("the front fell off") }
+
+        it 'raises' do
+          expect {
+            client.get("name", "key")
+          }.to raise_error(exception)
+        end
+      end
+    end
+  end
+
+  describe '#set' do
+    shared_examples 'it sends a SetRequest' do
+      it 'sends a SetRequest with the cache name, key, value, and ttl' do
+        allow(cache_stub).to receive(:set)
+          .and_return(build(:momento_cache_client_set_response))
+
+        set_call
+
+        request_expectation = be_a(Momento::CacheClient::SetRequest).and have_attributes(
+          cache_key: "key", cache_body: "value", ttl_milliseconds: expected_ttl
+        )
+
+        expect(cache_stub).to have_received(:set)
+          .with(
+            request_expectation,
+            metadata: { cache: "name" }
+          )
+      end
+    end
+
+    context 'without a ttl' do
+      it_behaves_like 'it sends a SetRequest' do
+        subject(:set_call) { client.set("name", "key", "value") }
+
+        let(:expected_ttl) { client.default_ttl }
+      end
+    end
+
+    context 'with a ttl' do
+      it_behaves_like 'it sends a SetRequest' do
+        subject(:set_call) { client.set("name", "key", "value", ttl: 1234) }
+
+        let(:expected_ttl) { 1234 }
+      end
+    end
+
+    context 'when it is a success' do
+      let(:grpc_response) { build(:momento_cache_client_set_response) }
+
+      before do
+        allow(client.send(:cache_stub)).to receive(:set)
+          .and_return(grpc_response)
+      end
+
+      it 'returns a Set::Success' do
+        expect(
+          client.set("name", "key", "value")
+        ).to be_a(Momento::Response::Set::Success).and have_attributes(
+          grpc_response: grpc_response
+        )
+      end
+    end
+
+    context 'with an exception' do
+      before do
+        allow(client.send(:cache_stub)).to receive(:set)
+          .and_raise(exception)
+      end
+
+      context 'when it is a known exception' do
+        let(:exception) { GRPC::NotFound.new }
+
+        it 'returns the appropriate response' do
+          expect(
+            client.set("name", "key", "value")
+          ).to be_a(Momento::Response::Set::NotFound).and have_attributes(
+            grpc_exception: exception
+          )
+        end
+      end
+
+      context 'when it is a unknown exception' do
+        let(:exception) { StandardError.new("the front fell off") }
+
+        it 'raises' do
+          expect {
+            client.set("name", "key", "value")
+          }.to raise_error(exception)
+        end
+      end
+    end
+  end
+
+  describe '#delete' do
+    it 'sends a DeleteRequest with the cache name and key' do
+      allow(cache_stub).to receive(:delete)
+        .and_return(build(:momento_cache_client_delete_response))
+
+      client.delete("name", "key")
+
+      expect(cache_stub).to have_received(:delete)
+        .with(
+          be_a(Momento::CacheClient::DeleteRequest).and(have_attributes(cache_key: "key")),
+          metadata: { cache: "name" }
+        )
+    end
+
+    context 'when it is a success' do
+      let(:grpc_response) { build(:momento_cache_client_delete_response) }
+
+      before do
+        allow(client.send(:cache_stub)).to receive(:delete)
+          .and_return(grpc_response)
+      end
+
+      it 'returns a Delete::Response' do
+        expect(
+          client.delete("name", "key")
+        ).to be_a(Momento::Response::Delete::Success).and have_attributes(
+          grpc_response: grpc_response
+        )
+      end
+    end
+
+    context 'with an exception' do
+      before do
+        allow(client.send(:cache_stub)).to receive(:delete)
+          .and_raise(exception)
+      end
+
+      context 'when it is a known exception' do
+        let(:exception) { GRPC::NotFound.new }
+
+        it 'returns the appropriate response' do
+          expect(
+            client.delete("name", "key")
+          ).to be_a(Momento::Response::Delete::NotFound).and have_attributes(
+            grpc_exception: exception
+          )
+        end
+      end
+
+      context 'when it is a unknown exception' do
+        let(:exception) { StandardError.new("the front fell off") }
+
+        it 'raises' do
+          expect {
+            client.delete("name", "key")
+          }.to raise_error(exception)
+        end
+      end
+    end
+  end
 end

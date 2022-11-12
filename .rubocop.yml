@@ -11,8 +11,16 @@ AllCops:
     - 'lib/**/*_pb.rb'
     - 'vendor/**/*'
 
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+# The rspec defaults are way too tight.
 RSpec/ExampleLength:
+  Max: 15
+RSpec/MultipleMemoizedHelpers:
   Max: 10
+RSpec/NestedGroups:
+  Max: 4
 
 # end.method looks really weird, and the other styles are too fussy
 Style/BlockDelimiters:
