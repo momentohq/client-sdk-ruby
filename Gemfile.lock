@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     momento (0.1.0)
-      grpc
-      jwt
+      grpc (~> 1)
+      jwt (~> 2)
 
 GEM
   remote: https://rubygems.org/
@@ -97,6 +97,7 @@ GEM
 
 PLATFORMS
   x86_64-darwin-20
+  x86_64-darwin-21
   x86_64-linux
 
 DEPENDENCIES
