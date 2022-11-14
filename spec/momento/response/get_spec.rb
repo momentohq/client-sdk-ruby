@@ -7,21 +7,21 @@ RSpec.describe Momento::Response::Get do
   describe '.from_block' do
     context 'when it raises InvalidArgument' do
       let(:exception) { GRPC::InvalidArgument.new }
-      let(:response_class) { Momento::Response::Get::InvalidArgument }
+      let(:response_class) { Momento::Response::Get::Error::InvalidArgument }
 
       it_behaves_like 'it wraps gRPC exceptions'
     end
 
     context 'when it raises NotFound' do
       let(:exception) { GRPC::NotFound.new }
-      let(:response_class) { Momento::Response::Get::NotFound }
+      let(:response_class) { Momento::Response::Get::Error::NotFound }
 
       it_behaves_like 'it wraps gRPC exceptions'
     end
 
     context 'when it raises PermissionDenied' do
       let(:exception) { GRPC::PermissionDenied.new }
-      let(:response_class) { Momento::Response::Get::PermissionDenied }
+      let(:response_class) { Momento::Response::Get::Error::PermissionDenied }
 
       it_behaves_like 'it wraps gRPC exceptions'
     end

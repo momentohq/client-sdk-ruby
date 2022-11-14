@@ -12,6 +12,12 @@ RSpec.shared_examples 'it wraps gRPC exceptions' do
       described_class.from_block { raise exception }.grpc_exception
     ).to eq exception
   end
+
+  it 'is a Momento::Response::Error' do
+    expect(
+      described_class.from_block { raise exception }
+    ).to be_a Momento::Response::Error
+  end
 end
 
 RSpec.shared_examples 'it wraps gRPC responses' do
@@ -19,6 +25,12 @@ RSpec.shared_examples 'it wraps gRPC responses' do
     expect(
       described_class.from_block { response }
     ).to be_a response_class
+  end
+
+  it 'is a Momento::Resposne' do
+    expect(
+      described_class.from_block { response }
+    ).to be_a Momento::Response
   end
 end
 

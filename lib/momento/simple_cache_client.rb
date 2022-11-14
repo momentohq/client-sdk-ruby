@@ -18,7 +18,7 @@ module Momento
   #     p response
   #   when Momento::Response::Get::Miss
   #     p client.set(cache_name, key, "default")
-  #   when Momento::Response::Error
+  #   when Momento::Response::Get::Error
   #     p "The front fell off."
   #   end
   class SimpleCacheClient
