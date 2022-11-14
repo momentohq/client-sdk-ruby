@@ -12,11 +12,11 @@ module Momento
         def from_block
           response = yield
         rescue Encoding::UndefinedConversionError, GRPC::InvalidArgument => e
-          Get::InvalidArgument.new(grpc_exception: e)
+          Get::Error::InvalidArgument.new(grpc_exception: e)
         rescue GRPC::NotFound => e
-          Get::NotFound.new(grpc_exception: e)
+          Get::Error::NotFound.new(grpc_exception: e)
         rescue GRPC::PermissionDenied => e
-          Get::PermissionDenied.new(grpc_exception: e)
+          Get::Error::PermissionDenied.new(grpc_exception: e)
         else
           from_response(response)
         end
@@ -49,18 +49,22 @@ module Momento
         end
       end
 
-      # Cache name is invalid.
-      class InvalidArgument < Error
-      end
-
+      # The item was not in the cache.
       class Miss < Response
       end
 
-      # Cache is not found.
-      class NotFound < Error
-      end
+      # A catch all for all Get errors.
+      class Error < Error
+        # Cache name is invalid.
+        class InvalidArgument < Error
+        end
 
-      class PermissionDenied < Error
+        # Cache is not found.
+        class NotFound < Error
+        end
+
+        class PermissionDenied < Error
+        end
       end
     end
   end
