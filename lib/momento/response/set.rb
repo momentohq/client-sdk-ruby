@@ -27,6 +27,7 @@ module Momento
       end
 
       # There was an error setting the key/value.
+      # See subclasses for more specific errors.
       class Error < Error
         # Cache name or key is invalid.
         class InvalidArgument < Error

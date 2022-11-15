@@ -20,6 +20,8 @@ module Momento
       class Success < Success
       end
 
+      # There was an error deleting the value from the cache.
+      # See subclasses for more specific errors.
       class Error < Error
         # Cache name or key is not allowed.
         class InvalidArgument < Error

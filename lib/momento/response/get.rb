@@ -37,7 +37,7 @@ module Momento
         end
       end
 
-      # A successful get from the cache.
+      # The value was gotten from the cache.
       class Hit < Success
         # @return [String] the value from the cache
         def value
@@ -49,13 +49,14 @@ module Momento
         end
       end
 
-      # The item was not in the cache.
+      # The key has no value in the cache.
       class Miss < Response
       end
 
-      # A catch all for all Get errors.
+      # There was an error getting a value from the cache.
+      # See subclasses for more specific errors.
       class Error < Error
-        # Cache name is invalid.
+        # Cache name or key is invalid.
         class InvalidArgument < Error
         end
 
@@ -63,6 +64,7 @@ module Momento
         class NotFound < Error
         end
 
+        # The client does not have permission to get values from the cache.
         class PermissionDenied < Error
         end
       end

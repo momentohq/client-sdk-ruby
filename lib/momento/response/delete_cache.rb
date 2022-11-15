@@ -27,6 +27,7 @@ module Momento
       end
 
       # There was an error deleting the cache.
+      # See subclasses for more specific errors.
       class Error < Error
         # The cache name was not a possible cache name.
         class InvalidArgument < Error
