@@ -36,7 +36,7 @@ client = Momento::SimpleCacheClient.new(
 
 # Create a cache named "test_cache" to play with.
 case response = client.create_cache("test_cache")
-when Momento::Response::CreateCache::AlreadyExists
+when Momento::Response::CreateCache::Error::AlreadyExists
   # ignore if it already exists
 when Momento::Response::Error
   raise "Couldn't create a cache: #{response}"

@@ -74,7 +74,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
     context 'when the response is a bad status' do
       let(:grpc_error) { GRPC::InvalidArgument.new }
-      let(:response_class) { Momento::Response::CreateCache::InvalidArgument }
+      let(:response_class) { Momento::Response::CreateCache::Error::InvalidArgument }
 
       before do
         allow(control_stub).to receive(:create_cache)
