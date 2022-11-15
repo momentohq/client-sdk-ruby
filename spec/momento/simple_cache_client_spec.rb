@@ -131,7 +131,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
     context 'when the response is a bad status' do
       let(:grpc_error) { GRPC::NotFound.new }
-      let(:response_class) { Momento::Response::DeleteCache::NotFound }
+      let(:response_class) { Momento::Response::DeleteCache::Error::NotFound }
 
       before do
         allow(control_stub).to receive(:delete_cache)

@@ -7,22 +7,22 @@ FactoryBot.define do
   end
 
   factory(
-    :momento_response_delete_cache_invalid_argument,
-    class: "Momento::Response::DeleteCache::InvalidArgument"
+    :momento_response_delete_cache_error_invalid_argument,
+    class: "Momento::Response::DeleteCache::Error::InvalidArgument"
   ) do
     momento_response_invalid_argument
   end
 
   factory(
-    :momento_response_delete_cache_not_found,
-    class: "Momento::Response::DeleteCache::NotFound"
+    :momento_response_delete_cache_error_not_found,
+    class: "Momento::Response::DeleteCache::Error::NotFound"
   ) do
     momento_response_not_found
   end
 
   factory(
-    :momento_response_delete_cache_permission_denied,
-    class: "Momento::Response::DeleteCache::PermissionDenied"
+    :momento_response_delete_cache_error_permission_denied,
+    class: "Momento::Response::DeleteCache::Error::PermissionDenied"
   ) do
     momento_response_permission_denied
   end
