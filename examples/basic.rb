@@ -1,25 +1,3 @@
-# Momento
-
-Client for Momento serverless caching service.
-
-## Installation
-
-Install the gem and add to an application's Gemfile by executing:
-
-    $ bundle add momento
-
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-    $ gem install momento
-
-## Requirements
-
-* A Momento Auth Token is required, you can generate one using the Momento CLI
-* Ruby >= 2.7
-
-## Usage
-
-```
 require 'momento'
 
 # Get your Momento token from an environment variable.
@@ -57,10 +35,3 @@ when Momento::Response::Get::Miss
 when Momento::Response::Error
   raise "Couldn't get an item from the cache: #{response}"
 end
-```
-
-You can run this code from [examples/basic.rb](examples/basic.rb).
-
-## Contributing
-
-See our [instructions for CONTRIBUTING](./CONTRIBUTING.md).
