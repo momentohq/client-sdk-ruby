@@ -199,7 +199,7 @@ RSpec.describe Momento::SimpleCacheClient do
       allow(control_stub).to receive(:list_caches)
         .and_raise(GRPC::PermissionDenied.new)
 
-      expect(client.list_caches).to be_a Momento::Response::ListCaches::PermissionDenied
+      expect(client.list_caches).to be_a Momento::Response::ListCaches::Error::PermissionDenied
     end
 
     it 'raises on an unknown stub error' do
@@ -242,7 +242,7 @@ RSpec.describe Momento::SimpleCacheClient do
     end
 
     it 'when list_caches has an error response, it raises the grpc exception' do
-      error_response = build(:momento_response_list_caches_permission_denied)
+      error_response = build(:momento_response_list_caches_error_permission_denied)
 
       allow(client).to receive(:list_caches)
         .and_return(error_response)

@@ -7,7 +7,7 @@ RSpec.describe Momento::Response::ListCaches do
   describe '.from_block' do
     context 'when it is PermissionDenied' do
       let(:exception) { GRPC::PermissionDenied.new }
-      let(:response_class) { Momento::Response::ListCaches::PermissionDenied }
+      let(:response_class) { Momento::Response::ListCaches::Error::PermissionDenied }
 
       it_behaves_like 'it wraps gRPC exceptions'
     end

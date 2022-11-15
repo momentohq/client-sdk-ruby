@@ -11,7 +11,7 @@ module Momento
       def self.from_block
         response = yield
       rescue GRPC::PermissionDenied => e
-        ListCaches::PermissionDenied.new(grpc_exception: e)
+        ListCaches::Error::PermissionDenied.new(grpc_exception: e)
       else
         raise TypeError unless response.is_a?(Momento::ControlClient::ListCachesResponse)
 
@@ -29,7 +29,9 @@ module Momento
         end
       end
 
-      class PermissionDenied < Error
+      class Error < Error
+        class PermissionDenied < Error
+        end
       end
     end
   end
