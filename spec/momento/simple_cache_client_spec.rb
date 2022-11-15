@@ -392,12 +392,29 @@ RSpec.describe Momento::SimpleCacheClient do
     end
 
     context 'with a non-ASCII value' do
-      it 'round trips' do
+      it 'can be set' do
+        allow(client.send(:cache_stub)).to receive(:set)
+          .and_return(build(:momento_cache_client_set_response))
+
+        value = "🎉☃"
+
+        expect {
+          expect(
+            client.set("name", "key", value)
+          ).to be_a(Momento::Response::Set::Success)
+        }.not_to(
+          change { value.encoding }
+        )
+      end
+    end
+
+    context 'with a frozen non-ASCII value' do
+      it 'can be set' do
         allow(client.send(:cache_stub)).to receive(:set)
           .and_return(build(:momento_cache_client_set_response))
 
         expect(
-          client.set("name", "key", "🎉☃")
+          client.set("name", "key", "🎉☃".freeze)
         ).to be_a(Momento::Response::Set::Success)
       end
     end

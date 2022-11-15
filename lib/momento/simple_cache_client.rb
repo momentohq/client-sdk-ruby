@@ -21,6 +21,8 @@ module Momento
   #   when Momento::Response::Get::Error
   #     p "The front fell off."
   #   end
+  #
+  # rubocop:disable Metrics/ClassLength
   class SimpleCacheClient
     VERSION = Momento::VERSION
     CACHE_CLIENT_STUB_CLASS = CacheClient::Scs::Stub
@@ -62,11 +64,13 @@ module Momento
     # @param ttl [Integer] time to live, in milliseconds.
     def set(cache_name, key, value, ttl: default_ttl)
       return Response::Set.from_block do
-        req = CacheClient::SetRequest.new(
-          cache_key: key,
-          cache_body: value.force_encoding(Encoding::ASCII_8BIT),
-          ttl_milliseconds: ttl
-        )
+        req = with_value_encoded_for_set(value) do |v|
+          CacheClient::SetRequest.new(
+            cache_key: key,
+            cache_body: v,
+            ttl_milliseconds: ttl
+          )
+        end
         cache_stub.set(req, metadata: { cache: cache_name })
       end
     end
@@ -162,6 +166,21 @@ module Momento
       @combined_credentials ||= make_combined_credentials
     end
 
+    def with_value_encoded_for_set(value)
+      encoding = value.encoding
+
+      # Don't duplicate the value unless we have to.
+      value = value.dup if value.frozen?
+      value.force_encoding(Encoding::ASCII_8BIT)
+
+      ret = yield(value)
+
+      # Restore the encoding of the value.
+      value.force_encoding(encoding) unless value.frozen?
+
+      return ret
+    end
+
     def load_endpoints_from_token
       claim = JWT.decode(@auth_token, nil, false).first
 
@@ -181,4 +200,5 @@ module Momento
       return GRPC::Core::ChannelCredentials.new.compose(call_creds)
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end
