@@ -39,6 +39,8 @@ module Momento
 
     # Get a value in a cache.
     #
+    # Momento only stores bytes; the returned value will be encoded as ASCII-8BIT.
+    #
     # @param cache_name [String]
     # @param key [String] must only contain ASCII characters
     def get(cache_name, key)
@@ -56,12 +58,14 @@ module Momento
     #
     # @param cache_name [String]
     # @param key [String] must only contain ASCII characters
-    # @param value [String]
+    # @param value [String] the value to cache
     # @param ttl [Integer] time to live, in milliseconds.
     def set(cache_name, key, value, ttl: default_ttl)
       return Response::Set.from_block do
         req = CacheClient::SetRequest.new(
-          cache_key: key, cache_body: value, ttl_milliseconds: ttl
+          cache_key: key,
+          cache_body: value.force_encoding(Encoding::ASCII_8BIT),
+          ttl_milliseconds: ttl
         )
         cache_stub.set(req, metadata: { cache: cache_name })
       end

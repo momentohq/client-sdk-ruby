@@ -391,6 +391,17 @@ RSpec.describe Momento::SimpleCacheClient do
       end
     end
 
+    context 'with a non-ASCII value' do
+      it 'round trips' do
+        allow(client.send(:cache_stub)).to receive(:set)
+          .and_return(build(:momento_cache_client_set_response))
+
+        expect(
+          client.set("name", "key", "🎉☃")
+        ).to be_a(Momento::Response::Set::Success)
+      end
+    end
+
     context 'with an exception' do
       before do
         allow(client.send(:cache_stub)).to receive(:set)
