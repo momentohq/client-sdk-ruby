@@ -27,6 +27,7 @@ module Momento
       end
 
       # There was an error creating the cache.
+      # See subclasses for more specific errors.
       class Error < Error
         # The cache already exists.
         class AlreadyExists < Error
