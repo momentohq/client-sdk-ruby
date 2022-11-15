@@ -403,7 +403,7 @@ RSpec.describe Momento::SimpleCacheClient do
         it 'returns the appropriate response' do
           expect(
             client.set("name", "key", "value")
-          ).to be_a(Momento::Response::Set::NotFound).and have_attributes(
+          ).to be_a(Momento::Response::Set::Error::NotFound).and have_attributes(
             grpc_exception: exception
           )
         end
