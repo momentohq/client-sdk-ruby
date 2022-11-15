@@ -11,30 +11,34 @@ module Momento
       def self.from_block
         response = yield
       rescue GRPC::AlreadyExists => e
-        CreateCache::AlreadyExists.new(grpc_exception: e)
+        CreateCache::Error::AlreadyExists.new(grpc_exception: e)
       rescue GRPC::InvalidArgument => e
-        CreateCache::InvalidArgument.new(grpc_exception: e)
+        CreateCache::Error::InvalidArgument.new(grpc_exception: e)
       rescue GRPC::PermissionDenied => e
-        CreateCache::PermissionDenied.new(grpc_exception: e)
+        CreateCache::Error::PermissionDenied.new(grpc_exception: e)
       else
         raise TypeError unless response.is_a?(Momento::ControlClient::CreateCacheResponse)
 
         return CreateCache::Success.new(response)
       end
 
-      class AlreadyExists < Error
-      end
-
-      class Error < Error
-      end
-
-      class InvalidArgument < Error
-      end
-
-      class PermissionDenied < Error
-      end
-
+      # The cache was created.
       class Success < Success
+      end
+
+      # There was an error creating the cache.
+      class Error < Error
+        # The cache already exists.
+        class AlreadyExists < Error
+        end
+
+        # The cache name is invalid.
+        class InvalidArgument < Error
+        end
+
+        # The client does not have permission to create the cache.
+        class PermissionDenied < Error
+        end
       end
     end
   end
