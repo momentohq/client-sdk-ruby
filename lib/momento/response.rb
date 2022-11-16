@@ -1,17 +1,17 @@
 require 'grpc'
-require_relative 'response/success'
 require_relative 'response/error'
-require_relative 'response/create_cache'
-require_relative 'response/delete'
-require_relative 'response/delete_cache'
-require_relative 'response/get'
-require_relative 'response/list_caches'
-require_relative 'response/set'
+require_relative 'create_cache_response'
+require_relative 'delete_response'
+require_relative 'delete_cache_response'
+require_relative 'get_response'
+require_relative 'list_caches_response'
+require_relative 'set_response'
 
 module Momento
   # A superclass for all Momento responses.
-  # rubocop:disable Lint/EmptyClass
   class Response
+    def error?
+      false
+    end
   end
-  # rubocop:enable Lint/EmptyClass
 end

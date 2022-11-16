@@ -2,7 +2,7 @@ require 'momento/response'
 
 FactoryBot.define do
   trait :momento_response do
-    initialize_with { new }
+    initialize_with { new(**attributes) }
   end
 
   trait :momento_response_success do
@@ -10,9 +10,9 @@ FactoryBot.define do
   end
 
   trait :momento_response_error do
-    grpc_exception { GRPC::BadStatus.new }
+    momento_response
 
-    initialize_with { new(grpc_exception: grpc_exception) }
+    grpc_exception { GRPC::PermissionDenied.new }
   end
 
   trait :momento_response_already_exists do

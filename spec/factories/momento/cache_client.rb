@@ -23,6 +23,10 @@ FactoryBot.define do
       message { "Item not found" }
     end
 
+    trait :invalid do
+      result { :Invalid }
+    end
+
     initialize_with { new(**attributes) }
   end
 

@@ -13,13 +13,12 @@ module Momento
   #   )
   #
   #   response = client.get("my_cache", "key")
-  #   case response
-  #   when Momento::Response::Get::Hit
-  #     p response
-  #   when Momento::Response::Get::Miss
-  #     p client.set(cache_name, key, "default")
-  #   when Momento::Response::Get::Error
-  #     p "The front fell off."
+  #   if response.hit?
+  #     puts "We got #{response}"
+  #   elsif response.miss?
+  #     puts "It's not in the cache"
+  #   elsif response.error?
+  #     puts "The front fell off."
   #   end
   class SimpleCacheClient
     VERSION = Momento::VERSION
@@ -43,8 +42,9 @@ module Momento
     #
     # @param cache_name [String]
     # @param key [String] must only contain ASCII characters
+    # @return [Momento::GetResponse]
     def get(cache_name, key)
-      return Response::Get.from_block do
+      return GetResponse.from_block do
         cache_stub.get(
           CacheClient::GetRequest.new(cache_key: to_bytes(key)),
           metadata: { cache: cache_name }
@@ -60,8 +60,9 @@ module Momento
     # @param key [String] must only contain ASCII characters
     # @param value [String] the value to cache
     # @param ttl [Integer] time to live, in milliseconds.
+    # @return [Momento::SetResponse]
     def set(cache_name, key, value, ttl: default_ttl)
-      return Response::Set.from_block do
+      return SetResponse.from_block do
         req = CacheClient::SetRequest.new(
           cache_key: to_bytes(key),
           cache_body: to_bytes(value),
@@ -76,8 +77,9 @@ module Momento
     #
     # @param cache_name [String]
     # @param key [String] must only contain ASCII characters
+    # @return [Momento::DeleteResponse]
     def delete(cache_name, key)
-      return Response::Delete.from_block do
+      return DeleteResponse.from_block do
         cache_stub.delete(
           CacheClient::DeleteRequest.new(cache_key: to_bytes(key)),
           metadata: { cache: cache_name }
@@ -88,9 +90,9 @@ module Momento
     # Create a new Momento cache.
     #
     # @param name [String] the name of the cache to create.
-    # @return [Momento::Response] the response from Momento.
+    # @return [Momento::CreateCacheResponse] the response from Momento.
     def create_cache(name)
-      return Response::CreateCache.from_block do
+      return CreateCacheResponse.from_block do
         control_stub.create_cache(
           ControlClient::CreateCacheRequest.new(cache_name: name)
         )
@@ -100,9 +102,9 @@ module Momento
     # Delete an existing Momento cache.
     #
     # @param name [String] the name of the cache to delete.
-    # @return [Momento::Response] the response from Momento.
+    # @return [Momento::DeleteCacheResponse] the response from Momento.
     def delete_cache(name)
-      return Response::DeleteCache.from_block do
+      return DeleteCacheResponse.from_block do
         control_stub.delete_cache(
           ControlClient::DeleteCacheRequest.new(cache_name: name)
         )
@@ -115,9 +117,9 @@ module Momento
     # If nil or "" it will fetch the first page. Default is to fetch the first page.
     #
     # @params next_token [String, nil] the token of the page to request
-    # @return [Momento::Response::ListCaches]
+    # @return [Momento::ListCachesResponse]
     def list_caches(next_token: "")
-      return Response::ListCaches.from_block do
+      return ListCachesResponse.from_block do
         control_stub.list_caches(
           ControlClient::ListCachesRequest.new(next_token: next_token)
         )

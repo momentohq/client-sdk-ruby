@@ -1,14 +1,16 @@
 module Momento
   class Response
-    # Superclass for all Responses wrapping an exception.
-    class Error < Response
+    # A module for responses which contain errors.
+    module Error
       attr_accessor :grpc_exception
 
-      # rubocop:disable Lint/MissingSuper
       def initialize(grpc_exception:)
         @grpc_exception = grpc_exception
       end
-      # rubocop:enable Lint/MissingSuper
+
+      def error?
+        true
+      end
     end
   end
 end
