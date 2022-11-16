@@ -278,6 +278,30 @@ RSpec.describe Momento::SimpleCacheClient do
         )
     end
 
+    it 'with a non-ACII string it does not raise nor change the encoding' do
+      allow(cache_stub).to receive(:get)
+        .and_return(build(:momento_cache_client_get_response, :hit))
+
+      key = "🫠🤢"
+
+      expect {
+        expect(
+          client.get("name", key)
+        ).to be_a(Momento::Response::Get::Hit)
+      }.to not_change {
+        key.encoding
+      }
+    end
+
+    it 'with a non-ACII string it does not raise' do
+      allow(cache_stub).to receive(:get)
+        .and_return(build(:momento_cache_client_get_response, :hit))
+
+      expect(
+        client.get("name", "🫠🤢".freeze)
+      ).to be_a(Momento::Response::Get::Hit)
+    end
+
     context 'with a gRPC response' do
       before do
         allow(cache_stub).to receive(:get)
@@ -389,33 +413,30 @@ RSpec.describe Momento::SimpleCacheClient do
           grpc_response: grpc_response
         )
       end
-    end
 
-    context 'with a non-ASCII value' do
-      it 'can be set' do
-        allow(client.send(:cache_stub)).to receive(:set)
-          .and_return(build(:momento_cache_client_set_response))
+      context 'with a non-ASCII key and value' do
+        it 'can be set' do
+          key = "🫠🤢"
+          value = "🎉☃"
 
-        value = "🎉☃"
-
-        expect {
-          expect(
-            client.set("name", "key", value)
-          ).to be_a(Momento::Response::Set::Success)
-        }.not_to(
-          change { value.encoding }
-        )
+          expect {
+            expect(
+              client.set("name", key, value)
+            ).to be_a(Momento::Response::Set::Success)
+          }.to not_change {
+            value.encoding
+          }.and not_change {
+            key.encoding
+          }
+        end
       end
-    end
 
-    context 'with a frozen non-ASCII value' do
-      it 'can be set' do
-        allow(client.send(:cache_stub)).to receive(:set)
-          .and_return(build(:momento_cache_client_set_response))
-
-        expect(
-          client.set("name", "key", "🎉☃".freeze)
-        ).to be_a(Momento::Response::Set::Success)
+      context 'with a frozen non-ASCII key and value' do
+        it 'can be set' do
+          expect(
+            client.set("name", "🫠🤢".freeze, "🎉☃".freeze)
+          ).to be_a(Momento::Response::Set::Success)
+        end
       end
     end
 
@@ -461,6 +482,30 @@ RSpec.describe Momento::SimpleCacheClient do
           be_a(Momento::CacheClient::DeleteRequest).and(have_attributes(cache_key: "key")),
           metadata: { cache: "name" }
         )
+    end
+
+    it 'with a non-ACII string it does not raise nor change the encoding' do
+      allow(cache_stub).to receive(:delete)
+        .and_return(build(:momento_cache_client_delete_response))
+
+      key = "🫠🤢"
+
+      expect {
+        expect(
+          client.delete("name", key)
+        ).to be_a(Momento::Response::Delete::Success)
+      }.to not_change {
+        key.encoding
+      }
+    end
+
+    it 'with a non-ACII string it does not raise' do
+      allow(cache_stub).to receive(:delete)
+        .and_return(build(:momento_cache_client_delete_response))
+
+      expect(
+        client.delete("name", "🫠🤢".freeze)
+      ).to be_a(Momento::Response::Delete::Success)
     end
 
     context 'when it is a success' do
