@@ -28,6 +28,9 @@ RSpec/MultipleMemoizedHelpers:
 RSpec/NestedGroups:
   Max: 4
 
+RSpec/ImplicitSubject:
+  EnforcedStyle: single_statement_only
+
 # end.method looks really weird, and the other styles are too fussy
 Style/BlockDelimiters:
   Enabled: false

@@ -41,27 +41,35 @@ client = Momento::SimpleCacheClient.new(
 )
 
 # Create a cache named "test_cache" to play with.
-case response = client.create_cache("test_cache")
-when Momento::Response::CreateCache::Error::AlreadyExists
-  # ignore if it already exists
-when Momento::Response::Error
+response = client.create_cache("test_cache")
+if response.success? || response.already_exists?
+  puts "Created the cache, or it already exists."
+elsif response.error?
   raise "Couldn't create a cache: #{response}"
+else
+  raise
 end
 
 # Put an item in the cache.
-case response = client.set("test_cache", "key", "You cached something!")
-when Momento::Response::Error
+response = client.set("test_cache", "key", "You cached something!")
+if response.success?
+  puts "Set an item in the cache."
+elsif response.error?
   raise "Couldn't set an item in the cache: #{response}"
+else
+  raise
 end
 
 # And get it back.
-case response = client.get("test_cache", "key")
-when Momento::Response::Get::Hit
+response = client.get("test_cache", "key")
+if response.hit?
   puts "Cache returned: #{response}"
-when Momento::Response::Get::Miss
+elsif response.miss?
   puts "The item wasn't found in the cache."
-when Momento::Response::Error
+elsif response.error?
   raise "Couldn't get an item from the cache: #{response}"
+else
+  raise
 end
 ```
 

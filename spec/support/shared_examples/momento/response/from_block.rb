@@ -20,6 +20,14 @@ RSpec.shared_examples 'it wraps gRPC exceptions' do
   end
 end
 
+RSpec.shared_examples 'it wraps gRPC exceptions as a response' do
+  it 'returns the approriate response' do
+    expect(
+      described_class.from_block { raise exception }
+    ).to be_a response_class
+  end
+end
+
 RSpec.shared_examples 'it wraps gRPC responses' do
   it 'returns the approriate response' do
     expect(

@@ -68,13 +68,13 @@ RSpec.describe Momento::SimpleCacheClient do
       end
 
       it 'returns the appropriate Response' do
-        expect(client.create_cache(cache_name)).to be_a Momento::Response::CreateCache::Success
+        expect(client.create_cache(cache_name)).to be_a Momento::CreateCacheResponse::Success
       end
     end
 
     context 'when the response is a bad status' do
       let(:grpc_error) { GRPC::InvalidArgument.new }
-      let(:response_class) { Momento::Response::CreateCache::Error::InvalidArgument }
+      let(:response_class) { Momento::CreateCacheResponse::Error }
 
       before do
         allow(control_stub).to receive(:create_cache)
@@ -125,13 +125,13 @@ RSpec.describe Momento::SimpleCacheClient do
       end
 
       it 'returns the appropriate Response' do
-        expect(client.delete_cache(cache_name)).to be_a Momento::Response::DeleteCache::Success
+        expect(client.delete_cache(cache_name)).to be_a Momento::DeleteCacheResponse::Success
       end
     end
 
     context 'when the response is a bad status' do
       let(:grpc_error) { GRPC::NotFound.new }
-      let(:response_class) { Momento::Response::DeleteCache::Error::NotFound }
+      let(:response_class) { Momento::DeleteCacheResponse::Error }
 
       before do
         allow(control_stub).to receive(:delete_cache)
@@ -192,14 +192,14 @@ RSpec.describe Momento::SimpleCacheClient do
       allow(control_stub).to receive(:list_caches)
         .and_return(build(:momento_control_client_list_caches_response))
 
-      expect(client.list_caches).to be_a Momento::Response::ListCaches::Caches
+      expect(client.list_caches).to be_a Momento::ListCachesResponse::Success
     end
 
     it 'returns an error response for a gRPC error' do
       allow(control_stub).to receive(:list_caches)
         .and_raise(GRPC::PermissionDenied.new)
 
-      expect(client.list_caches).to be_a Momento::Response::ListCaches::Error::PermissionDenied
+      expect(client.list_caches).to be_a Momento::ListCachesResponse::Error
     end
 
     it 'raises on an unknown stub error' do
@@ -224,7 +224,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
     let(:responses) {
       grpc_responses.map { |gr|
-        build(:momento_response_list_caches_caches, grpc_response: gr)
+        build(:momento_list_caches_response_success, grpc_response: gr)
       }
     }
 
@@ -242,7 +242,7 @@ RSpec.describe Momento::SimpleCacheClient do
     end
 
     it 'when list_caches has an error response, it raises the grpc exception' do
-      error_response = build(:momento_response_list_caches_error_permission_denied)
+      error_response = build(:momento_list_caches_response_error)
 
       allow(client).to receive(:list_caches)
         .and_return(error_response)
@@ -287,7 +287,7 @@ RSpec.describe Momento::SimpleCacheClient do
       expect {
         expect(
           client.get("name", key)
-        ).to be_a(Momento::Response::Get::Hit)
+        ).to be_a(Momento::GetResponse::Hit)
       }.to not_change {
         key.encoding
       }
@@ -299,7 +299,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
       expect(
         client.get("name", "🫠🤢".freeze)
-      ).to be_a(Momento::Response::Get::Hit)
+      ).to be_a(Momento::GetResponse::Hit)
     end
 
     context 'with a gRPC response' do
@@ -314,9 +314,8 @@ RSpec.describe Momento::SimpleCacheClient do
         it 'returns a Get::Hit' do
           expect(
             client.get("name", "key")
-          ).to be_a(Momento::Response::Get::Hit).and have_attributes(
-            value: grpc_response.cache_body,
-            grpc_response: grpc_response
+          ).to be_a(Momento::GetResponse::Hit).and have_attributes(
+            value: grpc_response.cache_body
           )
         end
       end
@@ -327,7 +326,7 @@ RSpec.describe Momento::SimpleCacheClient do
         it 'returns a Get::Miss' do
           expect(
             client.get("name", "key")
-          ).to be_a(Momento::Response::Get::Miss)
+          ).to be_a(Momento::GetResponse::Miss)
         end
       end
     end
@@ -344,7 +343,7 @@ RSpec.describe Momento::SimpleCacheClient do
         it 'returns the appropriate response' do
           expect(
             client.get("name", "key")
-          ).to be_a(Momento::Response::Get::Error::NotFound).and have_attributes(
+          ).to be_a(Momento::GetResponse::Error).and have_attributes(
             grpc_exception: exception
           )
         end
@@ -409,9 +408,7 @@ RSpec.describe Momento::SimpleCacheClient do
       it 'returns a Set::Success' do
         expect(
           client.set("name", "key", "value")
-        ).to be_a(Momento::Response::Set::Success).and have_attributes(
-          grpc_response: grpc_response
-        )
+        ).to be_a(Momento::SetResponse::Success)
       end
 
       context 'with a non-ASCII key and value' do
@@ -422,7 +419,7 @@ RSpec.describe Momento::SimpleCacheClient do
           expect {
             expect(
               client.set("name", key, value)
-            ).to be_a(Momento::Response::Set::Success)
+            ).to be_a(Momento::SetResponse::Success)
           }.to not_change {
             value.encoding
           }.and not_change {
@@ -435,7 +432,7 @@ RSpec.describe Momento::SimpleCacheClient do
         it 'can be set' do
           expect(
             client.set("name", "🫠🤢".freeze, "🎉☃".freeze)
-          ).to be_a(Momento::Response::Set::Success)
+          ).to be_a(Momento::SetResponse::Success)
         end
       end
     end
@@ -452,7 +449,7 @@ RSpec.describe Momento::SimpleCacheClient do
         it 'returns the appropriate response' do
           expect(
             client.set("name", "key", "value")
-          ).to be_a(Momento::Response::Set::Error::NotFound).and have_attributes(
+          ).to be_a(Momento::SetResponse::Error).and have_attributes(
             grpc_exception: exception
           )
         end
@@ -493,7 +490,7 @@ RSpec.describe Momento::SimpleCacheClient do
       expect {
         expect(
           client.delete("name", key)
-        ).to be_a(Momento::Response::Delete::Success)
+        ).to be_a(Momento::DeleteResponse::Success)
       }.to not_change {
         key.encoding
       }
@@ -505,7 +502,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
       expect(
         client.delete("name", "🫠🤢".freeze)
-      ).to be_a(Momento::Response::Delete::Success)
+      ).to be_a(Momento::DeleteResponse::Success)
     end
 
     context 'when it is a success' do
@@ -519,9 +516,7 @@ RSpec.describe Momento::SimpleCacheClient do
       it 'returns a Delete::Response' do
         expect(
           client.delete("name", "key")
-        ).to be_a(Momento::Response::Delete::Success).and have_attributes(
-          grpc_response: grpc_response
-        )
+        ).to be_a(Momento::DeleteResponse::Success)
       end
     end
 
@@ -537,7 +532,7 @@ RSpec.describe Momento::SimpleCacheClient do
         it 'returns the appropriate response' do
           expect(
             client.delete("name", "key")
-          ).to be_a(Momento::Response::Delete::Error::NotFound).and have_attributes(
+          ).to be_a(Momento::DeleteResponse::Error).and have_attributes(
             grpc_exception: exception
           )
         end
