@@ -12,11 +12,11 @@ module Momento
         def from_block
           response = yield
         rescue Encoding::UndefinedConversionError, GRPC::InvalidArgument => e
-          Get::InvalidArgument.new(grpc_exception: e)
+          Get::Error::InvalidArgument.new(grpc_exception: e)
         rescue GRPC::NotFound => e
-          Get::NotFound.new(grpc_exception: e)
+          Get::Error::NotFound.new(grpc_exception: e)
         rescue GRPC::PermissionDenied => e
-          Get::PermissionDenied.new(grpc_exception: e)
+          Get::Error::PermissionDenied.new(grpc_exception: e)
         else
           from_response(response)
         end
@@ -37,7 +37,7 @@ module Momento
         end
       end
 
-      # A successful get from the cache.
+      # The value was gotten from the cache.
       class Hit < Success
         # @return [String] the value from the cache
         def value
@@ -49,18 +49,24 @@ module Momento
         end
       end
 
-      # Cache name is invalid.
-      class InvalidArgument < Error
-      end
-
+      # The key has no value in the cache.
       class Miss < Response
       end
 
-      # Cache is not found.
-      class NotFound < Error
-      end
+      # There was an error getting a value from the cache.
+      # See subclasses for more specific errors.
+      class Error < Error
+        # Cache name or key is invalid.
+        class InvalidArgument < Error
+        end
 
-      class PermissionDenied < Error
+        # Cache is not found.
+        class NotFound < Error
+        end
+
+        # The client does not have permission to get values from the cache.
+        class PermissionDenied < Error
+        end
       end
     end
   end

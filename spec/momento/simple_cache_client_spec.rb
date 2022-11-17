@@ -74,7 +74,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
     context 'when the response is a bad status' do
       let(:grpc_error) { GRPC::InvalidArgument.new }
-      let(:response_class) { Momento::Response::CreateCache::InvalidArgument }
+      let(:response_class) { Momento::Response::CreateCache::Error::InvalidArgument }
 
       before do
         allow(control_stub).to receive(:create_cache)
@@ -131,7 +131,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
     context 'when the response is a bad status' do
       let(:grpc_error) { GRPC::NotFound.new }
-      let(:response_class) { Momento::Response::DeleteCache::NotFound }
+      let(:response_class) { Momento::Response::DeleteCache::Error::NotFound }
 
       before do
         allow(control_stub).to receive(:delete_cache)
@@ -199,7 +199,7 @@ RSpec.describe Momento::SimpleCacheClient do
       allow(control_stub).to receive(:list_caches)
         .and_raise(GRPC::PermissionDenied.new)
 
-      expect(client.list_caches).to be_a Momento::Response::ListCaches::PermissionDenied
+      expect(client.list_caches).to be_a Momento::Response::ListCaches::Error::PermissionDenied
     end
 
     it 'raises on an unknown stub error' do
@@ -242,7 +242,7 @@ RSpec.describe Momento::SimpleCacheClient do
     end
 
     it 'when list_caches has an error response, it raises the grpc exception' do
-      error_response = build(:momento_response_list_caches_permission_denied)
+      error_response = build(:momento_response_list_caches_error_permission_denied)
 
       allow(client).to receive(:list_caches)
         .and_return(error_response)
@@ -276,6 +276,30 @@ RSpec.describe Momento::SimpleCacheClient do
           be_a(Momento::CacheClient::GetRequest).and(have_attributes(cache_key: "key")),
           metadata: { cache: "name" }
         )
+    end
+
+    it 'with a non-ACII string it does not raise nor change the encoding' do
+      allow(cache_stub).to receive(:get)
+        .and_return(build(:momento_cache_client_get_response, :hit))
+
+      key = "🫠🤢"
+
+      expect {
+        expect(
+          client.get("name", key)
+        ).to be_a(Momento::Response::Get::Hit)
+      }.to not_change {
+        key.encoding
+      }
+    end
+
+    it 'with a non-ACII string it does not raise' do
+      allow(cache_stub).to receive(:get)
+        .and_return(build(:momento_cache_client_get_response, :hit))
+
+      expect(
+        client.get("name", "🫠🤢".freeze)
+      ).to be_a(Momento::Response::Get::Hit)
     end
 
     context 'with a gRPC response' do
@@ -320,7 +344,7 @@ RSpec.describe Momento::SimpleCacheClient do
         it 'returns the appropriate response' do
           expect(
             client.get("name", "key")
-          ).to be_a(Momento::Response::Get::NotFound).and have_attributes(
+          ).to be_a(Momento::Response::Get::Error::NotFound).and have_attributes(
             grpc_exception: exception
           )
         end
@@ -389,6 +413,31 @@ RSpec.describe Momento::SimpleCacheClient do
           grpc_response: grpc_response
         )
       end
+
+      context 'with a non-ASCII key and value' do
+        it 'can be set' do
+          key = "🫠🤢"
+          value = "🎉☃"
+
+          expect {
+            expect(
+              client.set("name", key, value)
+            ).to be_a(Momento::Response::Set::Success)
+          }.to not_change {
+            value.encoding
+          }.and not_change {
+            key.encoding
+          }
+        end
+      end
+
+      context 'with a frozen non-ASCII key and value' do
+        it 'can be set' do
+          expect(
+            client.set("name", "🫠🤢".freeze, "🎉☃".freeze)
+          ).to be_a(Momento::Response::Set::Success)
+        end
+      end
     end
 
     context 'with an exception' do
@@ -403,7 +452,7 @@ RSpec.describe Momento::SimpleCacheClient do
         it 'returns the appropriate response' do
           expect(
             client.set("name", "key", "value")
-          ).to be_a(Momento::Response::Set::NotFound).and have_attributes(
+          ).to be_a(Momento::Response::Set::Error::NotFound).and have_attributes(
             grpc_exception: exception
           )
         end
@@ -435,6 +484,30 @@ RSpec.describe Momento::SimpleCacheClient do
         )
     end
 
+    it 'with a non-ACII string it does not raise nor change the encoding' do
+      allow(cache_stub).to receive(:delete)
+        .and_return(build(:momento_cache_client_delete_response))
+
+      key = "🫠🤢"
+
+      expect {
+        expect(
+          client.delete("name", key)
+        ).to be_a(Momento::Response::Delete::Success)
+      }.to not_change {
+        key.encoding
+      }
+    end
+
+    it 'with a non-ACII string it does not raise' do
+      allow(cache_stub).to receive(:delete)
+        .and_return(build(:momento_cache_client_delete_response))
+
+      expect(
+        client.delete("name", "🫠🤢".freeze)
+      ).to be_a(Momento::Response::Delete::Success)
+    end
+
     context 'when it is a success' do
       let(:grpc_response) { build(:momento_cache_client_delete_response) }
 
@@ -464,7 +537,7 @@ RSpec.describe Momento::SimpleCacheClient do
         it 'returns the appropriate response' do
           expect(
             client.delete("name", "key")
-          ).to be_a(Momento::Response::Delete::NotFound).and have_attributes(
+          ).to be_a(Momento::Response::Delete::Error::NotFound).and have_attributes(
             grpc_exception: exception
           )
         end

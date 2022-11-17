@@ -15,8 +15,8 @@ FactoryBot.define do
   end
 
   factory(
-    :momento_response_list_caches_permission_denied,
-    class: "Momento::Response::ListCaches::PermissionDenied"
+    :momento_response_list_caches_error_permission_denied,
+    class: "Momento::Response::ListCaches::Error::PermissionDenied"
   ) do
     momento_response_permission_denied
   end

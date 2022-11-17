@@ -7,21 +7,21 @@ RSpec.describe Momento::Response::CreateCache do
   describe '.from_block' do
     context 'when it raises AlreadyExists' do
       let(:exception) { GRPC::AlreadyExists.new }
-      let(:response_class) { Momento::Response::CreateCache::AlreadyExists }
+      let(:response_class) { Momento::Response::CreateCache::Error::AlreadyExists }
 
       it_behaves_like 'it wraps gRPC exceptions'
     end
 
     context 'when it raises InvalidArgument' do
       let(:exception) { GRPC::InvalidArgument.new }
-      let(:response_class) { Momento::Response::CreateCache::InvalidArgument }
+      let(:response_class) { Momento::Response::CreateCache::Error::InvalidArgument }
 
       it_behaves_like 'it wraps gRPC exceptions'
     end
 
     context 'when it raises PermissionDenied' do
       let(:exception) { GRPC::PermissionDenied.new }
-      let(:response_class) { Momento::Response::CreateCache::PermissionDenied }
+      let(:response_class) { Momento::Response::CreateCache::Error::PermissionDenied }
 
       it_behaves_like 'it wraps gRPC exceptions'
     end

@@ -18,7 +18,7 @@ module Momento
   #     p response
   #   when Momento::Response::Get::Miss
   #     p client.set(cache_name, key, "default")
-  #   when Momento::Response::Error
+  #   when Momento::Response::Get::Error
   #     p "The front fell off."
   #   end
   class SimpleCacheClient
@@ -39,12 +39,14 @@ module Momento
 
     # Get a value in a cache.
     #
+    # Momento only stores bytes; the returned value will be encoded as ASCII-8BIT.
+    #
     # @param cache_name [String]
     # @param key [String] must only contain ASCII characters
     def get(cache_name, key)
       return Response::Get.from_block do
         cache_stub.get(
-          CacheClient::GetRequest.new(cache_key: key),
+          CacheClient::GetRequest.new(cache_key: to_bytes(key)),
           metadata: { cache: cache_name }
         )
       end
@@ -56,13 +58,16 @@ module Momento
     #
     # @param cache_name [String]
     # @param key [String] must only contain ASCII characters
-    # @param value [String]
+    # @param value [String] the value to cache
     # @param ttl [Integer] time to live, in milliseconds.
     def set(cache_name, key, value, ttl: default_ttl)
       return Response::Set.from_block do
         req = CacheClient::SetRequest.new(
-          cache_key: key, cache_body: value, ttl_milliseconds: ttl
+          cache_key: to_bytes(key),
+          cache_body: to_bytes(value),
+          ttl_milliseconds: ttl
         )
+
         cache_stub.set(req, metadata: { cache: cache_name })
       end
     end
@@ -74,7 +79,7 @@ module Momento
     def delete(cache_name, key)
       return Response::Delete.from_block do
         cache_stub.delete(
-          CacheClient::DeleteRequest.new(cache_key: key),
+          CacheClient::DeleteRequest.new(cache_key: to_bytes(key)),
           metadata: { cache: cache_name }
         )
       end
@@ -175,6 +180,23 @@ module Momento
       call_creds = GRPC::Core::CallCredentials.new(auth_proc)
 
       return GRPC::Core::ChannelCredentials.new.compose(call_creds)
+    end
+
+    # Ruby uses String for bytes. GRPC wants a String encoded as ASCII.
+    # GRPC will re-encode a String, but treats it as characters; GRPC will
+    # raise if you pass a String with non-ASCII characters.
+    # So we do the re-encoding ourselves in a way that treats the String as
+    # bytes and will not raise. The data is not changed.
+    #
+    # A duplicate String is returned, but since Ruby is copy-on-write it
+    # does not copy the data.
+    #
+    # @param string [String] the string to make safe for GRPC bytes
+    # @return [String] a duplicate safe to use as GRPC bytes
+    def to_bytes(string)
+      # dup in case the value is frozen and to avoid changing the value's encoding
+      # for the caller.
+      return string.dup.force_encoding(Encoding::ASCII_8BIT)
     end
   end
 end

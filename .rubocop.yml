@@ -14,9 +14,15 @@ AllCops:
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 
+Lint/AmbiguousBlockAssociation:
+  # For rspec
+  AllowedPatterns: ['change']
+
 # The rspec defaults are way too tight.
 RSpec/ExampleLength:
   Max: 15
+RSpec/MultipleExpectations:
+  Max: 4
 RSpec/MultipleMemoizedHelpers:
   Max: 10
 RSpec/NestedGroups:

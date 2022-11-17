@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory(
-    :momento_response_create_cache_already_exists,
-    class: "Momento::Response::CreateCache::AlreadyExists"
+    :momento_response_create_cache_error_already_exists,
+    class: "Momento::Response::CreateCache::Error::AlreadyExists"
   ) do
     momento_response_already_exists
   end
@@ -14,15 +14,15 @@ FactoryBot.define do
   end
 
   factory(
-    :momento_response_create_cache_invalid_argument,
-    class: "Momento::Response::CreateCache::InvalidArgument"
+    :momento_response_create_cache_error_invalid_argument,
+    class: "Momento::Response::CreateCache::Error::InvalidArgument"
   ) do
     momento_response_invalid_argument
   end
 
   factory(
-    :momento_response_create_cache_permission_denied,
-    class: "Momento::Response::CreateCache::PermissionDenied"
+    :momento_response_create_cache_error_permission_denied,
+    class: "Momento::Response::CreateCache::Error::PermissionDenied"
   ) do
     momento_response_permission_denied
   end
