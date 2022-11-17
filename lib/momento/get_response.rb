@@ -43,7 +43,7 @@ module Momento
       false
     end
 
-    # A successful get from the cache.
+    # Successfully got an item from the cache.
     class Hit < GetResponse
       # rubocop:disable Lint/MissingSuper
       def initialize(grpc_response:)
@@ -65,12 +65,14 @@ module Momento
       end
     end
 
+    # The key had no value stored in the cache.
     class Miss < GetResponse
       def miss?
         true
       end
     end
 
+    # There was a problem getting the value from the cache.
     class Error < GetResponse
       include Momento::Response::Error
     end
