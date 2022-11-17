@@ -23,7 +23,7 @@ If bundler is not being used to manage dependencies, install the gem by executin
 require 'momento'
 
 # Get your Momento token from an environment variable.
-token = ENV.fetch('MOMENTO_TOKEN')
+token = ENV.fetch('MOMENTO_AUTH_TOKEN')
 
 # Cached items will be deleted after 30 seconds.
 ttl = 30_000
