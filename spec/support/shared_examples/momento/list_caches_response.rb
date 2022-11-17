@@ -10,7 +10,7 @@ RSpec.shared_examples Momento::ListCachesResponse do
 
     let(:default_types) do
       {
-        caches?: false,
+        success?: false,
         error?: false
       }
     end

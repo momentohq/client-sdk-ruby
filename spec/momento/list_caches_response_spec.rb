@@ -22,7 +22,7 @@ RSpec.describe Momento::ListCachesResponse do
         Momento::ControlClient::ListCachesResponse.new
       }
       let(:response_class) {
-        Momento::ListCachesResponse::Caches
+        Momento::ListCachesResponse::Success
       }
 
       it_behaves_like 'it wraps gRPC responses'

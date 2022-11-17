@@ -17,22 +17,22 @@ module Momento
     else
       raise TypeError unless response.is_a?(Momento::ControlClient::ListCachesResponse)
 
-      return Caches.new(grpc_response: response)
+      return Success.new(grpc_response: response)
     end
 
-    def caches?
+    def success?
       false
     end
 
     # A Momento resposne with a page of caches.
-    class Caches < ListCachesResponse
+    class Success < ListCachesResponse
       # rubocop:disable Lint/MissingSuper
       def initialize(grpc_response:)
         @grpc_response = grpc_response
       end
       # rubocop:enable Lint/MissingSuper
 
-      def caches?
+      def success?
         true
       end
 

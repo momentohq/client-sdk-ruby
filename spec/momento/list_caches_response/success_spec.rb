@@ -1,6 +1,6 @@
 require 'momento/response'
 
-RSpec.describe Momento::ListCachesResponse::Caches do
+RSpec.describe Momento::ListCachesResponse::Success do
   let(:cache_names) { ["foo", "bar", "baz"] }
   let(:next_token) { "abcd123" }
   let(:grpc_list_caches_response) {
@@ -15,7 +15,7 @@ RSpec.describe Momento::ListCachesResponse::Caches do
   }
 
   it_behaves_like Momento::ListCachesResponse do
-    let(:types) do { caches?: true } end
+    let(:types) do { success?: true } end
   end
 
   describe '#cache_names' do

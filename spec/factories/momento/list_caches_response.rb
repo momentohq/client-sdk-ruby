@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory(
-    :momento_list_caches_response_caches,
-    class: "Momento::ListCachesResponse::Caches"
+    :momento_list_caches_response_success,
+    class: "Momento::ListCachesResponse::Success"
   ) do
     momento_response
 

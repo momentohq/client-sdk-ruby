@@ -192,7 +192,7 @@ RSpec.describe Momento::SimpleCacheClient do
       allow(control_stub).to receive(:list_caches)
         .and_return(build(:momento_control_client_list_caches_response))
 
-      expect(client.list_caches).to be_a Momento::ListCachesResponse::Caches
+      expect(client.list_caches).to be_a Momento::ListCachesResponse::Success
     end
 
     it 'returns an error response for a gRPC error' do
@@ -224,7 +224,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
     let(:responses) {
       grpc_responses.map { |gr|
-        build(:momento_list_caches_response_caches, grpc_response: gr)
+        build(:momento_list_caches_response_success, grpc_response: gr)
       }
     }
 
