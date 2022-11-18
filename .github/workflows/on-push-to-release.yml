@@ -1,0 +1,35 @@
+name: On push to release
+
+on:
+  push:
+    branches: [ release ]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Run tests
+        if: ${{ success() }}
+        id: tests
+        run: bundle exec rspec
+      - uses: go-semantic-release/action@v1
+        if: ${{ success() }}
+        id: semrel
+        with:
+          github-token: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
+          allow-initial-development-versions: true
+          force-bump-patch-version: true
+          update-file: lib/momento/version.rb
+          changelog-generator-opt: "emojis=true"
+      - name: Release Gem
+        if: ${{ success() }}
+        uses: cadwallion/publish-rubygems-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
+          RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_PUBLISH_TOKEN}}
+          RELEASE_COMMAND: rake release
