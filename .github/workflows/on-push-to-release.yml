@@ -38,9 +38,9 @@ jobs:
           branches:
             - release
           plugins:
-            - @semantic-release/commit-analyzer
-            - @semantic-release/release-notes-generator
-            - @semantic-release-rubygem
+            - '@semantic-release/commit-analyzer'
+            - '@semantic-release/release-notes-generator'
+            - '@semantic-release-rubygem'
           additional_packages:
             - semantic-release-rubygem
         env:
