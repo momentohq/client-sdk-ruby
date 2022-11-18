@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    momento (0.1.0)
+    momento (0.0.1)
       grpc (~> 1)
       jwt (~> 2)
 

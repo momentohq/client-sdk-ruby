@@ -5,8 +5,8 @@ require_relative "lib/momento/version"
 Gem::Specification.new do |spec|
   spec.name = "momento"
   spec.version = Momento::VERSION
-  spec.authors = ["Michael G. Schwern"]
-  spec.email = ["schwern@pobox.com"]
+  spec.authors = ["Momento"]
+  spec.email = ["eng-deveco@momentohq.com"]
 
   spec.summary = "Client for Momento Serverless Cache"
   spec.description = "Momento is a fast, simple, pay-as-you-go caching solution."
