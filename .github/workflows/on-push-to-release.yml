@@ -5,31 +5,46 @@ on:
     branches: [ release ]
 
 jobs:
-  release:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby-version:
+          - 2.7
+          - 3.0
+          - 3.1
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - name: Run tests
-        if: ${{ success() }}
-        id: tests
-        run: bundle exec rspec
-      - uses: go-semantic-release/action@v1
-        if: ${{ success() }}
+    - uses: actions/checkout@v3
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby-version }}
+        bundler-cache: true
+
+    - name: Run tests
+      run: bundle exec rspec
+
+  publish:
+    runs-on: ubuntu-latest
+    needs:
+      - test
+
+    steps:
+      - uses: codfish/semantic-release-action@v2
         id: semrel
         with:
-          github-token: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
-          allow-initial-development-versions: true
-          force-bump-patch-version: true
-          update-file: lib/momento/version.rb
-          changelog-generator-opt: "emojis=true"
-      - name: Release Gem
-        if: ${{ success() }}
-        uses: cadwallion/publish-rubygems-action@v1
+          branches:
+            - release
+          plugins:
+            - @semantic-release/commit-analyzer
+            - @semantic-release/release-notes-generator
+            - @semantic-release-rubygem
+          additional_packages:
+            - semantic-release-rubygem
         env:
           GITHUB_TOKEN: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
-          RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_PUBLISH_TOKEN}}
-          RELEASE_COMMAND: rake release
+          GEM_HOST_API_KEY: ${{secrets.RUBYGEMS_PUBLISH_TOKEN}}
+      - run: |
+          echo $RELEASE_VERSION
