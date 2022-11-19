@@ -34,17 +34,42 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: codfish/semantic-release-action@v2
+      - uses: go-semantic-release/action@v1
         id: semrel
         with:
-          branches: |
-            ['release']
-          plugins: |
-            ['@semantic-release/commit-analyzer', '@semantic-release/release-notes-generator', 'semantic-release-rubygem']
-          additional_packages: |
-            ['semantic-release-rubygem']
+          branches:
+            - release
+          # We only want the version #.
+          dry: true
+          github-token: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
+          allow-initial-development-versions: true
+          force-bump-patch-version: true
+          changelog-generator-opt: "emojis=true"
+
+      - name: Show release version
+        if: ${{ success() }}
+        run: |
+          echo $RELEASE_VERSION
+
+      - name: Set up Ruby
+        if: ${{ success() }}
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Install gem-release
+        if: ${{ success() }}
+        run: |
+          gem install gem-release
+
+      - name: Bump version and tag
+        if: ${{ success() }}
+        run: |
+          gem bump -v $RELEASE_VERSION
+
+      - uses: cadwallion/publish-rubygems-action@master
+        if: ${{ success() }}
         env:
           GITHUB_TOKEN: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
-          GEM_HOST_API_KEY: ${{secrets.RUBYGEMS_PUBLISH_TOKEN}}
-      - run: |
-          echo $RELEASE_VERSION
+          RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_PUBLISH_TOKEN}}
+          RELEASE_COMMAND: bundle rake release
