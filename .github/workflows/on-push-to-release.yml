@@ -43,6 +43,8 @@ jobs:
           allow-initial-development-versions: true
           force-bump-patch-version: true
           changelog-generator-opt: "emojis=true"
+          # Without this it will only publish from main.
+          custom-arguments: "--no-ci"
 
       - name: Show release version
         if: ${{ success() }}
