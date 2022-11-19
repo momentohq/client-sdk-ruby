@@ -14,10 +14,6 @@ jobs:
         id: release
         with:
           token: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
-          release-type: ruby
-          package-name: momento
-          bump-minor-pre-major: true
-          version-file: lib/momento/version.rb
 
       # The rest happens *after* the release PR is merged.
       - uses: actions/checkout@v3
