@@ -37,8 +37,8 @@ jobs:
       - uses: go-semantic-release/action@v1
         id: semrel
         with:
-          branches:
-            - release
+          branches: |
+            ['release']
           # We only want the version #.
           dry: true
           github-token: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
