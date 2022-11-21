@@ -1,4 +1,5 @@
-# A shared workflow for running Ruby tests.
+name: Test matrix (reusable)
+
 on:
   workflow_call:
 
