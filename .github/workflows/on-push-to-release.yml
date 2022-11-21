@@ -77,19 +77,25 @@ jobs:
         with:
           token: '${{ secrets.GITHUB_TOKEN }}'
 
-      # Bump the Ruby version, update the Gemfile.lock, and tag.
-      - name: Bump version and tag
+      # Bump the Ruby version.
+      - name: Bump version.
         if: ${{ success() }}
         run: |
           # Bump the version.
           gem bump --no-commit -v $RELEASE_VERSION
 
+      - name: Update Gemfile.lock
+        if: ${{ success() }}
+        run: |
           # `bundler-cache: true` puts us in deployment mode.
           # We can't update the Gemfile.lock in deployment mode.
           bundle config --local unset deployment
           bundle install
-          bundle config --local set deployment true
+          bundle config --local deployment true
 
+      - name: Commit and tag
+        if: ${{ success() }}
+        run: |
           git commit -a -m "chore: Release $RELEASE_VERSION"
           git tag v$RELEASE_VERSION
 
