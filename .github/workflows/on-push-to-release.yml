@@ -75,7 +75,7 @@ jobs:
       - name: Configure git
         uses: oleksiyrudenko/gha-git-credentials@v2-latest
         with:
-          token: '${{ secrets.GITHUB_TOKEN }}'
+          token: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
 
       - name: Bump version.
         if: ${{ success() }}
