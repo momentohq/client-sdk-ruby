@@ -77,11 +77,14 @@ jobs:
         with:
           token: '${{ secrets.GITHUB_TOKEN }}'
 
-      # Do all the work to bump a Ruby version and tag the release.
+      # Bump the Ruby version, update the Gemfile.lock, and tag.
       - name: Bump version and tag
         if: ${{ success() }}
         run: |
-          gem bump -t -v $RELEASE_VERSION
+          gem bump --no-commit -v $RELEASE_VERSION
+          bundle install
+          git commit -a -m "chore: Release $RELEASE_VERSION"
+          git tag v$RELEASE_VERSION
 
       # Publish to Rubygems.
       - uses: cadwallion/publish-rubygems-action@master
