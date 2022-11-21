@@ -93,3 +93,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
           RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_PUBLISH_TOKEN}}
           RELEASE_COMMAND: bundle exec rake release
+
+      - name: Github release
+        uses: softprops/action-gh-release@v1
+        if: ${{ success() }}
+        with:
+          files: pkg/momento-*.gem
