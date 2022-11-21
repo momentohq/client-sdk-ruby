@@ -97,7 +97,6 @@ jobs:
         if: ${{ success() }}
         run: |
           git commit -a -m "chore: Release $RELEASE_VERSION"
-          git tag v$RELEASE_VERSION
 
       # Publish to Rubygems.
       - uses: cadwallion/publish-rubygems-action@master
