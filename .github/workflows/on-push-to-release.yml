@@ -109,4 +109,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: ${{ success() }}
         with:
+          token: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
+          tag_name: v${{ needs.get_version.outputs.version }}
           files: pkg/*.gem
