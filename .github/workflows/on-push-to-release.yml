@@ -72,7 +72,7 @@ jobs:
         run: |
           gem install gem-release
 
-      # `gem bump` will commit and tag; it needs git configured
+      # We need git configured to commit and tag.
       - uses: oleksiyrudenko/gha-git-credentials@v2-latest
         with:
           token: '${{ secrets.GITHUB_TOKEN }}'
