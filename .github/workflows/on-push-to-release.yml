@@ -89,9 +89,9 @@ jobs:
         run: |
           # `bundler-cache: true` puts us in deployment mode.
           # We can't update the Gemfile.lock in deployment mode.
-          bundle config --local unset deployment
+          bundle config unset deployment
           bundle install
-          bundle config --local deployment true
+          bundle config deployment true
 
       - name: Commit and tag
         if: ${{ success() }}
