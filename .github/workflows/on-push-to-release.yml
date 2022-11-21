@@ -1,0 +1,92 @@
+name: On push to release
+
+on:
+  push:
+    branches: [ release ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby-version:
+          - 2.7
+          - 3.0
+          - 3.1
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby-version }}
+        bundler-cache: true
+
+    - name: Run tests
+      run: bundle exec rspec
+
+  get_version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.semrel.outputs.version }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # We only want the version #. `gem bump` will handle the rest.
+      - uses: go-semantic-release/action@v1
+        id: semrel
+        with:
+          dry: true
+          github-token: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
+          allow-initial-development-versions: true
+          force-bump-patch-version: true
+          changelog-generator-opt: "emojis=true"
+          # Without this it will only publish from main.
+          custom-arguments: "--no-ci"
+
+      - name: Show release version
+        if: ${{ success() }}
+        run: |
+          echo ${{ steps.semrel.outputs.version }}
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: [test, get_version]
+    env:
+      RELEASE_VERSION: ${{ needs.get_version.outputs.version }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        if: ${{ success() }}
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      # Provides `gem bump`.
+      - name: Install gem-release
+        if: ${{ success() }}
+        run: |
+          gem install gem-release
+
+      # `gem bump` will commit and tag; it needs git configured
+      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
+        with:
+          token: '${{ secrets.GITHUB_TOKEN }}'
+
+      # Do all the work to bump a Ruby version and tag the release.
+      - name: Bump version and tag
+        if: ${{ success() }}
+        run: |
+          gem bump -t -v $RELEASE_VERSION
+
+      # Publish to Rubygems.
+      - uses: cadwallion/publish-rubygems-action@master
+        if: ${{ success() }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
+          RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_PUBLISH_TOKEN}}
+          RELEASE_COMMAND: bundle rake release
