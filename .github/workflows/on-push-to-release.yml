@@ -87,6 +87,13 @@ jobs:
           RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_PUBLISH_TOKEN}}
           RELEASE_COMMAND: bundle exec rake release
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: gemfiles-v${{ needs.get_version.outputs.version }}
+          path: |
+            pkg/*.gem
+
       - name: Github release
         uses: softprops/action-gh-release@v1
         if: ${{ success() }}
