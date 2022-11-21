@@ -72,19 +72,18 @@ jobs:
         run: |
           gem install gem-release
 
-      # We need git configured to commit and tag.
-      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
+      - name: Configure git
+        uses: oleksiyrudenko/gha-git-credentials@v2-latest
         with:
           token: '${{ secrets.GITHUB_TOKEN }}'
 
-      # Bump the Ruby version.
       - name: Bump version.
         if: ${{ success() }}
         run: |
           # Bump the version.
           gem bump --no-commit -v $RELEASE_VERSION
 
-      - name: Update Gemfile.lock
+      - name: Update Gemfile.lock.
         if: ${{ success() }}
         run: |
           # `bundler-cache: true` puts us in deployment mode.
@@ -93,13 +92,13 @@ jobs:
           bundle install
           bundle config deployment true
 
-      - name: Commit and tag
+      - name: Commit bumps and updates.
         if: ${{ success() }}
         run: |
           git commit -a -m "chore: Release $RELEASE_VERSION"
 
-      # Publish to Rubygems.
-      - uses: cadwallion/publish-rubygems-action@master
+      - name: Publish to Rubygems
+        uses: cadwallion/publish-rubygems-action@master
         if: ${{ success() }}
         env:
           GITHUB_TOKEN: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
@@ -110,4 +109,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: ${{ success() }}
         with:
-          files: pkg/momento-*.gem
+          files: pkg/*.gem
