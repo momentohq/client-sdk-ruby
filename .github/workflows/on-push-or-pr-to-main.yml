@@ -27,4 +27,4 @@ jobs:
           reporter: github-pr-review
 
   test:
-    uses: ./github/workflows/test.yml
+    uses: ./.github/workflows/test.yml
