@@ -20,6 +20,8 @@ module Momento
   #   elsif response.error?
   #     puts "The front fell off."
   #   end
+  #
+  # rubocop:disable Metrics/ClassLength
   class SimpleCacheClient
     VERSION = Momento::VERSION
     CACHE_CLIENT_STUB_CLASS = CacheClient::Scs::Stub
@@ -153,7 +155,6 @@ module Momento
     #
     # @return [Enumerator::Lazy<String>] the cache names
     # @raise [GRPC::BadStatus]
-    # rubocop:disable Metrics/MethodLength
     def caches
       Enumerator.new do |yielder|
         next_token = ""
@@ -172,7 +173,6 @@ module Momento
         end
       end.lazy
     end
-    # rubocop:enable Metrics/MethodLength
 
     private
 
@@ -224,4 +224,5 @@ module Momento
       return string.dup.force_encoding(Encoding::ASCII_8BIT)
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end
