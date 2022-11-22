@@ -35,12 +35,19 @@ module Momento
       end
     end
 
+    # @return [Boolean] did we get a value
     def hit?
       false
     end
 
+    # @return [Boolean] was there no value
     def miss?
       false
+    end
+
+    # @return [String,nil] the gotten value, if any.
+    def value
+      nil
     end
 
     # Successfully got an item from the cache.
@@ -55,7 +62,6 @@ module Momento
         true
       end
 
-      # @return [String] the value from the cache
       def value
         @grpc_response.cache_body
       end
