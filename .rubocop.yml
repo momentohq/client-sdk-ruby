@@ -18,6 +18,9 @@ Lint/AmbiguousBlockAssociation:
   # For rspec
   AllowedPatterns: ['change']
 
+Metrics/MethodLength:
+  Max: 15
+
 # The rspec defaults are way too tight.
 RSpec/ExampleLength:
   Max: 15

@@ -1,19 +1,8 @@
-require 'grpc'
-require 'momento/cacheclient_pb'
+require_relative 'response/error'
 
 module Momento
   # Responses specific to delete.
   class DeleteResponse < Response
-    def self.from_block
-      response = yield
-    rescue GRPC::BadStatus => e
-      Error.new(grpc_exception: e)
-    else
-      raise TypeError unless response.is_a?(Momento::CacheClient::DeleteResponse)
-
-      Success.new
-    end
-
     def success?
       false
     end

@@ -1,7 +1,7 @@
 require 'jwt'
-require 'momento/cacheclient_services_pb'
-require 'momento/controlclient_services_pb'
-require 'momento/response'
+require_relative 'cacheclient_services_pb'
+require_relative 'controlclient_services_pb'
+require_relative 'response'
 
 module Momento
   # A simple client for Momento.
@@ -20,6 +20,8 @@ module Momento
   #   elsif response.error?
   #     puts "The front fell off."
   #   end
+  #
+  # rubocop:disable Metrics/ClassLength
   class SimpleCacheClient
     VERSION = Momento::VERSION
     CACHE_CLIENT_STUB_CLASS = CacheClient::Scs::Stub
@@ -44,7 +46,11 @@ module Momento
     # @param key [String] must only contain ASCII characters
     # @return [Momento::GetResponse]
     def get(cache_name, key)
-      return GetResponse.from_block do
+      builder = GetResponseBuilder.new(
+        context: { cache_name: cache_name, key: key }
+      )
+
+      return builder.from_block do
         cache_stub.get(
           CacheClient::GetRequest.new(cache_key: to_bytes(key)),
           metadata: { cache: cache_name }
@@ -62,7 +68,11 @@ module Momento
     # @param ttl [Integer] time to live, in milliseconds.
     # @return [Momento::SetResponse]
     def set(cache_name, key, value, ttl: default_ttl)
-      return SetResponse.from_block do
+      builder = SetResponseBuilder.new(
+        context: { cache_name: cache_name, key: key, value: value, ttl: ttl }
+      )
+
+      return builder.from_block do
         req = CacheClient::SetRequest.new(
           cache_key: to_bytes(key),
           cache_body: to_bytes(value),
@@ -79,7 +89,11 @@ module Momento
     # @param key [String] must only contain ASCII characters
     # @return [Momento::DeleteResponse]
     def delete(cache_name, key)
-      return DeleteResponse.from_block do
+      builder = DeleteResponseBuilder.new(
+        context: { cache_name: cache_name, key: key }
+      )
+
+      return builder.from_block do
         cache_stub.delete(
           CacheClient::DeleteRequest.new(cache_key: to_bytes(key)),
           metadata: { cache: cache_name }
@@ -89,24 +103,32 @@ module Momento
 
     # Create a new Momento cache.
     #
-    # @param name [String] the name of the cache to create.
+    # @param cache_name [String] the name of the cache to create.
     # @return [Momento::CreateCacheResponse] the response from Momento.
-    def create_cache(name)
-      return CreateCacheResponse.from_block do
+    def create_cache(cache_name)
+      builder = CreateCacheResponseBuilder.new(
+        context: { cache_name: cache_name }
+      )
+
+      return builder.from_block do
         control_stub.create_cache(
-          ControlClient::CreateCacheRequest.new(cache_name: name)
+          ControlClient::CreateCacheRequest.new(cache_name: cache_name)
         )
       end
     end
 
     # Delete an existing Momento cache.
     #
-    # @param name [String] the name of the cache to delete.
+    # @param cache_name [String] the name of the cache to delete.
     # @return [Momento::DeleteCacheResponse] the response from Momento.
-    def delete_cache(name)
-      return DeleteCacheResponse.from_block do
+    def delete_cache(cache_name)
+      builder = DeleteCacheResponseBuilder.new(
+        context: { cache_name: cache_name }
+      )
+
+      return builder.from_block do
         control_stub.delete_cache(
-          ControlClient::DeleteCacheRequest.new(cache_name: name)
+          ControlClient::DeleteCacheRequest.new(cache_name: cache_name)
         )
       end
     end
@@ -119,7 +141,10 @@ module Momento
     # @params next_token [String, nil] the token of the page to request
     # @return [Momento::ListCachesResponse]
     def list_caches(next_token: "")
-      return ListCachesResponse.from_block do
+      builder = ListCachesResponseBuilder.new(
+        context: { next_token: next_token }
+      )
+      return builder.from_block do
         control_stub.list_caches(
           ControlClient::ListCachesRequest.new(next_token: next_token)
         )
@@ -130,7 +155,6 @@ module Momento
     #
     # @return [Enumerator::Lazy<String>] the cache names
     # @raise [GRPC::BadStatus]
-    # rubocop:disable Metrics/MethodLength
     def caches
       Enumerator.new do |yielder|
         next_token = ""
@@ -149,7 +173,6 @@ module Momento
         end
       end.lazy
     end
-    # rubocop:enable Metrics/MethodLength
 
     private
 
@@ -201,4 +224,5 @@ module Momento
       return string.dup.force_encoding(Encoding::ASCII_8BIT)
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end

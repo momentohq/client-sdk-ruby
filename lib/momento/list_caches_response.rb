@@ -1,25 +1,8 @@
-require 'grpc'
-require 'momento/controlclient_pb'
+require_relative 'response/error'
 
 module Momento
   # Responses specific to list_caches.
   class ListCachesResponse < Response
-    # Build a Momento::ListCachesResponse from a block of code
-    # which returns a Momento::ControlClient::ListCachesResponse.
-    #
-    # @return [Momento::ListCachesResponse]
-    # @raise [StandardError] when the exception is not recognized.
-    # @raise [TypeError] when the response is not recognized.
-    def self.from_block
-      response = yield
-    rescue GRPC::BadStatus => e
-      Error.new(grpc_exception: e)
-    else
-      raise TypeError unless response.is_a?(Momento::ControlClient::ListCachesResponse)
-
-      return Success.new(grpc_response: response)
-    end
-
     def success?
       false
     end
