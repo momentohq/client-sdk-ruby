@@ -249,7 +249,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
       expect {
         client.caches.to_a
-      }.to raise_error(error_response.grpc_exception)
+      }.to raise_error(error_response.exception)
     end
 
     it 'when list_caches raises, it raises' do
@@ -344,7 +344,7 @@ RSpec.describe Momento::SimpleCacheClient do
           expect(
             client.get("name", "key")
           ).to be_a(Momento::GetResponse::Error).and have_attributes(
-            grpc_exception: exception
+            exception: exception
           )
         end
       end
@@ -450,7 +450,7 @@ RSpec.describe Momento::SimpleCacheClient do
           expect(
             client.set("name", "key", "value")
           ).to be_a(Momento::SetResponse::Error).and have_attributes(
-            grpc_exception: exception
+            exception: exception
           )
         end
       end
@@ -533,7 +533,7 @@ RSpec.describe Momento::SimpleCacheClient do
           expect(
             client.delete("name", "key")
           ).to be_a(Momento::DeleteResponse::Error).and have_attributes(
-            grpc_exception: exception
+            exception: exception
           )
         end
       end

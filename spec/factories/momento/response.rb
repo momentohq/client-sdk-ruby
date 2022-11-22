@@ -8,6 +8,6 @@ FactoryBot.define do
   trait :momento_response_error do
     momento_response
 
-    grpc_exception { GRPC::PermissionDenied.new }
+    exception { GRPC::PermissionDenied.new }
   end
 end
