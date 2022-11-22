@@ -10,6 +10,7 @@ require_relative 'delete_cache_response_builder'
 require_relative 'get_response'
 require_relative 'get_response_builder'
 require_relative 'list_caches_response'
+require_relative 'list_caches_response_builder'
 require_relative 'set_response'
 require_relative 'set_response_builder'
 

@@ -126,7 +126,10 @@ module Momento
     # @params next_token [String, nil] the token of the page to request
     # @return [Momento::ListCachesResponse]
     def list_caches(next_token: "")
-      return ListCachesResponse.from_block do
+      builder = ListCachesResponseBuilder.new(
+        context: { next_token: next_token }
+      )
+      return builder.from_block do
         control_stub.list_caches(
           ControlClient::ListCachesRequest.new(next_token: next_token)
         )
