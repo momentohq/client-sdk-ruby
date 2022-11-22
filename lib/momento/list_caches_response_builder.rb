@@ -15,7 +15,9 @@ module Momento
     def from_block
       response = yield
     rescue GRPC::BadStatus => e
-      ListCachesResponse::Error.new(exception: e)
+      ListCachesResponse::Error.new(
+        exception: e, context: context
+      )
     else
       raise TypeError unless response.is_a?(::Momento::ControlClient::ListCachesResponse)
 
