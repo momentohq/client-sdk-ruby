@@ -9,20 +9,12 @@ RSpec.describe Momento::GetResponse::Hit do
   }
 
   it_behaves_like Momento::GetResponse do
-    let(:types) do
-      { hit?: true }
+    let(:subclass_attributes) do
+      {
+        hit?: true,
+        value: grpc_response.cache_body,
+        to_s: response.value
+      }
     end
-  end
-
-  describe '#value' do
-    subject { response.value }
-
-    it { is_expected.to eq grpc_response.cache_body }
-  end
-
-  describe '#to_s' do
-    subject { response.to_s }
-
-    it { is_expected.to eq response.value }
   end
 end

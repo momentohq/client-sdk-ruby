@@ -1,24 +1,15 @@
 require 'momento/response'
 
 RSpec.shared_examples Momento::SetResponse do
-  it 'is a subclass' do
-    expect(response).to be_a described_class
-  end
-
-  describe 'type methods' do
-    subject { response }
-
-    let(:default_types) do
+  it_behaves_like Momento::Response do
+    let(:superclass_attributes) do
       {
-        success?: false,
-        error?: false
+        success?: false
       }
     end
+  end
 
-    it do
-      is_expected.to have_attributes(
-        default_types.merge(types)
-      )
-    end
+  it 'is a subclass' do
+    expect(response).to be_a described_class
   end
 end
