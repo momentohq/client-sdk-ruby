@@ -106,7 +106,8 @@ module Momento
     # @param name [String] the name of the cache to delete.
     # @return [Momento::DeleteCacheResponse] the response from Momento.
     def delete_cache(name)
-      return DeleteCacheResponse.from_block do
+      builder = DeleteCacheResponseBuilder.new(context: { cache_name: name })
+      return builder.from_block do
         control_stub.delete_cache(
           ControlClient::DeleteCacheRequest.new(cache_name: name)
         )
