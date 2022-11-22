@@ -1,7 +1,8 @@
 require 'jwt'
-require 'momento/cacheclient_services_pb'
-require 'momento/controlclient_services_pb'
-require 'momento/response'
+require_relative 'cacheclient_services_pb'
+require_relative 'controlclient_services_pb'
+require_relative 'get_response_builder'
+require_relative 'response'
 
 module Momento
   # A simple client for Momento.
@@ -44,7 +45,8 @@ module Momento
     # @param key [String] must only contain ASCII characters
     # @return [Momento::GetResponse]
     def get(cache_name, key)
-      return GetResponse.from_block do
+      builder = GetResponseBuilder.new(context: { cache_name: cache_name, key: key })
+      return builder.from_block do
         cache_stub.get(
           CacheClient::GetRequest.new(cache_key: to_bytes(key)),
           metadata: { cache: cache_name }

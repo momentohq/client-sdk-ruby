@@ -1,40 +1,8 @@
-require 'grpc'
-require 'momento/cacheclient_pb'
+require_relative 'response/error'
 
 module Momento
   # Responses specific to get.
   class GetResponse < Response
-    class << self
-      # Build a Momento::GetResponse from a block of code
-      # which returns a Momento::ControlClient::GetResponse.
-      #
-      # @return [Momento::GetResponse]
-      # @raise [StandardError] when the exception is not recognized.
-      # @raise [TypeError] when the response is not recognized.
-      def from_block
-        response = yield
-      rescue GRPC::BadStatus => e
-        Error.new(grpc_exception: e)
-      else
-        from_response(response)
-      end
-
-      private
-
-      def from_response(response)
-        raise TypeError unless response.is_a?(Momento::CacheClient::GetResponse)
-
-        case response.result
-        when :Hit
-          Hit.new(grpc_response: response)
-        when :Miss
-          Miss.new
-        else
-          raise "Unknown get result: #{response.result}"
-        end
-      end
-    end
-
     # @return [Boolean] did we get a value
     def hit?
       false
