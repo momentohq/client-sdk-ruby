@@ -80,7 +80,8 @@ module Momento
     # @param key [String] must only contain ASCII characters
     # @return [Momento::DeleteResponse]
     def delete(cache_name, key)
-      return DeleteResponse.from_block do
+      builder = DeleteResponseBuilder.new(context: { cache_name: cache_name, key: key })
+      return builder.from_block do
         cache_stub.delete(
           CacheClient::DeleteRequest.new(cache_key: to_bytes(key)),
           metadata: { cache: cache_name }
