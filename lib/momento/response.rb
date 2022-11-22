@@ -17,6 +17,14 @@ require_relative 'set_response_builder'
 module Momento
   # A superclass for all Momento responses.
   class Response
+    # Returns the error portion of the response, if any.
+    #
+    # @return [Momento::Response::Error, nil]
+    def error
+      nil
+    end
+
+    # Is the response an error?
     def error?
       false
     end

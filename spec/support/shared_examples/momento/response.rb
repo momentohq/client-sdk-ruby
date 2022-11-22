@@ -3,7 +3,8 @@ require 'momento/response'
 RSpec.shared_examples Momento::Response do
   let(:response_attributes) do
     {
-      error?: false
+      error?: false,
+      error: nil
     }
   end
 
