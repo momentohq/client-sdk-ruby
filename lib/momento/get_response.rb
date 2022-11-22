@@ -45,6 +45,11 @@ module Momento
       false
     end
 
+    # @return [String,nil] the gotten value, if any.
+    def value
+      nil
+    end
+
     # Successfully got an item from the cache.
     class Hit < GetResponse
       # rubocop:disable Lint/MissingSuper
@@ -57,7 +62,6 @@ module Momento
         true
       end
 
-      # @return [String] the value from the cache
       def value
         @grpc_response.cache_body
       end

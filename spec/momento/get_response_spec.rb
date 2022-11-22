@@ -48,4 +48,10 @@ RSpec.describe Momento::GetResponse do
       end
     end
   end
+
+  describe '#value' do
+    it 'is nil' do
+      expect(response.value).to be_nil
+    end
+  end
 end
