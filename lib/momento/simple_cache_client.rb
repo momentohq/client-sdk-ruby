@@ -1,7 +1,6 @@
 require 'jwt'
 require_relative 'cacheclient_services_pb'
 require_relative 'controlclient_services_pb'
-require_relative 'get_response_builder'
 require_relative 'response'
 
 module Momento
@@ -94,7 +93,8 @@ module Momento
     # @param name [String] the name of the cache to create.
     # @return [Momento::CreateCacheResponse] the response from Momento.
     def create_cache(name)
-      return CreateCacheResponse.from_block do
+      builder = CreateCacheResponseBuilder.new(context: { cache_name: name })
+      return builder.from_block do
         control_stub.create_cache(
           ControlClient::CreateCacheRequest.new(cache_name: name)
         )
