@@ -35,10 +35,12 @@ module Momento
       end
     end
 
+    # @return [Boolean] did we get a value
     def hit?
       false
     end
 
+    # @return [Boolean] was there no value
     def miss?
       false
     end
