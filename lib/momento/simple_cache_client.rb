@@ -63,7 +63,10 @@ module Momento
     # @param ttl [Integer] time to live, in milliseconds.
     # @return [Momento::SetResponse]
     def set(cache_name, key, value, ttl: default_ttl)
-      return SetResponse.from_block do
+      builder = SetResponseBuilder.new(
+        context: { cache_name: cache_name, key: key, value: value, ttl: ttl }
+      )
+      return builder.from_block do
         req = CacheClient::SetRequest.new(
           cache_key: to_bytes(key),
           cache_body: to_bytes(value),
