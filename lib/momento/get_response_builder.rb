@@ -16,7 +16,7 @@ module Momento
     def from_block
       response = yield
     rescue GRPC::BadStatus => e
-      GetResponse::Error.new(exception: e)
+      GetResponse::Error.new(exception: e, context: context)
     else
       from_response(response)
     end

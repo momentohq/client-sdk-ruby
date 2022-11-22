@@ -17,7 +17,9 @@ module Momento
     rescue GRPC::AlreadyExists
       return CreateCacheResponse::AlreadyExists.new
     rescue GRPC::BadStatus => e
-      CreateCacheResponse::Error.new(exception: e)
+      CreateCacheResponse::Error.new(
+        exception: e, context: context
+      )
     else
       raise TypeError unless response.is_a?(::Momento::ControlClient::CreateCacheResponse)
 

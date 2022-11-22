@@ -4,7 +4,7 @@ module Momento
     module Error
       attr_reader :exception
 
-      def initialize(exception:)
+      def initialize(exception:, context: {})
         @exception = exception
       end
 
