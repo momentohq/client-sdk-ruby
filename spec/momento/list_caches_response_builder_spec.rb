@@ -1,6 +1,6 @@
 require 'momento/response'
 
-RSpec.describe Momento::SetResponseBuilder do
+RSpec.describe Momento::ListCachesResponseBuilder do
   let(:builder) { described_class.new }
 
   it_behaves_like Momento::ResponseBuilder
@@ -8,17 +8,17 @@ RSpec.describe Momento::SetResponseBuilder do
   describe '#from_block' do
     context 'when it raises GRPC::BadStatus' do
       let(:exception) { GRPC::InvalidArgument.new }
-      let(:response_class) { Momento::SetResponse::Error }
+      let(:response_class) { Momento::ListCachesResponse::Error }
 
       it_behaves_like '#from_block wraps gRPC exceptions'
     end
 
-    context 'when it returns a SetResponse' do
+    context 'when it returns a ListCachesResponse' do
       let(:response) {
-        Momento::CacheClient::SetResponse.new
+        Momento::ControlClient::ListCachesResponse.new
       }
       let(:response_class) {
-        Momento::SetResponse::Success
+        Momento::ListCachesResponse::Success
       }
 
       it_behaves_like '#from_block wraps gRPC responses'
