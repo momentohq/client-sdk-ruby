@@ -2,10 +2,10 @@ module Momento
   class Response
     # A module for responses which contain errors.
     module Error
-      attr_accessor :grpc_exception
+      attr_reader :exception
 
-      def initialize(grpc_exception:)
-        @grpc_exception = grpc_exception
+      def initialize(exception:)
+        @exception = exception
       end
 
       def error?
