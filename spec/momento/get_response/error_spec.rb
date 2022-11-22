@@ -7,7 +7,10 @@ RSpec.describe Momento::GetResponse::Error do
 
   it_behaves_like Momento::GetResponse do
     let(:subclass_attributes) do
-      { error?: true }
+      {
+        error?: true,
+        error: be_a(Momento::Error)
+      }
     end
   end
 end

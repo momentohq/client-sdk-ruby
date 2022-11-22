@@ -7,7 +7,10 @@ RSpec.describe Momento::ListCachesResponse::Error do
 
   it_behaves_like Momento::ListCachesResponse do
     let(:subclass_attributes) do
-      { error?: true }
+      {
+        error?: true,
+        error: be_a(Momento::Error)
+      }
     end
   end
 end

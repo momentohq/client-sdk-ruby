@@ -1,5 +1,7 @@
 require 'grpc'
 require_relative 'response/error'
+require_relative 'error'
+require_relative 'error_builder'
 require_relative 'response_builder'
 require_relative 'create_cache_response'
 require_relative 'create_cache_response_builder'
@@ -19,7 +21,7 @@ module Momento
   class Response
     # Returns the error portion of the response, if any.
     #
-    # @return [Momento::Response::Error, nil]
+    # @return [Momento::Error, nil]
     def error
       nil
     end
