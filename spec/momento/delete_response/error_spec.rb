@@ -6,7 +6,7 @@ RSpec.describe Momento::DeleteResponse::Error do
   }
 
   it_behaves_like Momento::DeleteResponse do
-    let(:types) do
+    let(:subclass_attributes) do
       { error?: true }
     end
   end

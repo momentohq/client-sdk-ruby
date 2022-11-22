@@ -6,7 +6,7 @@ RSpec.describe Momento::DeleteResponse::Success do
   }
 
   it_behaves_like Momento::DeleteResponse do
-    let(:types) do
+    let(:subclass_attributes) do
       { success?: true }
     end
   end

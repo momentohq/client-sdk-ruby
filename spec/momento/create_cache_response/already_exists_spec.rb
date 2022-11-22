@@ -6,7 +6,7 @@ RSpec.describe Momento::CreateCacheResponse::AlreadyExists do
   }
 
   it_behaves_like Momento::CreateCacheResponse do
-    let(:types) do
+    let(:subclass_attributes) do
       { already_exists?: true }
     end
   end

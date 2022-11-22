@@ -15,18 +15,12 @@ RSpec.describe Momento::ListCachesResponse::Success do
   }
 
   it_behaves_like Momento::ListCachesResponse do
-    let(:types) do { success?: true } end
-  end
-
-  describe '#cache_names' do
-    subject { response.cache_names }
-
-    it { is_expected.to eq cache_names }
-  end
-
-  describe '#next_token' do
-    subject { response.next_token }
-
-    it { is_expected.to eq next_token }
+    let(:subclass_attributes) do
+      {
+        success?: true,
+        cache_names: cache_names,
+        next_token: next_token
+      }
+    end
   end
 end
