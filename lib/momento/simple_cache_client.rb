@@ -94,26 +94,26 @@ module Momento
 
     # Create a new Momento cache.
     #
-    # @param name [String] the name of the cache to create.
+    # @param cache_name [String] the name of the cache to create.
     # @return [Momento::CreateCacheResponse] the response from Momento.
-    def create_cache(name)
-      builder = CreateCacheResponseBuilder.new(context: { cache_name: name })
+    def create_cache(cache_name)
+      builder = CreateCacheResponseBuilder.new(context: { cache_name: cache_name })
       return builder.from_block do
         control_stub.create_cache(
-          ControlClient::CreateCacheRequest.new(cache_name: name)
+          ControlClient::CreateCacheRequest.new(cache_name: cache_name)
         )
       end
     end
 
     # Delete an existing Momento cache.
     #
-    # @param name [String] the name of the cache to delete.
+    # @param cache_name [String] the name of the cache to delete.
     # @return [Momento::DeleteCacheResponse] the response from Momento.
-    def delete_cache(name)
-      builder = DeleteCacheResponseBuilder.new(context: { cache_name: name })
+    def delete_cache(cache_name)
+      builder = DeleteCacheResponseBuilder.new(context: { cache_name: cache_name })
       return builder.from_block do
         control_stub.delete_cache(
-          ControlClient::DeleteCacheRequest.new(cache_name: name)
+          ControlClient::DeleteCacheRequest.new(cache_name: cache_name)
         )
       end
     end
