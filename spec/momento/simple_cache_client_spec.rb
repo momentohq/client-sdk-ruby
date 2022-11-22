@@ -249,7 +249,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
       expect {
         client.caches.to_a
-      }.to raise_error(error_response.exception)
+      }.to raise_error(error_response.error.exception)
     end
 
     it 'when list_caches raises, it raises' do
@@ -341,11 +341,9 @@ RSpec.describe Momento::SimpleCacheClient do
         let(:exception) { GRPC::NotFound.new }
 
         it 'returns the appropriate response' do
-          expect(
-            client.get("name", "key")
-          ).to be_a(Momento::GetResponse::Error).and have_attributes(
-            exception: exception
-          )
+          resp = client.get("name", "key")
+          expect(resp).to be_a(Momento::GetResponse::Error)
+          expect(resp.error.exception).to eq exception
         end
       end
 
@@ -447,11 +445,9 @@ RSpec.describe Momento::SimpleCacheClient do
         let(:exception) { GRPC::NotFound.new }
 
         it 'returns the appropriate response' do
-          expect(
-            client.set("name", "key", "value")
-          ).to be_a(Momento::SetResponse::Error).and have_attributes(
-            exception: exception
-          )
+          resp = client.set("name", "key", "value")
+          expect(resp).to be_a(Momento::SetResponse::Error)
+          expect(resp.error.exception).to eq exception
         end
       end
 
@@ -530,11 +526,9 @@ RSpec.describe Momento::SimpleCacheClient do
         let(:exception) { GRPC::NotFound.new }
 
         it 'returns the appropriate response' do
-          expect(
-            client.delete("name", "key")
-          ).to be_a(Momento::DeleteResponse::Error).and have_attributes(
-            exception: exception
-          )
+          resp = client.delete("name", "key")
+          expect(resp).to be_a(Momento::DeleteResponse::Error)
+          expect(resp.error.exception).to eq exception
         end
       end
 

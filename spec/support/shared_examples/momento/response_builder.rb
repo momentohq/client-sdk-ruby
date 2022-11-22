@@ -31,7 +31,7 @@ RSpec.shared_examples '#from_block wraps gRPC exceptions' do
 
   it 'wraps the exception' do
     expect(
-      builder.from_block { raise exception }.exception
+      builder.from_block { raise exception }.error.exception
     ).to eq exception
   end
 

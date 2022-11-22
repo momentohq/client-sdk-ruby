@@ -161,7 +161,7 @@ module Momento
 
         loop do
           response = list_caches(next_token: next_token)
-          raise response.exception if response.is_a? Momento::Response::Error
+          raise response.error.exception if response.is_a? Momento::Response::Error
 
           response.cache_names.each do |name|
             yielder << name
