@@ -25,5 +25,6 @@ jobs:
     - name: Run tests
       run: bundle exec rspec
       env:
+        TEST_AUTH_TOKEN: ${{ secrets.ALPHA_TEST_AUTH_TOKEN }}
         MOMENTO_TEST_LIVE: true
         TEST_CACHE_NAME: ruby-integration-test-cache

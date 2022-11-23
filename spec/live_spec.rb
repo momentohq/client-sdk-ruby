@@ -2,7 +2,7 @@
 #
 # Only runs whem MOMENTO_TEST_LIVE set.
 #
-# Needs ALPHA_TEST_AUTH_TOKEN and TEST_CACHE_NAME.
+# Needs TEST_AUTH_TOKEN and TEST_CACHE_NAME.
 
 require 'momento'
 
@@ -11,7 +11,7 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
   # rubocop:enable RSpec/DescribeClass
 
   let(:auth_token) {
-    ENV.fetch('ALPHA_TEST_AUTH_TOKEN')
+    ENV.fetch('TEST_AUTH_TOKEN')
   }
   let(:cache_name) {
     ENV.fetch('TEST_CACHE_NAME')
