@@ -19,12 +19,12 @@ module Momento
 
     # @return [String]
     def error_code
-      raise NotImplementedEror
+      raise NotImplementedError
     end
 
     # @return [String]
     def message
-      raise NotImplementedEror
+      raise NotImplementedError
     end
 
     def to_s
