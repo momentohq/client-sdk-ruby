@@ -23,7 +23,8 @@ module Momento
       GRPC::Unknown => Error::UnknownServiceError
     }.freeze
 
-    OTHER_EXCEPTION_MAP = {}.freeze
+    # Default to UnknownError.
+    OTHER_EXCEPTION_MAP = Hash.new(Error::UnknownError).freeze
 
     class << self
       def from_exception(exception, context: {})
@@ -57,17 +58,12 @@ module Momento
     end
 
     def from_other_exception
-      return unless (error_class = OTHER_EXCEPTION_MAP[@exception.class])
+      error_class = OTHER_EXCEPTION_MAP[@exception.class]
 
       return error_class.new(
         context: @context,
-        exception: @exception
-      )
-    end
-
-    def from_unknown_exception
-      return UnknownError.new(
-        exception: @exception, context: @context
+        exception: @exception,
+        details: @exception.message
       )
     end
   end

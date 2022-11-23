@@ -4,10 +4,16 @@ RSpec::Matchers.define :be_a_momento_error do
 
     expect(actual).to be_a(Momento::Error)
 
+    details = if @grpc_exception
+                @grpc_exception.details
+              elsif @exception
+                @exception.message
+              end
+
     expect(actual).to have_attributes(
       exception: @exception,
       context: @context,
-      details: @exception&.details
+      details: details
     )
 
     if @grpc_exception
@@ -19,6 +25,8 @@ RSpec::Matchers.define :be_a_momento_error do
         )
       )
     end
+
+    true
   end
 
   chain :with_context do |context|
@@ -28,5 +36,9 @@ RSpec::Matchers.define :be_a_momento_error do
   chain :with_grpc_exception do |exception|
     @exception = exception
     @grpc_exception = exception
+  end
+
+  chain :with_exception do |exception|
+    @exception = exception
   end
 end
