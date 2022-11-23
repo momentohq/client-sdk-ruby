@@ -45,7 +45,7 @@ response = client.create_cache("test_cache")
 if response.success? || response.already_exists?
   puts "Created the cache, or it already exists."
 elsif response.error?
-  raise "Couldn't create a cache: #{response}"
+  raise "Couldn't create a cache: #{response.error}"
 else
   raise
 end
@@ -55,7 +55,7 @@ response = client.set("test_cache", "key", "You cached something!")
 if response.success?
   puts "Set an item in the cache."
 elsif response.error?
-  raise "Couldn't set an item in the cache: #{response}"
+  raise "Couldn't set an item in the cache: #{response.error}"
 else
   raise
 end
@@ -67,7 +67,7 @@ if response.hit?
 elsif response.miss?
   puts "The item wasn't found in the cache."
 elsif response.error?
-  raise "Couldn't get an item from the cache: #{response}"
+  raise "Couldn't get an item from the cache: #{response.error}"
 else
   raise
 end

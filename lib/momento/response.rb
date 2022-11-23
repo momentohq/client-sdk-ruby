@@ -1,5 +1,9 @@
 require 'grpc'
 require_relative 'response/error'
+require_relative 'error'
+require_relative 'error/grpc_details'
+require_relative 'error/transport_details'
+require_relative 'error_builder'
 require_relative 'response_builder'
 require_relative 'create_cache_response'
 require_relative 'create_cache_response_builder'
@@ -17,6 +21,14 @@ require_relative 'set_response_builder'
 module Momento
   # A superclass for all Momento responses.
   class Response
+    # Returns the error portion of the response, if any.
+    #
+    # @return [Momento::Error, nil]
+    def error
+      nil
+    end
+
+    # Is the response an error?
     def error?
       false
     end

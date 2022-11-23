@@ -74,15 +74,19 @@ RSpec.describe Momento::SimpleCacheClient do
 
     context 'when the response is a bad status' do
       let(:grpc_error) { GRPC::InvalidArgument.new }
-      let(:response_class) { Momento::CreateCacheResponse::Error }
 
       before do
         allow(control_stub).to receive(:create_cache)
           .and_raise(grpc_error)
       end
 
-      it 'returns the appropriate Response' do
-        expect(client.create_cache(cache_name)).to be_a response_class
+      it 'returns an error response' do
+        response = client.create_cache(cache_name)
+
+        expect(response.error?).to be true
+        expect(response.error).to be_a_momento_error
+          .with_context({ cache_name: cache_name })
+          .with_grpc_exception(grpc_error)
       end
     end
 
@@ -131,15 +135,19 @@ RSpec.describe Momento::SimpleCacheClient do
 
     context 'when the response is a bad status' do
       let(:grpc_error) { GRPC::NotFound.new }
-      let(:response_class) { Momento::DeleteCacheResponse::Error }
 
       before do
         allow(control_stub).to receive(:delete_cache)
           .and_raise(grpc_error)
       end
 
-      it 'returns the appropriate Response' do
-        expect(client.delete_cache(cache_name)).to be_a response_class
+      it 'returns an error response' do
+        response = client.delete_cache(cache_name)
+
+        expect(response.error?).to be true
+        expect(response.error).to be_a_momento_error
+          .with_context({ cache_name: cache_name })
+          .with_grpc_exception(grpc_error)
       end
     end
 
@@ -195,11 +203,22 @@ RSpec.describe Momento::SimpleCacheClient do
       expect(client.list_caches).to be_a Momento::ListCachesResponse::Success
     end
 
-    it 'returns an error response for a gRPC error' do
-      allow(control_stub).to receive(:list_caches)
-        .and_raise(GRPC::PermissionDenied.new)
+    context 'when the response is a GRPC error' do
+      let(:grpc_error) { GRPC::PermissionDenied.new }
 
-      expect(client.list_caches).to be_a Momento::ListCachesResponse::Error
+      before {
+        allow(control_stub).to receive(:list_caches)
+          .and_raise(grpc_error)
+      }
+
+      it 'returns an error response for a gRPC error' do
+        response = client.list_caches
+
+        expect(response.error?).to be true
+        expect(response.error).to be_a_momento_error
+          .with_context({ next_token: '' })
+          .with_grpc_exception(grpc_error)
+      end
     end
 
     it 'raises on an unknown stub error' do
@@ -249,7 +268,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
       expect {
         client.caches.to_a
-      }.to raise_error(error_response.exception)
+      }.to raise_error(error_response.error.exception)
     end
 
     it 'when list_caches raises, it raises' do
@@ -341,11 +360,12 @@ RSpec.describe Momento::SimpleCacheClient do
         let(:exception) { GRPC::NotFound.new }
 
         it 'returns the appropriate response' do
-          expect(
-            client.get("name", "key")
-          ).to be_a(Momento::GetResponse::Error).and have_attributes(
-            exception: exception
-          )
+          response = client.get("name", "key")
+
+          expect(response.error?).to be true
+          expect(response.error).to be_a_momento_error
+            .with_context({ cache_name: "name", key: "key" })
+            .with_grpc_exception(exception)
         end
       end
 
@@ -447,11 +467,14 @@ RSpec.describe Momento::SimpleCacheClient do
         let(:exception) { GRPC::NotFound.new }
 
         it 'returns the appropriate response' do
-          expect(
-            client.set("name", "key", "value")
-          ).to be_a(Momento::SetResponse::Error).and have_attributes(
-            exception: exception
-          )
+          response = client.set("name", "key", "value", ttl: 123)
+
+          expect(response.error?).to be true
+          expect(response.error).to be_a_momento_error
+            .with_context(
+              { cache_name: "name", key: "key", value: "value", ttl: 123 }
+            )
+            .with_grpc_exception(exception)
         end
       end
 
@@ -530,11 +553,12 @@ RSpec.describe Momento::SimpleCacheClient do
         let(:exception) { GRPC::NotFound.new }
 
         it 'returns the appropriate response' do
-          expect(
-            client.delete("name", "key")
-          ).to be_a(Momento::DeleteResponse::Error).and have_attributes(
-            exception: exception
-          )
+          response = client.delete("name", "key")
+
+          expect(response.error?).to be true
+          expect(response.error).to be_a_momento_error
+            .with_context({ cache_name: "name", key: "key" })
+            .with_grpc_exception(exception)
         end
       end
 

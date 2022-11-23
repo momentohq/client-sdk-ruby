@@ -2,10 +2,12 @@ module Momento
   class Response
     # A module for responses which contain errors.
     module Error
-      attr_reader :exception
+      attr_reader :error
 
-      def initialize(exception:)
-        @exception = exception
+      def initialize(exception:, context: {})
+        @error = Momento::ErrorBuilder.from_exception(
+          exception, context: context
+        ).freeze
       end
 
       def error?
