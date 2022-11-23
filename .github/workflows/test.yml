@@ -2,6 +2,19 @@ name: Test matrix (reusable)
 
 on:
   workflow_call:
+    secrets:
+      auth-token:
+        description: 'Auth token used for live testing'
+        required: false
+    inputs:
+      live:
+        description: 'If true, run tests against a real server'
+        default: false
+        type: boolean
+      cache-name:
+        description: 'The cache name to use for live testing'
+        default: ruby-integration-test-cache
+        type: string
 
 jobs:
   test:
@@ -25,6 +38,6 @@ jobs:
     - name: Run tests
       run: bundle exec rspec
       env:
-        TEST_AUTH_TOKEN: ${{ secrets.ALPHA_TEST_AUTH_TOKEN }}
-        MOMENTO_TEST_LIVE: true
-        TEST_CACHE_NAME: ruby-integration-test-cache
+        TEST_AUTH_TOKEN: ${{ secrets.auth-token }}
+        TEST_CACHE_NAME: ${{ inputs.cache-name }}
+        MOMENTO_TEST_LIVE: ${{ inputs.live }}
