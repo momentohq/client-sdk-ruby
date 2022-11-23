@@ -51,7 +51,7 @@ module Momento
       return error_class.new(
         context: @context,
         exception: @exception,
-        transport_metadata: @exception.metadata,
+        transport_details: Error::TransportDetails.new(grpc: @exception),
         details: @exception.details
       )
     end

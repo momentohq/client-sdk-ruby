@@ -3,18 +3,18 @@ require_relative 'error/types'
 module Momento
   # Errors from the Momento client or service.
   class Error
-    attr_reader :exception, :context, :transport_metadata, :details
+    attr_reader :exception, :context, :transport_details, :details
 
     def initialize(
       exception:,
       context: {},
-      transport_metadata: nil,
+      transport_details: nil,
       details: nil
     )
       @exception = exception
       @context = context
       @details = details
-      @transport_metadata = transport_metadata
+      @transport_details = transport_details
     end
 
     def error_code

@@ -1,6 +1,8 @@
 require 'grpc'
 require_relative 'response/error'
 require_relative 'error'
+require_relative 'error/grpc_details'
+require_relative 'error/transport_details'
 require_relative 'error_builder'
 require_relative 'response_builder'
 require_relative 'create_cache_response'
