@@ -24,3 +24,6 @@ jobs:
 
     - name: Run tests
       run: bundle exec rspec
+      env:
+        MOMENTO_TEST_LIVE: true
+        TEST_CACHE_NAME: ruby-integration-test-cache
