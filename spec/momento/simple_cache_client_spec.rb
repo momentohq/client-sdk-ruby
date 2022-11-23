@@ -405,7 +405,7 @@ RSpec.describe Momento::SimpleCacheClient do
       it_behaves_like 'it sends a SetRequest' do
         subject(:set_call) { client.set("name", "key", "value") }
 
-        let(:expected_ttl) { client.default_ttl }
+        let(:expected_ttl) { client.default_ttl.milliseconds }
       end
     end
 
@@ -413,7 +413,7 @@ RSpec.describe Momento::SimpleCacheClient do
       it_behaves_like 'it sends a SetRequest' do
         subject(:set_call) { client.set("name", "key", "value", ttl: 1234) }
 
-        let(:expected_ttl) { 1234 }
+        let(:expected_ttl) { 1_234_000 }
       end
     end
 
@@ -472,7 +472,7 @@ RSpec.describe Momento::SimpleCacheClient do
           expect(response.error?).to be true
           expect(response.error).to be_a_momento_error
             .with_context(
-              { cache_name: "name", key: "key", value: "value", ttl: 123 }
+              { cache_name: "name", key: "key", value: "value", ttl: Momento::Ttl.to_ttl(123) }
             )
             .with_grpc_exception(exception)
         end

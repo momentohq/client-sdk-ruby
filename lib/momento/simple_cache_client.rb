@@ -2,6 +2,7 @@ require 'jwt'
 require_relative 'cacheclient_services_pb'
 require_relative 'controlclient_services_pb'
 require_relative 'response'
+require_relative 'ttl'
 
 module Momento
   # A simple client for Momento.
@@ -27,14 +28,14 @@ module Momento
     CACHE_CLIENT_STUB_CLASS = CacheClient::Scs::Stub
     CONTROL_CLIENT_STUB_CLASS = ControlClient::ScsControl::Stub
 
-    # The default time to live, in milliseconds.
+    # @return [Numeric] the default time-to-live, in seconds.
     attr_accessor :default_ttl
 
     # @param auth_token [String] the JWT for your Momento account
-    # @param default_ttl [Integer]
+    # @param default_ttl [Numeric] time-to-live, in seconds
     def initialize(auth_token:, default_ttl:)
       @auth_token = auth_token
-      @default_ttl = default_ttl
+      @default_ttl = Momento::Ttl.to_ttl(default_ttl)
       load_endpoints_from_token
     end
 
@@ -65,9 +66,11 @@ module Momento
     # @param cache_name [String]
     # @param key [String] must only contain ASCII characters
     # @param value [String] the value to cache
-    # @param ttl [Integer] time to live, in milliseconds.
+    # @param ttl [Numeric] time-to-live, in seconds.
     # @return [Momento::SetResponse]
     def set(cache_name, key, value, ttl: default_ttl)
+      ttl = Momento::Ttl.to_ttl(ttl)
+
       builder = SetResponseBuilder.new(
         context: { cache_name: cache_name, key: key, value: value, ttl: ttl }
       )
@@ -76,7 +79,7 @@ module Momento
         req = CacheClient::SetRequest.new(
           cache_key: to_bytes(key),
           cache_body: to_bytes(value),
-          ttl_milliseconds: ttl
+          ttl_milliseconds: ttl.milliseconds
         )
 
         cache_stub.set(req, metadata: { cache: cache_name })
