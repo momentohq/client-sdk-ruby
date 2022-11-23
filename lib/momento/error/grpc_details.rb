@@ -8,14 +8,17 @@ module Momento
         @grpc = grpc
       end
 
+      # @return [Integer]
       def code
-        grpc.status
+        grpc.code
       end
 
+      # @return [String]
       def details
         grpc.details
       end
 
+      # @return [Hash]
       def metadata
         grpc.metadata
       end
