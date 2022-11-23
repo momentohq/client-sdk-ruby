@@ -92,4 +92,67 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
     expect(client.caches).not_to include(cache_name)
   end
   # rubocop:enable RSpec/ExampleLength,RSpec/MultipleExpectations
+
+  describe '#create_cache' do
+    subject {
+      client.create_cache(cache_name)
+    }
+
+    context 'when the cache already exists' do
+      before {
+        client.create_cache(cache_name)
+      }
+
+      it {
+        is_expected.to have_attributes(
+          success?: false,
+          error?: false,
+          already_exists?: true,
+          error: nil
+        )
+      }
+    end
+
+    context 'when the cache name is empty' do
+      let(:cache_name) { "" }
+
+      it {
+        is_expected.to have_attributes(
+          success?: false,
+          error?: true,
+          error: have_attributes(
+            error_code: :INVALID_ARGUMENT_ERROR
+          )
+        )
+      }
+    end
+
+    context 'when the cache name is invalid' do
+      let(:cache_name) { "süpé® çåçhê 9ººº" }
+
+      it {
+        is_expected.to have_attributes(
+          success?: false,
+          error?: true,
+          error: have_attributes(
+            error_code: :INVALID_ARGUMENT_ERROR
+          )
+        )
+      }
+    end
+
+    context 'when the server cannot be contacted' do
+      let(:auth_token) { build(:auth_token) }
+
+      it {
+        is_expected.to have_attributes(
+          success?: false,
+          error?: true,
+          error: have_attributes(
+            error_code: :SERVER_UNAVAILABLE
+          )
+        )
+      }
+    end
+  end
 end
