@@ -163,7 +163,7 @@ module Momento
       end
 
       def message
-        "The service returned an unknown response; please contact Momento: ${details}"
+        "The service returned an unknown response; please contact Momento: #{details}"
       end
     end
 
