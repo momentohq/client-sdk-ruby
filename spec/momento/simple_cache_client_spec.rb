@@ -12,11 +12,11 @@ RSpec.describe Momento::SimpleCacheClient do
 
     context 'with a bad ttl' do
       let(:client) {
-        build(:momento_simple_cache_client, ttl: "whatever")
+        build(:momento_simple_cache_client, default_ttl: "whatever")
       }
 
       it {
-        expect { subject }.to raise_error(ArgumentError)
+        expect { subject }.to raise_error(ArgumentError, /is not Numeric/)
       }
     end
   end
