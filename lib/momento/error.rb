@@ -17,10 +17,12 @@ module Momento
       @transport_details = transport_details
     end
 
+    # @return [String]
     def error_code
-      @error_code ||= self.class.name.split('::').last
+      raise NotImplementedEror
     end
 
+    # @return [String]
     def message
       raise NotImplementedEror
     end
