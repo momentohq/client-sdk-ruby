@@ -9,6 +9,16 @@ RSpec.describe Momento::SimpleCacheClient do
     subject { client }
 
     it { is_expected.to be_a described_class }
+
+    context 'with a bad ttl' do
+      let(:client) {
+        build(:momento_simple_cache_client, ttl: "whatever")
+      }
+
+      it {
+        expect { subject }.to raise_error(ArgumentError)
+      }
+    end
   end
 
   shared_examples 'a gRPC stub' do
@@ -414,6 +424,14 @@ RSpec.describe Momento::SimpleCacheClient do
         subject(:set_call) { client.set("name", "key", "value", ttl: 1234) }
 
         let(:expected_ttl) { 1_234_000 }
+      end
+    end
+
+    context 'with an invalid ttl' do
+      it 'raises' do
+        expect {
+          client.set("name", "key", "value", ttl: "whenever")
+        }.to raise_error(ArgumentError)
       end
     end
 

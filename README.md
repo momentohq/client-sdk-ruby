@@ -31,8 +31,8 @@ require 'momento'
 # Get your Momento token from an environment variable.
 token = ENV.fetch('MOMENTO_AUTH_TOKEN')
 
-# Cached items will be deleted after 30 seconds.
-ttl = 30_000
+# Cached items will be deleted after 12.5 seconds.
+ttl = 12.5
 
 # Instantiate a Momento client.
 client = Momento::SimpleCacheClient.new(

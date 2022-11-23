@@ -16,7 +16,21 @@ RSpec.describe Momento::Ttl do
     context 'when it is nil' do
       let(:input_ttl) { nil }
 
-      it { is_expected.to be_nil }
+      it {
+        expect {
+          subject
+        }.to raise_error(ArgumentError, /is not Numeric/)
+      }
+    end
+
+    context 'when it is not Numeric' do
+      let(:input_ttl) { "whenever" }
+
+      it {
+        expect {
+          subject
+        }.to raise_error(ArgumentError, /is not Numeric/)
+      }
     end
 
     context 'when it is an integer' do
@@ -37,6 +51,26 @@ RSpec.describe Momento::Ttl do
         is_expected.to have_attributes(
           seconds: 123.456,
           milliseconds: 123_456
+        )
+      }
+    end
+
+    context 'when it is negative' do
+      let(:input_ttl) { -0.001 }
+
+      it {
+        expect {
+          subject
+        }.to raise_error(ArgumentError, /is less than 0/)
+      }
+    end
+
+    context 'when it is zero' do
+      let(:input_ttl) { 0 }
+
+      it {
+        is_expected.to have_attributes(
+          seconds: 0, milliseconds: 0
         )
       }
     end

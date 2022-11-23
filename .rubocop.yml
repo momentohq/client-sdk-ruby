@@ -28,6 +28,9 @@ RSpec/MultipleExpectations:
   Max: 4
 RSpec/MultipleMemoizedHelpers:
   Max: 10
+# I disagree with this one. It should be clear you're using the subject.
+RSpec/NamedSubject:
+  Enabled: false
 RSpec/NestedGroups:
   Max: 4
 
