@@ -15,7 +15,9 @@ module Momento
       # @return [Momento::Ttl]
       def to_ttl(ttl)
         return ttl if ttl.is_a?(self)
-        return if ttl.nil?
+
+        raise ArgumentError, "ttl '#{ttl}' is not Numeric" unless ttl.is_a?(Numeric)
+        raise ArgumentError, "ttl #{ttl} is less than 0" if ttl.negative?
 
         new(ttl)
       end

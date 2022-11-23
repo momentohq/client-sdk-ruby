@@ -33,6 +33,7 @@ module Momento
 
     # @param auth_token [String] the JWT for your Momento account
     # @param default_ttl [Numeric] time-to-live, in seconds
+    # @raise [ArgumentError] if the default_ttl is invalid
     def initialize(auth_token:, default_ttl:)
       @auth_token = auth_token
       @default_ttl = Momento::Ttl.to_ttl(default_ttl)
@@ -67,6 +68,7 @@ module Momento
     # @param key [String] must only contain ASCII characters
     # @param value [String] the value to cache
     # @param ttl [Numeric] time-to-live, in seconds.
+    # @raise [ArgumentError] if the ttl is invalid
     # @return [Momento::SetResponse]
     def set(cache_name, key, value, ttl: default_ttl)
       ttl = Momento::Ttl.to_ttl(ttl)
