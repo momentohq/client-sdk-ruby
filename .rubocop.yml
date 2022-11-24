@@ -11,8 +11,14 @@ AllCops:
     - 'lib/**/*_pb.rb'
     - 'vendor/**/*'
 
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
+
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
+
+Layout/MultilineMethodCallBraceLayout:
+  EnforcedStyle: new_line
 
 Lint/AmbiguousBlockAssociation:
   # For rspec
