@@ -229,4 +229,34 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
       it_behaves_like 'it handles invalid cache names'
     end
   end
+
+  describe '#set' do
+    subject {
+      client.set(cache_name, key, value)
+    }
+
+    it 'sets a ttl', :include_cache_exists do
+      ttl = 0.5
+
+      expect(
+        client.set(cache_name, key, value, ttl: ttl)
+      ).to be_success
+
+      expect(
+        client.get(cache_name, key)
+      ).to be_hit
+
+      # Short duration TTLs are not accurate.
+      sleep(ttl * 2)
+
+      expect(
+        client.get(cache_name, key)
+      ).to be_miss
+    end
+
+    it_behaves_like 'it handles server failures'
+    skip "Invalid cache name handling is inconsistent" do
+      it_behaves_like 'it handles invalid cache names'
+    end
+  end
 end
