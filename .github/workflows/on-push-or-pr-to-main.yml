@@ -28,3 +28,7 @@ jobs:
 
   test:
     uses: ./.github/workflows/test.yml
+    secrets:
+      auth-token: ${{ secrets.ALPHA_TEST_AUTH_TOKEN }}
+    with:
+      live: true
