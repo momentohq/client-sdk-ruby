@@ -60,7 +60,6 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
   shared_examples 'it handles invalid cache names' do
     it "responds with InvalidArgumentError", :include_empty_cache_name do
       is_expected.to have_attributes(
-        success?: false,
         error?: true,
         error: have_attributes(
           error_code: :INVALID_ARGUMENT_ERROR
@@ -70,7 +69,6 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
 
     it "responds with InvalidArgumentError", :include_invalid_cache_name do
       is_expected.to have_attributes(
-        success?: false,
         error?: true,
         error: have_attributes(
           error_code: :INVALID_ARGUMENT_ERROR
@@ -82,7 +80,6 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
   shared_examples 'it handles server failures' do
     it "responds with SERVER_UNAVAILABLE", :include_invalid_server do
       is_expected.to have_attributes(
-        success?: false,
         error?: true,
         error: have_attributes(
           error_code: :SERVER_UNAVAILABLE
