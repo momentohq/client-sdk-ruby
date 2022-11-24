@@ -22,6 +22,12 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
       default_ttl: 10
     )
   }
+  let(:key) {
+    Faker::Lorem.word
+  }
+  let(:value) {
+    Faker::Lorem.paragraph
+  }
 
   # Clean up after each test.
   around do |example|
@@ -90,9 +96,6 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
 
   # rubocop:disable RSpec/ExampleLength,RSpec/MultipleExpectations
   it 'creates, lists, sets, gets, and deletes' do
-    key = Faker::Lorem.word
-    value = Faker::Lorem.paragraph
-
     expect(
       client.create_cache(cache_name)
     ).to have_attributes(
@@ -182,6 +185,43 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
           error_code: :NOT_FOUND_ERROR
         )
       )
+    end
+
+    it_behaves_like 'it handles server failures'
+    skip "Invalid cache name handling is inconsistent" do
+      it_behaves_like 'it handles invalid cache names'
+    end
+  end
+
+  describe '#get' do
+    subject {
+      client.get(cache_name, key)
+    }
+
+    it 'with no key, it will miss', :include_cache_exists do
+      is_expected.to have_attributes(
+        hit?: false,
+        miss?: true,
+        error?: false,
+        error: nil,
+        value: nil
+      )
+    end
+
+    context 'when there is a key', :include_cache_exists do
+      before {
+        client.set(cache_name, key, value)
+      }
+
+      it 'will hit' do
+        is_expected.to have_attributes(
+          hit?: true,
+          miss?: false,
+          error?: false,
+          error: nil,
+          value: value
+        )
+      end
     end
 
     it_behaves_like 'it handles server failures'
