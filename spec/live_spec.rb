@@ -244,7 +244,10 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
 
       expect(
         client.get(cache_name, key)
-      ).to be_hit
+      ).to have_attributes(
+        hit?: true,
+        value: value
+      )
 
       # Short duration TTLs are not accurate.
       sleep(ttl * 2)
@@ -252,6 +255,61 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
       expect(
         client.get(cache_name, key)
       ).to be_miss
+    end
+
+    context 'with a UTF-8 string' do
+      let(:value) {
+        Faker::String.random
+      }
+
+      it 'sets', :include_cache_exists do
+        expect(
+          client.set(cache_name, key, value)
+        ).to be_success
+
+        expect(
+          client.get(cache_name, key)
+        ).to have_attributes(
+          hit?: true,
+          value: value.force_encoding(Encoding::ASCII_8BIT)
+        )
+      end
+    end
+
+    context 'with binary data' do
+      let(:value) {
+        File.read("spec/support/assets/test.jpg", encoding: Encoding::ASCII_8BIT)
+      }
+
+      it 'sets', :include_cache_exists do
+        expect(
+          client.set(cache_name, key, value)
+        ).to be_success
+
+        expect(
+          client.get(cache_name, key)
+        ).to have_attributes(
+          hit?: true,
+          value: value
+        )
+      end
+    end
+
+    context 'with an empty string' do
+      let(:value) { "" }
+
+      it 'sets', :include_cache_exists do
+        expect(
+          client.set(cache_name, key, value)
+        ).to be_success
+
+        expect(
+          client.get(cache_name, key)
+        ).to have_attributes(
+          hit?: true,
+          value: value
+        )
+      end
     end
 
     it_behaves_like 'it handles server failures'
