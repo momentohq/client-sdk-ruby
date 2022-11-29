@@ -12,9 +12,35 @@ RSpec.describe Momento::GetResponse::Hit do
     let(:subclass_attributes) do
       {
         hit?: true,
-        value: grpc_response.cache_body,
-        to_s: response.value
+        value: grpc_response.cache_body
       }
+    end
+  end
+
+  describe '#to_s' do
+    subject { response.to_s }
+
+    let(:response) {
+      build(:momento_get_response_hit, value: value)
+    }
+
+    context 'when the vaule is short' do
+      let(:value) { "short" }
+
+      it { is_expected.to match(/short/) }
+    end
+
+    context 'when the value is long' do
+      let(:value) {
+        v = <<-VALUE
+        Lopado­temacho­selacho­galeo­kranio­leipsano­drim­hypo­trimmato­silphio­karabo­melito­katakechy­meno­kichl­epi­kossypho­phatto­perister­alektryon­opte­kephallio­kigklo­peleio­lagoio­siraio­baphe­tragano­pterygon
+        VALUE
+
+        # This is going directly to the GRPC response which requires ASCII 8Bit.
+        v.force_encoding(Encoding::ASCII_8BIT)
+      }
+
+      it { is_expected.to include("...") }
     end
   end
 end
