@@ -39,6 +39,50 @@ RSpec.describe Momento::SimpleCacheClient do
     end
   end
 
+  shared_examples 'it validates the key' do
+    context 'with a non-String key' do
+      let(:key) { 42 }
+
+      it 'raises TypeError' do
+        expect {
+          subject
+        }.to raise_error(TypeError, /expected a String, got a Integer/)
+      end
+    end
+
+    context 'when a nil key' do
+      let(:key) { nil }
+
+      it 'raises TypeError' do
+        expect {
+          subject
+        }.to raise_error(TypeError, /expected a String, got a NilClass/)
+      end
+    end
+  end
+
+  shared_examples 'it validates the value' do
+    context 'with a non-String value' do
+      let(:value) { 42 }
+
+      it 'raises TypeError' do
+        expect {
+          subject
+        }.to raise_error(TypeError, /expected a String, got a Integer/)
+      end
+    end
+
+    context 'when a nil value' do
+      let(:value) { nil }
+
+      it 'raises TypeError' do
+        expect {
+          subject
+        }.to raise_error(TypeError, /expected a String, got a NilClass/)
+      end
+    end
+  end
+
   describe '#cache_stub' do
     let(:stub_class) { described_class.const_get(:CACHE_CLIENT_STUB_CLASS) }
     let(:stub_method) { :cache_stub }
@@ -303,6 +347,8 @@ RSpec.describe Momento::SimpleCacheClient do
     let(:cache_name) { Faker::Lorem.word }
     let(:key) { Faker::Lorem.word }
 
+    it_behaves_like 'it validates the key'
+
     it 'sends a GetRequest with the cache name and key' do
       allow(cache_stub).to receive(:get)
         .and_return(build(:momento_cache_client_get_response, :hit))
@@ -413,6 +459,9 @@ RSpec.describe Momento::SimpleCacheClient do
     let(:key) { Faker::Lorem.word }
     let(:value) { Faker::Lorem.paragraph }
     let(:ttl) { 1234 }
+
+    it_behaves_like 'it validates the key'
+    it_behaves_like 'it validates the value'
 
     shared_examples 'it sends a SetRequest' do
       it 'sends a SetRequest with the cache name, key, value, and ttl' do
@@ -540,6 +589,8 @@ RSpec.describe Momento::SimpleCacheClient do
 
     let(:cache_name) { Faker::Lorem.word }
     let(:key) { Faker::Lorem.word }
+
+    it_behaves_like 'it validates the key'
 
     it 'sends a DeleteRequest with the cache name and key' do
       allow(cache_stub).to receive(:delete)

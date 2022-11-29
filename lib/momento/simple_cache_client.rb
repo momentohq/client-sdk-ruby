@@ -47,6 +47,7 @@ module Momento
     # @param cache_name [String]
     # @param key [String] must only contain ASCII characters
     # @return [Momento::GetResponse]
+    # @raise [TypeError] when the key is not a String
     def get(cache_name, key)
       builder = GetResponseBuilder.new(
         context: { cache_name: cache_name, key: key }
@@ -70,6 +71,7 @@ module Momento
     # @param ttl [Numeric] time-to-live, in seconds.
     # @raise [ArgumentError] if the ttl is invalid
     # @return [Momento::SetResponse]
+    # @raise [TypeError] when the key or value is not a String
     def set(cache_name, key, value, ttl: default_ttl)
       ttl = Momento::Ttl.to_ttl(ttl)
 
@@ -93,6 +95,7 @@ module Momento
     # @param cache_name [String]
     # @param key [String] must only contain ASCII characters
     # @return [Momento::DeleteResponse]
+    # @raise [TypeError] when the key or value is not a String
     def delete(cache_name, key)
       builder = DeleteResponseBuilder.new(
         context: { cache_name: cache_name, key: key }
@@ -223,7 +226,10 @@ module Momento
     #
     # @param string [String] the string to make safe for GRPC bytes
     # @return [String] a duplicate safe to use as GRPC bytes
+    # @raise [TypeError] when the string is not a String
     def to_bytes(string)
+      raise TypeError, "expected a String, got a #{string.class}" unless string.is_a?(String)
+
       # dup in case the value is frozen and to avoid changing the value's encoding
       # for the caller.
       return string.dup.force_encoding(Encoding::ASCII_8BIT)
