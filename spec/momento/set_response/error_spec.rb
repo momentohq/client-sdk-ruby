@@ -5,6 +5,8 @@ RSpec.describe Momento::SetResponse::Error do
     build(:momento_set_response_error)
   }
 
+  it_behaves_like Momento::Response::Error
+
   it_behaves_like Momento::SetResponse do
     let(:subclass_attributes) do
       {

@@ -13,6 +13,10 @@ module Momento
       def error?
         true
       end
+
+      def to_s
+        "#{super}: #{error.message}"
+      end
     end
   end
 end
