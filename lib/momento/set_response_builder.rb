@@ -19,7 +19,7 @@ module Momento
     else
       raise TypeError unless response.is_a?(::Momento::CacheClient::SetResponse)
 
-      SetResponse::Success.new
+      SetResponse::Success.new(key: context[:key], value: context[:value])
     end
   end
 end

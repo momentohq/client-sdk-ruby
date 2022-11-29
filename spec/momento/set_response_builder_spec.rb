@@ -22,6 +22,13 @@ RSpec.describe Momento::SetResponseBuilder do
       }
 
       it_behaves_like '#from_block wraps gRPC responses'
+
+      it 'passes the key and value from context' do
+        builder.context = { key: "key", value: "value" }
+
+        momento_response = builder.from_block { response }
+        expect(momento_response).to have_attributes(key: "key", value: "value")
+      end
     end
   end
 end

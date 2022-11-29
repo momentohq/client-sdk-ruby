@@ -3,6 +3,9 @@ FactoryBot.define do
     :momento_set_response_success,
     class: "Momento::SetResponse::Success"
   ) do
+    key { Faker::Lorem.word }
+    value { Faker::Lorem.sentence }
+
     momento_response
   end
 
