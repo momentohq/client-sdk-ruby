@@ -24,4 +24,10 @@ RSpec.shared_examples Momento::Response do
       expect(response).to have_attributes(**expected_attributes)
     end
   end
+
+  describe '#to_s' do
+    it 'starts with the class' do
+      expect(response.to_s).to start_with(response.class.to_s)
+    end
+  end
 end

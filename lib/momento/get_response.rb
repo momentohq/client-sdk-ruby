@@ -37,7 +37,7 @@ module Momento
       end
 
       def to_s
-        "#{self.class}: #{display_value}"
+        "#{super}: #{display_value}"
       end
 
       private
