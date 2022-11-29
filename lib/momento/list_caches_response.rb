@@ -9,6 +9,8 @@ module Momento
 
     # A Momento resposne with a page of caches.
     class Success < ListCachesResponse
+      CACHE_NAMES_TO_DISPLAY = 5
+
       # rubocop:disable Lint/MissingSuper
       def initialize(grpc_response:)
         @grpc_response = grpc_response
@@ -25,6 +27,22 @@ module Momento
 
       def next_token
         @grpc_response.next_token
+      end
+
+      def to_s
+        "#{super}: #{display_cache_names}"
+      end
+
+      private
+
+      def display_cache_names
+        display = cache_names.first(CACHE_NAMES_TO_DISPLAY).join(", ")
+
+        if cache_names.size > CACHE_NAMES_TO_DISPLAY
+          "#{display}, ..."
+        else
+          display
+        end
       end
     end
 
