@@ -21,6 +21,8 @@ require_relative 'set_response_builder'
 module Momento
   # A superclass for all Momento responses.
   class Response
+    MAX_STRING_DISPLAY_LENGTH = 32
+
     # Returns the error portion of the response, if any.
     #
     # @return [Momento::Error, nil]
@@ -35,6 +37,14 @@ module Momento
 
     def to_s
       self.class.to_s
+    end
+
+    def display_string(string, max_length: MAX_STRING_DISPLAY_LENGTH)
+      if string.length < max_length
+        string
+      else
+        "#{string[0, max_length]}..."
+      end
     end
   end
 end

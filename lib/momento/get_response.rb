@@ -20,8 +20,6 @@ module Momento
 
     # Successfully got an item from the cache.
     class Hit < GetResponse
-      VALUE_DISPLAY_LENGTH = 32
-
       # rubocop:disable Lint/MissingSuper
       def initialize(grpc_response:)
         @grpc_response = grpc_response
@@ -37,17 +35,7 @@ module Momento
       end
 
       def to_s
-        "#{super}: #{display_value}"
-      end
-
-      private
-
-      def display_value
-        if value.length < VALUE_DISPLAY_LENGTH
-          value
-        else
-          "#{value[0, VALUE_DISPLAY_LENGTH]}..."
-        end
+        "#{super}: #{display_string(value)}"
       end
     end
 
