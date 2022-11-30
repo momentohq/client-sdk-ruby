@@ -35,7 +35,7 @@ module Momento
       end
 
       def to_s
-        value
+        "#{super}: #{display_string(value)}"
       end
     end
 

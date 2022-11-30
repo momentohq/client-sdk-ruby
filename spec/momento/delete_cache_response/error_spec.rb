@@ -5,6 +5,8 @@ RSpec.describe Momento::DeleteCacheResponse::Error do
     build(:momento_delete_cache_response_error)
   }
 
+  it_behaves_like Momento::Response::Error
+
   it_behaves_like Momento::DeleteCacheResponse do
     let(:subclass_attributes) do
       {
