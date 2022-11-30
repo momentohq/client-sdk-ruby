@@ -121,7 +121,7 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
       miss?: false,
       error?: false,
       error: nil,
-      value: value
+      value_string: value
     )
 
     expect(
@@ -139,7 +139,8 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
       miss?: true,
       error?: false,
       error: nil,
-      value: nil
+      value_string: nil,
+      value_bytes: nil
     )
 
     expect(
@@ -202,7 +203,8 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
         miss?: true,
         error?: false,
         error: nil,
-        value: nil
+        value_string: nil,
+        value_bytes: nil
       )
     end
 
@@ -217,7 +219,7 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
           miss?: false,
           error?: false,
           error: nil,
-          value: value
+          value_string: value
         )
       end
     end
@@ -242,7 +244,7 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
         client.get(cache_name, key)
       ).to have_attributes(
         hit?: true,
-        value: value
+        value_string: value
       )
 
       # Short duration TTLs are not accurate.
@@ -267,7 +269,7 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
           client.get(cache_name, key)
         ).to have_attributes(
           hit?: true,
-          value: value.force_encoding(Encoding::ASCII_8BIT)
+          value_string: value
         )
       end
     end
@@ -286,7 +288,7 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
           client.get(cache_name, key)
         ).to have_attributes(
           hit?: true,
-          value: value
+          value_bytes: value
         )
       end
     end
@@ -303,7 +305,7 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
           client.get(cache_name, key)
         ).to have_attributes(
           hit?: true,
-          value: value
+          value_string: value
         )
       end
     end
