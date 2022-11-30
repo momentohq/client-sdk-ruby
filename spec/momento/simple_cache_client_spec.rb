@@ -461,7 +461,7 @@ RSpec.describe Momento::SimpleCacheClient do
           expect(
             subject
           ).to be_a(Momento::GetResponse::Hit).and have_attributes(
-            value: grpc_response.cache_body
+            value_string: grpc_response.cache_body
           )
         end
       end

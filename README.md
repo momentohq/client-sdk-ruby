@@ -63,7 +63,7 @@ end
 # And get it back.
 response = client.get("test_cache", "key")
 if response.hit?
-  puts "Cache returned: #{response.value}"
+  puts "Cache returned: #{response.value_string}"
 elsif response.miss?
   puts "The item wasn't found in the cache."
 elsif response.error?

@@ -5,7 +5,9 @@ RSpec.shared_examples Momento::GetResponse do
     let(:superclass_attributes) do
       {
         hit?: false,
-        miss?: false
+        miss?: false,
+        value_bytes: nil,
+        value_string: nil
       }
     end
   end

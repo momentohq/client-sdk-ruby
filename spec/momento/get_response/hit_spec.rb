@@ -12,8 +12,37 @@ RSpec.describe Momento::GetResponse::Hit do
     let(:subclass_attributes) do
       {
         hit?: true,
-        value: grpc_response.cache_body
+        value_string: grpc_response.cache_body,
+        value_bytes: grpc_response.cache_body
       }
+    end
+  end
+
+  describe '#value_bytes' do
+    subject { response.value_bytes }
+
+    it {
+      is_expected.to have_attributes(
+        frozen?: true,
+        encoding: Encoding::ASCII_8BIT
+      )
+    }
+  end
+
+  describe '#value_string' do
+    subject { response.value_string }
+
+    it {
+      is_expected.to have_attributes(
+        frozen?: false,
+        encoding: Encoding::UTF_8
+      )
+    }
+
+    it 'will accept a different encoding' do
+      expect(
+        response.value_string(Encoding::Big5)
+      ).to have_attributes(encoding: Encoding::Big5)
     end
   end
 

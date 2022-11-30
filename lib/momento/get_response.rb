@@ -13,8 +13,18 @@ module Momento
       false
     end
 
-    # @return [String,nil] the gotten value, if any.
-    def value
+    # The gotten value, if any, as binary data: an ASCII_8BIT encoded frozen String.
+    #
+    # @return [String,nil] the value, if any, frozen and ASCII_8BIT encoded
+    def value_bytes
+      nil
+    end
+
+    # The gotten value, if any, as a string using your default encoding or specified one.
+    #
+    # @param encoding [Encoding] defaults to Encoding.default_external
+    # @return [String,nil] the value, if any, re-encoded
+    def value_string
       nil
     end
 
@@ -30,12 +40,16 @@ module Momento
         true
       end
 
-      def value
+      def value_bytes
         @grpc_response.cache_body
       end
 
+      def value_string(encoding = Encoding.default_external)
+        value_bytes.dup.force_encoding(encoding)
+      end
+
       def to_s
-        "#{super}: #{display_string(value)}"
+        "#{super}: #{display_string(value_string)}"
       end
     end
 
