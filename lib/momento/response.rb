@@ -39,6 +39,8 @@ module Momento
       self.class.to_s
     end
 
+    protected
+
     def display_string(string, max_length: MAX_STRING_DISPLAY_LENGTH)
       if string.length < max_length
         string
