@@ -42,8 +42,7 @@ module Momento
 
     def from_exception
       return from_grpc_exception ||
-             from_other_exception ||
-             from_unknown_exception
+             from_other_exception
     end
 
     private
