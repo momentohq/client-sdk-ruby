@@ -1,7 +1,7 @@
 module Momento
-  # Internal class
-  #
   # Validates and represents a time-to-live.
+  #
+  # @private
   class Ttl
     class << self
       # Create a Momento::Ttl object.

@@ -2,9 +2,7 @@ require 'grpc'
 require_relative 'cacheclient_pb'
 
 module Momento
-  # An internal class.
-  #
-  # Builds DeleteResponses
+  # @private
   class DeleteResponseBuilder < ResponseBuilder
     # Build a Momento::DeleteResponse from a block of code
     # which returns a Momento::CacheClient::DeleteResponse..

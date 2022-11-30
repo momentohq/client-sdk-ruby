@@ -1,7 +1,7 @@
 module Momento
-  # An internal class.
-  #
   # A superclass for building responses.
+  #
+  # @private
   class ResponseBuilder
     attr_accessor :context
 

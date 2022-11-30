@@ -3,9 +3,7 @@ require_relative 'cacheclient_pb'
 require_relative 'get_response'
 
 module Momento
-  # An internal class.
-  #
-  # Builds GetResponses
+  # @private
   class GetResponseBuilder < ResponseBuilder
     # Build a Momento::GetResponse from a block of code
     # which returns a Momento::ControlClient::GetResponse.
