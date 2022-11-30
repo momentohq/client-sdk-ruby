@@ -19,6 +19,22 @@ RSpec.describe Momento::SimpleCacheClient do
         expect { subject }.to raise_error(ArgumentError, /is not Numeric/)
       }
     end
+
+    context 'with an invalid JWT' do
+      let(:invalid_token) { "let me iiiin!" }
+
+      let(:client) {
+        build(:momento_simple_cache_client, auth_token: invalid_token)
+      }
+
+      it 'raises a ArgumentError' do
+        expect {
+          subject
+        }.to raise_error(
+          an_instance_of(ArgumentError).and(have_attributes(cause: JWT::DecodeError))
+        )
+      end
+    end
   end
 
   shared_examples 'a gRPC stub' do

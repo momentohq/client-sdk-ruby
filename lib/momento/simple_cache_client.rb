@@ -34,7 +34,7 @@ module Momento
 
     # @param auth_token [String] the JWT for your Momento account
     # @param default_ttl [Numeric] time-to-live, in seconds
-    # @raise [ArgumentError] if the default_ttl is invalid
+    # @raise [ArgumentError] if the default_ttl or auth_token is invalid
     def initialize(auth_token:, default_ttl:)
       @auth_token = auth_token
       @default_ttl = Momento::Ttl.to_ttl(default_ttl)
@@ -212,6 +212,8 @@ module Momento
 
       @control_endpoint = claim["cp"]
       @cache_endpoint = claim["c"]
+    rescue JWT::DecodeError
+      raise ArgumentError, "Invalid Momento auth token."
     end
 
     def make_combined_credentials
