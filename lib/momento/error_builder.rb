@@ -1,5 +1,6 @@
 require 'grpc'
 require_relative 'error/types'
+require_relative 'exceptions'
 
 module Momento
   # An internal class to build Momento::Errors
@@ -23,8 +24,9 @@ module Momento
       GRPC::Unknown => Error::UnknownServiceError
     }.freeze
 
-    # Default to UnknownError.
-    OTHER_EXCEPTION_MAP = Hash.new(Error::UnknownError).freeze
+    OTHER_EXCEPTION_MAP = {
+      Momento::CacheNameError => Error::InvalidArgumentError
+    }.freeze
 
     class << self
       def from_exception(exception, context: {})
@@ -58,7 +60,7 @@ module Momento
     end
 
     def from_other_exception
-      error_class = OTHER_EXCEPTION_MAP[@exception.class]
+      error_class = OTHER_EXCEPTION_MAP[@exception.class] || Error::UnknownError
 
       return error_class.new(
         context: @context,

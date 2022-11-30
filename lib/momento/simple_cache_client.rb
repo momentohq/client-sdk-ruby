@@ -3,6 +3,7 @@ require_relative 'cacheclient_services_pb'
 require_relative 'controlclient_services_pb'
 require_relative 'response'
 require_relative 'ttl'
+require_relative 'exceptions'
 
 module Momento
   # A simple client for Momento.
@@ -49,13 +50,13 @@ module Momento
     # @return [Momento::GetResponse]
     # @raise [TypeError] when the key is not a String
     def get(cache_name, key)
-      validate_cache_name(cache_name)
-
       builder = GetResponseBuilder.new(
         context: { cache_name: cache_name, key: key }
       )
 
       return builder.from_block do
+        validate_cache_name(cache_name)
+
         cache_stub.get(
           CacheClient::GetRequest.new(cache_key: to_bytes(key)),
           metadata: { cache: cache_name }
@@ -76,13 +77,14 @@ module Momento
     # @raise [TypeError] when the key or value is not a String
     def set(cache_name, key, value, ttl: default_ttl)
       ttl = Momento::Ttl.to_ttl(ttl)
-      validate_cache_name(cache_name)
 
       builder = SetResponseBuilder.new(
         context: { cache_name: cache_name, key: key, value: value, ttl: ttl }
       )
 
       return builder.from_block do
+        validate_cache_name(cache_name)
+
         req = CacheClient::SetRequest.new(
           cache_key: to_bytes(key),
           cache_body: to_bytes(value),
@@ -100,13 +102,13 @@ module Momento
     # @return [Momento::DeleteResponse]
     # @raise [TypeError] when the key or value is not a String
     def delete(cache_name, key)
-      validate_cache_name(cache_name)
-
       builder = DeleteResponseBuilder.new(
         context: { cache_name: cache_name, key: key }
       )
 
       return builder.from_block do
+        validate_cache_name(cache_name)
+
         cache_stub.delete(
           CacheClient::DeleteRequest.new(cache_key: to_bytes(key)),
           metadata: { cache: cache_name }
@@ -119,13 +121,13 @@ module Momento
     # @param cache_name [String] the name of the cache to create.
     # @return [Momento::CreateCacheResponse] the response from Momento.
     def create_cache(cache_name)
-      validate_cache_name(cache_name)
-
       builder = CreateCacheResponseBuilder.new(
         context: { cache_name: cache_name }
       )
 
       return builder.from_block do
+        validate_cache_name(cache_name)
+
         control_stub.create_cache(
           ControlClient::CreateCacheRequest.new(cache_name: cache_name)
         )
@@ -137,13 +139,13 @@ module Momento
     # @param cache_name [String] the name of the cache to delete.
     # @return [Momento::DeleteCacheResponse] the response from Momento.
     def delete_cache(cache_name)
-      validate_cache_name(cache_name)
-
       builder = DeleteCacheResponseBuilder.new(
         context: { cache_name: cache_name }
       )
 
       return builder.from_block do
+        validate_cache_name(cache_name)
+
         control_stub.delete_cache(
           ControlClient::DeleteCacheRequest.new(cache_name: cache_name)
         )
@@ -244,10 +246,16 @@ module Momento
       return string.dup.force_encoding(Encoding::ASCII_8BIT)
     end
 
+    # This is not a complete validation of the cache name, just
+    # issues that might cause an exception in the client. Let the server
+    # handle the rest of the validation.
+    #
     # @param name [String] the cache name to validate
     # @raise [TypeError] when the name is not a String
+    # @raise [Momento::CacheNameError] when the name is not ASCII
     def validate_cache_name(name)
       raise TypeError, "Cache name must be a String, got a #{name.class}" unless name.is_a?(String)
+      raise Momento::CacheNameError, "Cache name must be ASCII, got '#{name}'" if name.match?(/[^[:ascii:]]/)
 
       return
     end

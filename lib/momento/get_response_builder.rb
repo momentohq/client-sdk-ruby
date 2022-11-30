@@ -15,7 +15,7 @@ module Momento
     # @raise [TypeError] when the response is not recognized.
     def from_block
       response = yield
-    rescue GRPC::BadStatus => e
+    rescue *RESCUED_EXCEPTIONS => e
       GetResponse::Error.new(exception: e, context: context)
     else
       from_response(response)

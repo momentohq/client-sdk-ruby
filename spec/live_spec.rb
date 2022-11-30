@@ -188,9 +188,7 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
     end
 
     it_behaves_like 'it handles server failures'
-    skip "Invalid cache name handling is inconsistent" do
-      it_behaves_like 'it handles invalid cache names'
-    end
+    it_behaves_like 'it handles invalid cache names'
   end
 
   describe '#get' do
@@ -225,9 +223,7 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
     end
 
     it_behaves_like 'it handles server failures'
-    skip "Invalid cache name handling is inconsistent" do
-      it_behaves_like 'it handles invalid cache names'
-    end
+    it_behaves_like 'it handles invalid cache names'
   end
 
   describe '#set' do
@@ -313,9 +309,7 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
     end
 
     it_behaves_like 'it handles server failures'
-    skip "Invalid cache name handling is inconsistent" do
-      it_behaves_like 'it handles invalid cache names'
-    end
+    it_behaves_like 'it handles invalid cache names'
   end
 
   describe '#delete' do
@@ -356,8 +350,6 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
     end
 
     it_behaves_like 'it handles server failures'
-    skip "Invalid cache name handling is inconsistent" do
-      it_behaves_like 'it handles invalid cache names'
-    end
+    it_behaves_like 'it handles invalid cache names'
   end
 end

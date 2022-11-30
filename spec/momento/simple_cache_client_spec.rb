@@ -103,6 +103,19 @@ RSpec.describe Momento::SimpleCacheClient do
         }.to raise_error(TypeError, /Cache name must be a String, got a Integer/)
       }
     end
+
+    context 'with a non-ASCII cache name' do
+      let(:cache_name) { "caché" }
+
+      it {
+        is_expected.to have_attributes(
+          error?: true,
+          error: have_attributes(
+            error_code: :INVALID_ARGUMENT_ERROR
+          )
+        )
+      }
+    end
   end
 
   describe '#cache_stub' do

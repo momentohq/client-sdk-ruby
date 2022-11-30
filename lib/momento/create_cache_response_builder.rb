@@ -16,7 +16,7 @@ module Momento
       response = yield
     rescue GRPC::AlreadyExists
       return CreateCacheResponse::AlreadyExists.new
-    rescue GRPC::BadStatus => e
+    rescue *RESCUED_EXCEPTIONS => e
       CreateCacheResponse::Error.new(
         exception: e, context: context
       )
