@@ -56,13 +56,15 @@ RSpec.describe Momento::SimpleCacheClient do
   end
 
   describe '#create_cache' do
-    let(:cache_name) { "foobar" }
+    subject { client.create_cache(cache_name) }
+
+    let(:cache_name) { Faker::Lorem.word }
 
     it 'sends a CreateCacheRequest with the cache name' do
       allow(control_stub).to receive(:create_cache)
         .and_return(Momento::ControlClient::CreateCacheResponse.new)
 
-      client.create_cache(cache_name)
+      subject
 
       expected_request = be_a(Momento::ControlClient::CreateCacheRequest).and have_attributes(
         cache_name: cache_name
@@ -78,7 +80,7 @@ RSpec.describe Momento::SimpleCacheClient do
       end
 
       it 'returns the appropriate Response' do
-        expect(client.create_cache(cache_name)).to be_a Momento::CreateCacheResponse::Success
+        expect(subject).to be_a Momento::CreateCacheResponse::Success
       end
     end
 
@@ -91,7 +93,7 @@ RSpec.describe Momento::SimpleCacheClient do
       end
 
       it 'returns an error response' do
-        response = client.create_cache(cache_name)
+        response = subject
 
         expect(response.error?).to be true
         expect(response.error).to be_a_momento_error
@@ -110,20 +112,22 @@ RSpec.describe Momento::SimpleCacheClient do
 
       it 'raises the error' do
         expect {
-          client.create_cache(cache_name)
+          subject
         }.to raise_error(error)
       end
     end
   end
 
   describe '#delete_cache' do
-    let(:cache_name) { "foobar" }
+    subject { client.delete_cache(cache_name) }
+
+    let(:cache_name) { Faker::Lorem.word }
 
     it 'sends a DeleteCacheRequest with the cache name' do
       allow(control_stub).to receive(:delete_cache)
         .and_return(Momento::ControlClient::DeleteCacheResponse.new)
 
-      client.delete_cache(cache_name)
+      subject
 
       expected_request = be_a(Momento::ControlClient::DeleteCacheRequest).and have_attributes(
         cache_name: cache_name
@@ -139,7 +143,7 @@ RSpec.describe Momento::SimpleCacheClient do
       end
 
       it 'returns the appropriate Response' do
-        expect(client.delete_cache(cache_name)).to be_a Momento::DeleteCacheResponse::Success
+        expect(subject).to be_a Momento::DeleteCacheResponse::Success
       end
     end
 
@@ -152,7 +156,7 @@ RSpec.describe Momento::SimpleCacheClient do
       end
 
       it 'returns an error response' do
-        response = client.delete_cache(cache_name)
+        response = subject
 
         expect(response.error?).to be true
         expect(response.error).to be_a_momento_error
@@ -171,7 +175,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
       it 'raises the error' do
         expect {
-          client.delete_cache(cache_name)
+          subject
         }.to raise_error(error)
       end
     end
@@ -294,41 +298,52 @@ RSpec.describe Momento::SimpleCacheClient do
   end
 
   describe '#get' do
+    subject { client.get(cache_name, key) }
+
+    let(:cache_name) { Faker::Lorem.word }
+    let(:key) { Faker::Lorem.word }
+
     it 'sends a GetRequest with the cache name and key' do
       allow(cache_stub).to receive(:get)
         .and_return(build(:momento_cache_client_get_response, :hit))
 
-      client.get("name", "key")
+      subject
 
       expect(cache_stub).to have_received(:get)
         .with(
-          be_a(Momento::CacheClient::GetRequest).and(have_attributes(cache_key: "key")),
-          metadata: { cache: "name" }
+          be_a(Momento::CacheClient::GetRequest).and(have_attributes(cache_key: key)),
+          metadata: { cache: cache_name }
         )
     end
 
-    it 'with a non-ACII string it does not raise nor change the encoding' do
-      allow(cache_stub).to receive(:get)
-        .and_return(build(:momento_cache_client_get_response, :hit))
+    context 'with a non-ASCII key' do
+      let(:key) { "🫠🤢" }
 
-      key = "🫠🤢"
+      it 'does not raise nor change the encoding' do
+        allow(cache_stub).to receive(:get)
+          .and_return(build(:momento_cache_client_get_response, :hit))
 
-      expect {
-        expect(
-          client.get("name", key)
-        ).to be_a(Momento::GetResponse::Hit)
-      }.to not_change {
-        key.encoding
-      }
+        expect {
+          expect(
+            subject
+          ).to be_a(Momento::GetResponse::Hit)
+        }.to not_change {
+          key.encoding
+        }
+      end
     end
 
-    it 'with a non-ACII string it does not raise' do
-      allow(cache_stub).to receive(:get)
-        .and_return(build(:momento_cache_client_get_response, :hit))
+    context 'with a frozen non-ACII string' do
+      let(:key) { "🫠🤢".freeze }
 
-      expect(
-        client.get("name", "🫠🤢".freeze)
-      ).to be_a(Momento::GetResponse::Hit)
+      it 'does not raise' do
+        allow(cache_stub).to receive(:get)
+          .and_return(build(:momento_cache_client_get_response, :hit))
+
+        expect(
+          subject
+        ).to be_a(Momento::GetResponse::Hit)
+      end
     end
 
     context 'with a gRPC response' do
@@ -342,7 +357,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
         it 'returns a Get::Hit' do
           expect(
-            client.get("name", "key")
+            subject
           ).to be_a(Momento::GetResponse::Hit).and have_attributes(
             value: grpc_response.cache_body
           )
@@ -354,7 +369,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
         it 'returns a Get::Miss' do
           expect(
-            client.get("name", "key")
+            subject
           ).to be_a(Momento::GetResponse::Miss)
         end
       end
@@ -370,11 +385,11 @@ RSpec.describe Momento::SimpleCacheClient do
         let(:exception) { GRPC::NotFound.new }
 
         it 'returns the appropriate response' do
-          response = client.get("name", "key")
+          response = subject
 
           expect(response.error?).to be true
           expect(response.error).to be_a_momento_error
-            .with_context({ cache_name: "name", key: "key" })
+            .with_context({ cache_name: cache_name, key: key })
             .with_grpc_exception(exception)
         end
       end
@@ -384,7 +399,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
         it 'raises' do
           expect {
-            client.get("name", "key")
+            subject
           }.to raise_error(exception)
         end
       end
@@ -392,6 +407,13 @@ RSpec.describe Momento::SimpleCacheClient do
   end
 
   describe '#set' do
+    subject { client.set(cache_name, key, value) }
+
+    let(:cache_name) { Faker::Lorem.word }
+    let(:key) { Faker::Lorem.word }
+    let(:value) { Faker::Lorem.paragraph }
+    let(:ttl) { 1234 }
+
     shared_examples 'it sends a SetRequest' do
       it 'sends a SetRequest with the cache name, key, value, and ttl' do
         allow(cache_stub).to receive(:set)
@@ -400,20 +422,20 @@ RSpec.describe Momento::SimpleCacheClient do
         set_call
 
         request_expectation = be_a(Momento::CacheClient::SetRequest).and have_attributes(
-          cache_key: "key", cache_body: "value", ttl_milliseconds: expected_ttl
+          cache_key: key, cache_body: value, ttl_milliseconds: expected_ttl
         )
 
         expect(cache_stub).to have_received(:set)
           .with(
             request_expectation,
-            metadata: { cache: "name" }
+            metadata: { cache: cache_name }
           )
       end
     end
 
     context 'without a ttl' do
       it_behaves_like 'it sends a SetRequest' do
-        subject(:set_call) { client.set("name", "key", "value") }
+        subject(:set_call) { client.set(cache_name, key, value) }
 
         let(:expected_ttl) { client.default_ttl.milliseconds }
       end
@@ -421,16 +443,18 @@ RSpec.describe Momento::SimpleCacheClient do
 
     context 'with a ttl' do
       it_behaves_like 'it sends a SetRequest' do
-        subject(:set_call) { client.set("name", "key", "value", ttl: 1234) }
+        subject(:set_call) { client.set(cache_name, key, value, ttl: 1_234) }
 
         let(:expected_ttl) { 1_234_000 }
       end
     end
 
     context 'with an invalid ttl' do
+      let(:ttl) { "whenver" }
+
       it 'raises' do
         expect {
-          client.set("name", "key", "value", ttl: "whenever")
+          client.set("name", "key", "value", ttl: ttl)
         }.to raise_error(ArgumentError)
       end
     end
@@ -445,18 +469,18 @@ RSpec.describe Momento::SimpleCacheClient do
 
       it 'returns a Set::Success' do
         expect(
-          client.set("name", "key", "value")
+          subject
         ).to be_a(Momento::SetResponse::Success)
       end
 
       context 'with a non-ASCII key and value' do
-        it 'can be set' do
-          key = "🫠🤢"
-          value = "🎉☃"
+        let(:key) { "🫠🤢" }
+        let(:value) { "🎉☃" }
 
+        it 'can be set' do
           expect {
             expect(
-              client.set("name", key, value)
+              subject
             ).to be_a(Momento::SetResponse::Success)
           }.to not_change {
             value.encoding
@@ -467,9 +491,12 @@ RSpec.describe Momento::SimpleCacheClient do
       end
 
       context 'with a frozen non-ASCII key and value' do
+        let(:key) { "🫠🤢".freeze }
+        let(:value) { "🎉☃".freeze }
+
         it 'can be set' do
           expect(
-            client.set("name", "🫠🤢".freeze, "🎉☃".freeze)
+            subject
           ).to be_a(Momento::SetResponse::Success)
         end
       end
@@ -501,7 +528,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
         it 'raises' do
           expect {
-            client.set("name", "key", "value")
+            subject
           }.to raise_error(exception)
         end
       end
@@ -509,41 +536,52 @@ RSpec.describe Momento::SimpleCacheClient do
   end
 
   describe '#delete' do
+    subject { client.delete(cache_name, key) }
+
+    let(:cache_name) { Faker::Lorem.word }
+    let(:key) { Faker::Lorem.word }
+
     it 'sends a DeleteRequest with the cache name and key' do
       allow(cache_stub).to receive(:delete)
         .and_return(build(:momento_cache_client_delete_response))
 
-      client.delete("name", "key")
+      subject
 
       expect(cache_stub).to have_received(:delete)
         .with(
-          be_a(Momento::CacheClient::DeleteRequest).and(have_attributes(cache_key: "key")),
-          metadata: { cache: "name" }
+          be_a(Momento::CacheClient::DeleteRequest).and(have_attributes(cache_key: key)),
+          metadata: { cache: cache_name }
         )
     end
 
-    it 'with a non-ACII string it does not raise nor change the encoding' do
-      allow(cache_stub).to receive(:delete)
-        .and_return(build(:momento_cache_client_delete_response))
+    context 'with a non-ASCII string' do
+      let(:key) { "🫠🤢" }
 
-      key = "🫠🤢"
+      it 'does not raise nor change the encoding' do
+        allow(cache_stub).to receive(:delete)
+          .and_return(build(:momento_cache_client_delete_response))
 
-      expect {
-        expect(
-          client.delete("name", key)
-        ).to be_a(Momento::DeleteResponse::Success)
-      }.to not_change {
-        key.encoding
-      }
+        expect {
+          expect(
+            subject
+          ).to be_a(Momento::DeleteResponse::Success)
+        }.to not_change {
+          key.encoding
+        }
+      end
     end
 
-    it 'with a non-ACII string it does not raise' do
-      allow(cache_stub).to receive(:delete)
-        .and_return(build(:momento_cache_client_delete_response))
+    context 'with a frozen non-ASCII string' do
+      let(:key) { "🫠🤢".freeze }
 
-      expect(
-        client.delete("name", "🫠🤢".freeze)
-      ).to be_a(Momento::DeleteResponse::Success)
+      it 'does not raise' do
+        allow(cache_stub).to receive(:delete)
+          .and_return(build(:momento_cache_client_delete_response))
+
+        expect(
+          subject
+        ).to be_a(Momento::DeleteResponse::Success)
+      end
     end
 
     context 'when it is a success' do
@@ -556,7 +594,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
       it 'returns a Delete::Response' do
         expect(
-          client.delete("name", "key")
+          subject
         ).to be_a(Momento::DeleteResponse::Success)
       end
     end
@@ -571,11 +609,11 @@ RSpec.describe Momento::SimpleCacheClient do
         let(:exception) { GRPC::NotFound.new }
 
         it 'returns the appropriate response' do
-          response = client.delete("name", "key")
+          response = subject
 
           expect(response.error?).to be true
           expect(response.error).to be_a_momento_error
-            .with_context({ cache_name: "name", key: "key" })
+            .with_context({ cache_name: cache_name, key: key })
             .with_grpc_exception(exception)
         end
       end
@@ -585,7 +623,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
         it 'raises' do
           expect {
-            client.delete("name", "key")
+            subject
           }.to raise_error(exception)
         end
       end
