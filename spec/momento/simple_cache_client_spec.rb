@@ -83,6 +83,28 @@ RSpec.describe Momento::SimpleCacheClient do
     end
   end
 
+  shared_examples 'it validates the cache name' do
+    context 'when the cache_name is nil' do
+      let(:cache_name) { nil }
+
+      it {
+        expect {
+          subject
+        }.to raise_error(TypeError, /Cache name must be a String, got a NilClass/)
+      }
+    end
+
+    context 'when the cache_name is not a String' do
+      let(:cache_name) { 42 }
+
+      it {
+        expect {
+          subject
+        }.to raise_error(TypeError, /Cache name must be a String, got a Integer/)
+      }
+    end
+  end
+
   describe '#cache_stub' do
     let(:stub_class) { described_class.const_get(:CACHE_CLIENT_STUB_CLASS) }
     let(:stub_method) { :cache_stub }
@@ -103,6 +125,8 @@ RSpec.describe Momento::SimpleCacheClient do
     subject { client.create_cache(cache_name) }
 
     let(:cache_name) { Faker::Lorem.word }
+
+    it_behaves_like 'it validates the cache name'
 
     it 'sends a CreateCacheRequest with the cache name' do
       allow(control_stub).to receive(:create_cache)
@@ -166,6 +190,8 @@ RSpec.describe Momento::SimpleCacheClient do
     subject { client.delete_cache(cache_name) }
 
     let(:cache_name) { Faker::Lorem.word }
+
+    it_behaves_like 'it validates the cache name'
 
     it 'sends a DeleteCacheRequest with the cache name' do
       allow(control_stub).to receive(:delete_cache)
@@ -348,6 +374,7 @@ RSpec.describe Momento::SimpleCacheClient do
     let(:key) { Faker::Lorem.word }
 
     it_behaves_like 'it validates the key'
+    it_behaves_like 'it validates the cache name'
 
     it 'sends a GetRequest with the cache name and key' do
       allow(cache_stub).to receive(:get)
@@ -462,6 +489,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
     it_behaves_like 'it validates the key'
     it_behaves_like 'it validates the value'
+    it_behaves_like 'it validates the cache name'
 
     shared_examples 'it sends a SetRequest' do
       it 'sends a SetRequest with the cache name, key, value, and ttl' do
@@ -590,6 +618,7 @@ RSpec.describe Momento::SimpleCacheClient do
     let(:cache_name) { Faker::Lorem.word }
     let(:key) { Faker::Lorem.word }
 
+    it_behaves_like 'it validates the cache name'
     it_behaves_like 'it validates the key'
 
     it 'sends a DeleteRequest with the cache name and key' do

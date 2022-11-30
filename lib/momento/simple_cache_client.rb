@@ -49,6 +49,8 @@ module Momento
     # @return [Momento::GetResponse]
     # @raise [TypeError] when the key is not a String
     def get(cache_name, key)
+      validate_cache_name(cache_name)
+
       builder = GetResponseBuilder.new(
         context: { cache_name: cache_name, key: key }
       )
@@ -74,6 +76,7 @@ module Momento
     # @raise [TypeError] when the key or value is not a String
     def set(cache_name, key, value, ttl: default_ttl)
       ttl = Momento::Ttl.to_ttl(ttl)
+      validate_cache_name(cache_name)
 
       builder = SetResponseBuilder.new(
         context: { cache_name: cache_name, key: key, value: value, ttl: ttl }
@@ -97,6 +100,8 @@ module Momento
     # @return [Momento::DeleteResponse]
     # @raise [TypeError] when the key or value is not a String
     def delete(cache_name, key)
+      validate_cache_name(cache_name)
+
       builder = DeleteResponseBuilder.new(
         context: { cache_name: cache_name, key: key }
       )
@@ -114,6 +119,8 @@ module Momento
     # @param cache_name [String] the name of the cache to create.
     # @return [Momento::CreateCacheResponse] the response from Momento.
     def create_cache(cache_name)
+      validate_cache_name(cache_name)
+
       builder = CreateCacheResponseBuilder.new(
         context: { cache_name: cache_name }
       )
@@ -130,6 +137,8 @@ module Momento
     # @param cache_name [String] the name of the cache to delete.
     # @return [Momento::DeleteCacheResponse] the response from Momento.
     def delete_cache(cache_name)
+      validate_cache_name(cache_name)
+
       builder = DeleteCacheResponseBuilder.new(
         context: { cache_name: cache_name }
       )
@@ -233,6 +242,14 @@ module Momento
       # dup in case the value is frozen and to avoid changing the value's encoding
       # for the caller.
       return string.dup.force_encoding(Encoding::ASCII_8BIT)
+    end
+
+    # @param name [String] the cache name to validate
+    # @raise [TypeError] when the name is not a String
+    def validate_cache_name(name)
+      raise TypeError, "Cache name must be a String, got a #{name.class}" unless name.is_a?(String)
+
+      return
     end
   end
   # rubocop:enable Metrics/ClassLength
