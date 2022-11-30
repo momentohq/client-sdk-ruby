@@ -1,13 +1,15 @@
 require_relative 'response/error'
 
 module Momento
-  # Responses specific to set.
+  # A response from setting a key.
   class SetResponse < Response
+    # Was the key/value pair added to the cache?
+    # @return [Boolean]
     def success?
       false
     end
 
-    # The item was set.
+    # @private
     class Success < SetResponse
       attr_accessor :key, :value
 
@@ -29,7 +31,7 @@ module Momento
       end
     end
 
-    # There was an error setting the item.
+    # @private
     class Error < SetResponse
       include Momento::Response::Error
     end
