@@ -13,14 +13,23 @@ module Momento
   #   token = ...your Momento JWT...
   #   client = Momento::SimpleCacheClient.new(
   #     auth_token: token,
-  #     default_ttl: 100 # 100 seconds
+  #     # cached items will be deleted after 100 seconds
+  #     default_ttl: 100
   #   )
   #
   #   response = client.create_cache("my_cache")
-  #   if response.error?
-  #     puts response.error
+  #   if response.success?
+  #     puts "my_cache was created"
+  #   elsif response.already_exists?
+  #     puts "my_cache already exists"
+  #   elsif response.error?
   #     raise response.error
   #   end
+  #
+  #   # set will only return success or error,
+  #   # we only need to check for error
+  #   response = client.set("my_cache", "key", "value")
+  #   raise response.error if response.error?
   #
   #   response = client.get("my_cache", "key")
   #   if response.hit?
@@ -28,7 +37,7 @@ module Momento
   #   elsif response.miss?
   #     puts "It's not in the cache"
   #   elsif response.error?
-  #     puts response.error
+  #     raise response.error
   #   end
   #
   # rubocop:disable Metrics/ClassLength
