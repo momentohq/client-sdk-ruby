@@ -14,6 +14,14 @@ module Momento
     # @return [String] details about the error
     attr_accessor :details
 
+    # @!method error_code
+    #   A Momento-specific code for the type of error.
+    #   @return [Symbol]
+
+    # @!method message
+    #   The error message.
+    #   @return [String]
+
     # (see #message)
     def to_s
       message
