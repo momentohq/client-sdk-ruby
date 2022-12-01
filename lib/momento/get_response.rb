@@ -1,10 +1,7 @@
 require_relative 'response/error'
 
 module Momento
-  # A response from getting a key.
-  #
-  # Because Momento only stores bytes, the value will be
-  # encoded using Encoding::ASCII_8BIT.
+  # A response containing the value retrieved from a cache.
   class GetResponse < Response
     # There was a value for the key.
     # @return [Boolean]
