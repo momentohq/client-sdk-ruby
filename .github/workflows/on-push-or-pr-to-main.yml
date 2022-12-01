@@ -26,6 +26,17 @@ jobs:
           rubocop_extensions: rubocop-performance:gemfile rubocop-rake:gemfile rubocop-rspec:gemfile
           reporter: github-pr-review
 
+  readme:
+    steps:
+      - name: Generate README
+        uses: momentohq/standards-and-practices/github-actions/generate-and-commit-oss-readme@gh-actions-v1
+        with:
+          project_status: official
+          project_stability: alpha
+          project_type: sdk
+          sdk_language: Ruby
+          usage_example_path: ./examples/basic.rb
+
   test:
     uses: ./.github/workflows/test.yml
     secrets:
