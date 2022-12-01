@@ -182,8 +182,11 @@ module Momento
 
     # Lists the names of all your caches.
     #
+    # @note Unlike other methods, this will raise if there is a problem
+    #   with the client or service.
+    #
     # @return [Enumerator::Lazy<String>] the cache names
-    # @raise [Momento::Error]
+    # @raise [Momento::Error] when there is an error listing caches.
     def caches
       Enumerator.new do |yielder|
         next_token = ""
