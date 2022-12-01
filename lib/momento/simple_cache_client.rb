@@ -9,18 +9,26 @@ module Momento
   # A simple client for Momento.
   #
   # @example
+  #
+  #   token = ...your Momento JWT...
   #   client = Momento::SimpleCacheClient.new(
-  #     auth_token: jwt,
-  #     default_ttl: 10_000
+  #     auth_token: token,
+  #     default_ttl: 100 # 100 seconds
   #   )
+  #
+  #   response = client.create_cache("my_cache")
+  #   if response.error?
+  #     puts response.error
+  #     raise response.error
+  #   end
   #
   #   response = client.get("my_cache", "key")
   #   if response.hit?
-  #     puts "We got #{response}"
+  #     puts "We got #{response.value_string}"
   #   elsif response.miss?
   #     puts "It's not in the cache"
   #   elsif response.error?
-  #     puts "The front fell off."
+  #     puts response.error
   #   end
   #
   # rubocop:disable Metrics/ClassLength
