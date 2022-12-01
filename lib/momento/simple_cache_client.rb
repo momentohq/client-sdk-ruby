@@ -162,10 +162,12 @@ module Momento
 
     # List a page of your caches.
     #
+    # @note Consider using `caches` instead.
+    #
     # The next_token indicates which page to fetch.
     # If nil or "" it will fetch the first page. Default is to fetch the first page.
     #
-    # @params next_token [String, nil] the token of the page to request
+    # @param next_token [String, nil] the token of the page to request
     # @return [Momento::ListCachesResponse]
     def list_caches(next_token: "")
       builder = ListCachesResponseBuilder.new(
