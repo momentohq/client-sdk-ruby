@@ -15,13 +15,13 @@ An IDE with good Ruby support, such as [RubyMine](https://www.jetbrains.com/ruby
 Install the gem and add to an application's Gemfile by executing:
 
 ```sh
-$ bundle add momento
+bundle add momento
 ```
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
 ```sh
-$ gem install momento
+gem install momento
 ```
 
 #### Note: M1 or M2 Macs
