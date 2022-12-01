@@ -5,7 +5,7 @@ require_relative 'exceptions'
 module Momento
   # An internal class to build Momento::Errors
   class ErrorBuilder
-    GRPC_EXCEPTION_MAP = {
+    EXCEPTION_MAP = {
       GRPC::Aborted => Error::InternalServerError,
       GRPC::AlreadyExists => Error::AlreadyExistsError,
       GRPC::Cancelled => Error::CancelledError,
@@ -21,51 +21,30 @@ module Momento
       GRPC::Unauthenticated => Error::AuthenticationError,
       GRPC::Unavailable => Error::ServerUnavailableError,
       GRPC::Unimplemented => Error::BadRequestError,
-      GRPC::Unknown => Error::UnknownServiceError
-    }.freeze
-
-    OTHER_EXCEPTION_MAP = {
+      GRPC::Unknown => Error::UnknownServiceError,
       Momento::CacheNameError => Error::InvalidArgumentError
     }.freeze
 
     class << self
       def from_exception(exception, context: {})
-        new(exception: exception, context: context)
-          .from_exception
+        error_class = EXCEPTION_MAP[exception.class] || Error::UnknownError
+
+        error = error_class.new
+        error.context = context
+        error.cause = exception
+
+        case exception
+        when GRPC::BadStatus
+          error.transport_details = Error::TransportDetails.new(grpc: exception)
+          error.details = exception.details
+        else
+          error.details = exception.message
+        end
+
+        error.freeze
+
+        return error
       end
-    end
-
-    def initialize(exception:, context:)
-      @exception = exception
-      @context = context
-    end
-
-    def from_exception
-      return from_grpc_exception ||
-             from_other_exception
-    end
-
-    private
-
-    def from_grpc_exception
-      return unless (error_class = GRPC_EXCEPTION_MAP[@exception.class])
-
-      return error_class.new(
-        context: @context,
-        exception: @exception,
-        transport_details: Error::TransportDetails.new(grpc: @exception),
-        details: @exception.details
-      )
-    end
-
-    def from_other_exception
-      error_class = OTHER_EXCEPTION_MAP[@exception.class] || Error::UnknownError
-
-      return error_class.new(
-        context: @context,
-        exception: @exception,
-        details: @exception.message
-      )
     end
   end
 end

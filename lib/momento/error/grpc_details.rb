@@ -1,5 +1,5 @@
 module Momento
-  class Error
+  module Error
     # Details about a GRPC error.
     class GrpcDetails
       attr_reader :grpc

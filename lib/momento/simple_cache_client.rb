@@ -173,14 +173,14 @@ module Momento
     # Lists the names of all your caches.
     #
     # @return [Enumerator::Lazy<String>] the cache names
-    # @raise [GRPC::BadStatus]
+    # @raise [Momento::Error]
     def caches
       Enumerator.new do |yielder|
         next_token = ""
 
         loop do
           response = list_caches(next_token: next_token)
-          raise response.error.exception if response.is_a? Momento::Response::Error
+          raise response.error if response.is_a? Momento::Response::Error
 
           response.cache_names.each do |name|
             yielder << name

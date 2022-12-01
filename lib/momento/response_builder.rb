@@ -5,9 +5,7 @@ module Momento
   class ResponseBuilder
     attr_accessor :context
 
-    RESCUED_EXCEPTIONS = [
-      GRPC::BadStatus, *ErrorBuilder::OTHER_EXCEPTION_MAP.keys
-    ].freeze
+    RESCUED_EXCEPTIONS = ErrorBuilder::EXCEPTION_MAP.keys.freeze
 
     def initialize(context: {})
       @context = context

@@ -11,7 +11,7 @@ RSpec::Matchers.define :be_a_momento_error do
               end
 
     expect(actual).to have_attributes(
-      exception: @exception,
+      cause: @exception,
       context: @context,
       details: details
     )
