@@ -45,6 +45,7 @@ module Momento
     VERSION = Momento::VERSION
     CACHE_CLIENT_STUB_CLASS = CacheClient::Scs::Stub
     CONTROL_CLIENT_STUB_CLASS = ControlClient::ScsControl::Stub
+    private_constant :CACHE_CLIENT_STUB_CLASS, :CONTROL_CLIENT_STUB_CLASS
 
     # @return [Numeric] the default time-to-live, in seconds.
     attr_accessor :default_ttl
