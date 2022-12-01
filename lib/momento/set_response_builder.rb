@@ -2,9 +2,9 @@ require 'grpc'
 require_relative 'cacheclient_pb'
 
 module Momento
-  # An internal class.
-  #
   # Builds SetResponses
+  #
+  # @private
   class SetResponseBuilder < ResponseBuilder
     # Build a Momento::SetResponse from a block of code
     # which returns a Momento::CacheClient::SetResponse..

@@ -1,6 +1,7 @@
 module Momento
   class Response
     # A module for responses which contain errors.
+    # @private
     module Error
       attr_reader :error
 

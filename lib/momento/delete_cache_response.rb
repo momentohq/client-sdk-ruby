@@ -1,18 +1,20 @@
 require_relative 'response/error'
 
 module Momento
-  # Responses specific to delete_cache
+  # A response from deleting a cache.
   class DeleteCacheResponse < Response
+    # Was the cache deleted?
+    # @return [Boolean]
     def success?
       false
     end
 
-    # There was an error deleting the cache.
+    # @private
     class Error < DeleteCacheResponse
       include ::Momento::Response::Error
     end
 
-    # The cache was deleted.
+    # @private
     class Success < DeleteCacheResponse
       def success?
         true

@@ -9,25 +9,44 @@ module Momento
   # A simple client for Momento.
   #
   # @example
+  #
+  #   token = ...your Momento JWT...
   #   client = Momento::SimpleCacheClient.new(
-  #     auth_token: jwt,
-  #     default_ttl: 10_000
+  #     auth_token: token,
+  #     # cached items will be deleted after 100 seconds
+  #     default_ttl: 100
   #   )
+  #
+  #   response = client.create_cache("my_cache")
+  #   if response.success?
+  #     puts "my_cache was created"
+  #   elsif response.already_exists?
+  #     puts "my_cache already exists"
+  #   elsif response.error?
+  #     raise response.error
+  #   end
+  #
+  #   # set will only return success or error,
+  #   # we only need to check for error
+  #   response = client.set("my_cache", "key", "value")
+  #   raise response.error if response.error?
   #
   #   response = client.get("my_cache", "key")
   #   if response.hit?
-  #     puts "We got #{response}"
+  #     puts "We got #{response.value_string}"
   #   elsif response.miss?
   #     puts "It's not in the cache"
   #   elsif response.error?
-  #     puts "The front fell off."
+  #     raise response.error
   #   end
   #
   # rubocop:disable Metrics/ClassLength
   class SimpleCacheClient
+    # This gem's version.
     VERSION = Momento::VERSION
     CACHE_CLIENT_STUB_CLASS = CacheClient::Scs::Stub
     CONTROL_CLIENT_STUB_CLASS = ControlClient::ScsControl::Stub
+    private_constant :CACHE_CLIENT_STUB_CLASS, :CONTROL_CLIENT_STUB_CLASS
 
     # @return [Numeric] the default time-to-live, in seconds.
     attr_accessor :default_ttl
@@ -48,7 +67,7 @@ module Momento
     # @param cache_name [String]
     # @param key [String] must only contain ASCII characters
     # @return [Momento::GetResponse]
-    # @raise [TypeError] when the key is not a String
+    # @raise [TypeError] when the cache_name or key is not a String
     def get(cache_name, key)
       builder = GetResponseBuilder.new(
         context: { cache_name: cache_name, key: key }
@@ -74,7 +93,7 @@ module Momento
     # @param ttl [Numeric] time-to-live, in seconds.
     # @raise [ArgumentError] if the ttl is invalid
     # @return [Momento::SetResponse]
-    # @raise [TypeError] when the key or value is not a String
+    # @raise [TypeError] when the cache_name, key, or value is not a String
     def set(cache_name, key, value, ttl: default_ttl)
       ttl = Momento::Ttl.to_ttl(ttl)
 
@@ -100,7 +119,7 @@ module Momento
     # @param cache_name [String]
     # @param key [String] must only contain ASCII characters
     # @return [Momento::DeleteResponse]
-    # @raise [TypeError] when the key or value is not a String
+    # @raise [TypeError] when the cache_name or key is not a String
     def delete(cache_name, key)
       builder = DeleteResponseBuilder.new(
         context: { cache_name: cache_name, key: key }
@@ -120,6 +139,7 @@ module Momento
     #
     # @param cache_name [String] the name of the cache to create.
     # @return [Momento::CreateCacheResponse] the response from Momento.
+    # @raise [TypeError] when the cache_name is not a String
     def create_cache(cache_name)
       builder = CreateCacheResponseBuilder.new(
         context: { cache_name: cache_name }
@@ -138,6 +158,7 @@ module Momento
     #
     # @param cache_name [String] the name of the cache to delete.
     # @return [Momento::DeleteCacheResponse] the response from Momento.
+    # @raise [TypeError] when the cache_name is not a String
     def delete_cache(cache_name)
       builder = DeleteCacheResponseBuilder.new(
         context: { cache_name: cache_name }
@@ -154,10 +175,12 @@ module Momento
 
     # List a page of your caches.
     #
+    # @note Consider using `caches` instead.
+    #
     # The next_token indicates which page to fetch.
     # If nil or "" it will fetch the first page. Default is to fetch the first page.
     #
-    # @params next_token [String, nil] the token of the page to request
+    # @param next_token [String, nil] the token of the page to request
     # @return [Momento::ListCachesResponse]
     def list_caches(next_token: "")
       builder = ListCachesResponseBuilder.new(
@@ -172,8 +195,11 @@ module Momento
 
     # Lists the names of all your caches.
     #
+    # @note Unlike other methods, this will raise if there is a problem
+    #   with the client or service.
+    #
     # @return [Enumerator::Lazy<String>] the cache names
-    # @raise [Momento::Error]
+    # @raise [Momento::Error] when there is an error listing caches.
     def caches
       Enumerator.new do |yielder|
         next_token = ""

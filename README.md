@@ -1,20 +1,24 @@
 # Momento
 
-Client for Momento serverless caching service.
+Client for [Momento serverless caching service](https://www.gomomento.com/).
 
 ## Installation
 
 Install the gem and add to an application's Gemfile by executing:
 
-    $ bundle add momento
+```sh
+$ bundle add momento
+```
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install momento
+```sh
+$ gem install momento
+```
 
 ### M1 or M2 Macs
 
-If you're using an M1 or M2 Mac, [you may have trouble installing the `grpc` gem](https://github.com/grpc/grpc/issues/31215).
+If you're using an M1 or M2 Mac, you may have trouble installing the `grpc` gem; [see this issue for more information](https://github.com/grpc/grpc/issues/31215).
 
 [A work around](https://github.com/grpc/grpc/pull/31151#issuecomment-1310321807) is to run `bundle config build.grpc --with-ldflags="-Wl,-undefined,dynamic_lookup"` before doing `bundle install`.
 
@@ -25,7 +29,7 @@ If you're using an M1 or M2 Mac, [you may have trouble installing the `grpc` gem
 
 ## Usage
 
-```
+```ruby
 require 'momento'
 
 # Get your Momento token from an environment variable.
@@ -73,8 +77,8 @@ else
 end
 ```
 
-You can run this code from [examples/basic.rb](examples/basic.rb).
+You can find this code in [the examples directory](https://github.com/momentohq/client-sdk-ruby/tree/main/examples).
 
 ## Contributing
 
-See our [instructions for CONTRIBUTING](./CONTRIBUTING.md).
+See our [instructions for CONTRIBUTING](https://github.com/momentohq/client-sdk-ruby/blob/main/CONTRIBUTING.md).

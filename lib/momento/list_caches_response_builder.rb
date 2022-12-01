@@ -2,9 +2,7 @@ require 'grpc'
 require_relative 'controlclient_pb'
 
 module Momento
-  # An internal class.
-  #
-  # Builds ListCachesResponses
+  # @private
   class ListCachesResponseBuilder < ResponseBuilder
     # Build a Momento::ListCachesResponse from a block of code
     # which returns a Momento::ControlClient::ListCachesResponse..

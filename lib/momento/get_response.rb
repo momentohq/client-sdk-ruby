@@ -1,14 +1,16 @@
 require_relative 'response/error'
 
 module Momento
-  # Responses specific to get.
+  # A response containing the value retrieved from a cache.
   class GetResponse < Response
-    # @return [Boolean] did we get a value
+    # There was a value for the key.
+    # @return [Boolean]
     def hit?
       false
     end
 
-    # @return [Boolean] was there no value
+    # There was no value for the key.
+    # @return [Boolean]
     def miss?
       false
     end
@@ -24,11 +26,18 @@ module Momento
     #
     # @param encoding [Encoding] defaults to Encoding.default_external
     # @return [String,nil] the value, if any, re-encoded
-    def value_string
+    # rubocop:disable Lint/UnusedMethodArgument
+    def value_string(encoding = Encoding.default_external)
       nil
     end
+    # rubocop:enable Lint/UnusedMethodArgument
 
-    # Successfully got an item from the cache.
+    # @!method to_s
+    #   Displays the response and the value, if any.
+    #   A long value will be truncated.
+    #   @return [String]
+
+    # @private
     class Hit < GetResponse
       # rubocop:disable Lint/MissingSuper
       def initialize(grpc_response:)
@@ -53,14 +62,14 @@ module Momento
       end
     end
 
-    # The key had no value stored in the cache.
+    # @private
     class Miss < GetResponse
       def miss?
         true
       end
     end
 
-    # There was a problem getting the value from the cache.
+    # @private
     class Error < GetResponse
       include Momento::Response::Error
     end

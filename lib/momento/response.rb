@@ -22,6 +22,7 @@ module Momento
   # A superclass for all Momento responses.
   class Response
     MAX_STRING_DISPLAY_LENGTH = 32
+    private_constant :MAX_STRING_DISPLAY_LENGTH
 
     # Returns the error portion of the response, if any.
     #
@@ -31,13 +32,19 @@ module Momento
     end
 
     # Is the response an error?
+    #
+    # @return [Boolean]
     def error?
       false
     end
 
+    # Displays the type of response and additional info, if any.
+    # @return [String]
     def to_s
       self.class.to_s
     end
+
+    protected
 
     def display_string(string, max_length: MAX_STRING_DISPLAY_LENGTH)
       if string.length < max_length

@@ -3,7 +3,7 @@ require_relative 'error/types'
 require_relative 'exceptions'
 
 module Momento
-  # An internal class to build Momento::Errors
+  # @private
   class ErrorBuilder
     EXCEPTION_MAP = {
       GRPC::Aborted => Error::InternalServerError,
