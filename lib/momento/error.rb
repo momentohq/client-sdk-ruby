@@ -3,6 +3,7 @@ require_relative 'error/types'
 module Momento
   # Errors from the Momento client or service.
   # Usually available as `response.error`.
+  # Momento::Errors are Exceptions and can be raised.
   module Error
     # @return [Exception] the original exception which was the cause of the error
     attr_accessor :cause
