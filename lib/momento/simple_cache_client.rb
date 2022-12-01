@@ -42,6 +42,7 @@ module Momento
   #
   # rubocop:disable Metrics/ClassLength
   class SimpleCacheClient
+    # This gem's version.
     VERSION = Momento::VERSION
     CACHE_CLIENT_STUB_CLASS = CacheClient::Scs::Stub
     CONTROL_CLIENT_STUB_CLASS = ControlClient::ScsControl::Stub
