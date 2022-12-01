@@ -14,31 +14,29 @@ RSpec.describe 'Momento::Error subclasses' do
   let(:details) { "Basset hounds got long ears" }
   let(:exception) { StandardError.new("the front fell off") }
   let(:error) {
-    described_class.new(
-      exception: exception,
-      context: context,
-      details: details
-    )
+    described_class.new.tap do |e|
+      e.cause = exception
+      e.context = context
+      e.details = details
+    end
   }
+  let(:superclass) { RuntimeError }
 
   shared_examples Momento::Error do
-    describe '#error_code' do
-      it 'has the correct error code' do
-        expect(error.error_code).to eq error_code
-      end
-    end
+    subject { error }
 
-    describe '#message' do
-      it 'uses context in its message' do
-        expect(error.message).to match(message_re)
-      end
-    end
+    it { is_expected.to be_a(superclass) }
 
-    describe '#to_s' do
-      it 'uses the message for stringification' do
-        expect(error.to_s).to match(message_re)
-      end
-    end
+    it {
+      is_expected.to have_attributes(
+        error_code: error_code,
+        message: match(message_re),
+        to_s: match(message_re),
+        cause: exception,
+        context: context,
+        details: details
+      )
+    }
   end
 
   describe Momento::Error::AlreadyExistsError do
@@ -91,6 +89,8 @@ RSpec.describe 'Momento::Error subclasses' do
   end
 
   describe Momento::Error::InvalidArgumentError do
+    let(:superclass) { ArgumentError }
+
     it_behaves_like Momento::Error do
       let(:error_code) { :INVALID_ARGUMENT_ERROR }
       let(:message_re) { /Invalid argument passed to Momento client: #{details}/ }

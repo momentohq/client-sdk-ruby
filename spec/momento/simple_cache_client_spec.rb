@@ -373,7 +373,7 @@ RSpec.describe Momento::SimpleCacheClient do
       expect(client.caches.to_a).to eq cache_names
     end
 
-    it 'when list_caches has an error response, it raises the grpc exception' do
+    it 'when list_caches has an error response, it raises the error' do
       error_response = build(:momento_list_caches_response_error)
 
       allow(client).to receive(:list_caches)
@@ -381,7 +381,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
       expect {
         client.caches.to_a
-      }.to raise_error(error_response.error.exception)
+      }.to raise_error(error_response.error)
     end
 
     it 'when list_caches raises, it raises' do

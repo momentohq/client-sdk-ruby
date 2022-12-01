@@ -1,9 +1,11 @@
 module Momento
-  class Error
+  module Error
     # rubocop:disable Layout/LineLength
 
     # A cache with the specified name already exists.
-    class AlreadyExistsError < Error
+    class AlreadyExistsError < RuntimeError
+      include Momento::Error
+
       def error_code
         :ALREADY_EXISTS_ERROR
       end
@@ -14,7 +16,9 @@ module Momento
     end
 
     # Invalid authentication credentials to connect to cache service
-    class AuthenticationError < Error
+    class AuthenticationError < RuntimeError
+      include Momento::Error
+
       def error_code
         :AUTHENTICATION_ERROR
       end
@@ -25,7 +29,9 @@ module Momento
     end
 
     # The request was invalid.
-    class BadRequestError < Error
+    class BadRequestError < RuntimeError
+      include Momento::Error
+
       def error_code
         :BAD_REQUEST_ERROR
       end
@@ -36,7 +42,9 @@ module Momento
     end
 
     # The request was cancelled by the server.
-    class CancelledError < Error
+    class CancelledError < RuntimeError
+      include Momento::Error
+
       def error_code
         :CANCELLED_ERROR
       end
@@ -47,7 +55,9 @@ module Momento
     end
 
     # A client resource (most likely memory) was exhausted.
-    class ClientResourceExhaustedError < Error
+    class ClientResourceExhaustedError < RuntimeError
+      include Momento::Error
+
       def error_code
         :CLIENT_RESOURCE_EXHAUSTED
       end
@@ -58,7 +68,9 @@ module Momento
     end
 
     # System is not in a state required for the operation\'s execution
-    class FailedPreconditionError < Error
+    class FailedPreconditionError < RuntimeError
+      include Momento::Error
+
       def error_code
         :FAILED_PRECONDITION_ERROR
       end
@@ -69,7 +81,9 @@ module Momento
     end
 
     # An unexpected error occurred while trying to fulfill the request.
-    class InternalServerError < Error
+    class InternalServerError < RuntimeError
+      include Momento::Error
+
       def error_code
         :INTERNAL_SERVER_ERROR
       end
@@ -80,7 +94,9 @@ module Momento
     end
 
     # Invalid argument passed to Momento client
-    class InvalidArgumentError < Error
+    class InvalidArgumentError < ArgumentError
+      include Momento::Error
+
       def error_code
         :INVALID_ARGUMENT_ERROR
       end
@@ -91,7 +107,9 @@ module Momento
     end
 
     # Request rate exceeded the limits for this account.
-    class LimitExceededError < Error
+    class LimitExceededError < RuntimeError
+      include Momento::Error
+
       def error_code
         :LIMIT_EXCEEDED_ERROR
       end
@@ -102,7 +120,9 @@ module Momento
     end
 
     # A cache with the specified name does not exist.
-    class NotFoundError < Error
+    class NotFoundError < RuntimeError
+      include Momento::Error
+
       def error_code
         :NOT_FOUND_ERROR
       end
@@ -113,7 +133,9 @@ module Momento
     end
 
     # Insufficient permissions to perform an operation on a cache.
-    class PermissionError < Error
+    class PermissionError < RuntimeError
+      include Momento::Error
+
       def error_code
         :PERMISSION_ERROR
       end
@@ -124,7 +146,9 @@ module Momento
     end
 
     # The server was unable to handle the request
-    class ServerUnavailableError < Error
+    class ServerUnavailableError < RuntimeError
+      include Momento::Error
+
       def error_code
         :SERVER_UNAVAILABLE
       end
@@ -135,7 +159,9 @@ module Momento
     end
 
     # The client's configured timeout was exceeded.
-    class TimeoutError < Error
+    class TimeoutError < RuntimeError
+      include Momento::Error
+
       def error_code
         :TIMEOUT_ERROR
       end
@@ -146,7 +172,9 @@ module Momento
     end
 
     # The cache service failed due to an internal error
-    class UnknownError < Error
+    class UnknownError < RuntimeError
+      include Momento::Error
+
       def error_code
         :UNKNOWN_ERROR
       end
@@ -157,7 +185,9 @@ module Momento
     end
 
     # The cache service failed due to an internal error
-    class UnknownServiceError < Error
+    class UnknownServiceError < RuntimeError
+      include Momento::Error
+
       def error_code
         :UNKNOWN_SERVICE_ERROR
       end
