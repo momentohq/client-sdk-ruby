@@ -66,7 +66,7 @@ module Momento
     # @param cache_name [String]
     # @param key [String] must only contain ASCII characters
     # @return [Momento::GetResponse]
-    # @raise [TypeError] when the key is not a String
+    # @raise [TypeError] when the cache_name or key is not a String
     def get(cache_name, key)
       builder = GetResponseBuilder.new(
         context: { cache_name: cache_name, key: key }
@@ -92,7 +92,7 @@ module Momento
     # @param ttl [Numeric] time-to-live, in seconds.
     # @raise [ArgumentError] if the ttl is invalid
     # @return [Momento::SetResponse]
-    # @raise [TypeError] when the key or value is not a String
+    # @raise [TypeError] when the cache_name, key, or value is not a String
     def set(cache_name, key, value, ttl: default_ttl)
       ttl = Momento::Ttl.to_ttl(ttl)
 
@@ -118,7 +118,7 @@ module Momento
     # @param cache_name [String]
     # @param key [String] must only contain ASCII characters
     # @return [Momento::DeleteResponse]
-    # @raise [TypeError] when the key or value is not a String
+    # @raise [TypeError] when the cache_name or key is not a String
     def delete(cache_name, key)
       builder = DeleteResponseBuilder.new(
         context: { cache_name: cache_name, key: key }
@@ -138,6 +138,7 @@ module Momento
     #
     # @param cache_name [String] the name of the cache to create.
     # @return [Momento::CreateCacheResponse] the response from Momento.
+    # @raise [TypeError] when the cache_name is not a String
     def create_cache(cache_name)
       builder = CreateCacheResponseBuilder.new(
         context: { cache_name: cache_name }
@@ -156,6 +157,7 @@ module Momento
     #
     # @param cache_name [String] the name of the cache to delete.
     # @return [Momento::DeleteCacheResponse] the response from Momento.
+    # @raise [TypeError] when the cache_name is not a String
     def delete_cache(cache_name)
       builder = DeleteCacheResponseBuilder.new(
         context: { cache_name: cache_name }
