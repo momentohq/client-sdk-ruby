@@ -10,6 +10,10 @@
 
 An IDE with good Ruby support, such as [RubyMine](https://www.jetbrains.com/ruby/), is recommended.
 
+### Examples
+
+You can find this example code and more in [the examples directory](https://github.com/momentohq/client-sdk-ruby/tree/main/examples) of this repository.
+
 ### Installation
 
 Install the gem and add to an application's Gemfile by executing:
@@ -36,7 +40,13 @@ If you're using an M1 or M2 Mac, you may have trouble installing the `grpc` gem;
 {{ usageExampleCode }}
 ```
 
-You can find this example code and more in [the examples directory](https://github.com/momentohq/client-sdk-ruby/tree/main/examples) of this repository.
+### Error Handling
+
+Coming soon.
+
+### Tuning
+
+Coming soon.
 
 ## Issues
 
