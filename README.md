@@ -77,8 +77,8 @@ else
 end
 ```
 
-You can run this code from [examples/basic.rb](examples/basic.rb).
+You can find this code in [the examples directory](https://github.com/momentohq/client-sdk-ruby/tree/main/examples).
 
 ## Contributing
 
-See our [instructions for CONTRIBUTING](./CONTRIBUTING.md).
+See our [instructions for CONTRIBUTING](https://github.com/momentohq/client-sdk-ruby/blob/main/CONTRIBUTING.md).
