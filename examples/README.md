@@ -11,7 +11,7 @@ See the [project's README](https://github.com/momentohq/client-sdk-ruby/blob/mai
 First, install the gem and its dependencies.
 
 ```sh
-gem install momento
+bundle
 ```
 
 Then, set the required environment variables:
