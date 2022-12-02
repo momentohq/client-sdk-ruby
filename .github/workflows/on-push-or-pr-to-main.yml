@@ -40,7 +40,7 @@ jobs:
           project_stability: alpha
           project_type: sdk
           sdk_language: Ruby
-          usage_example_path: ./examples/basic.rb
+          usage_example_path: ./examples/example.rb
 
   test:
     # Don't test until all code is generated.
