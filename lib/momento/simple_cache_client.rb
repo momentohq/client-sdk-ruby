@@ -10,6 +10,9 @@ module Momento
 
   # A simple client for Momento.
   #
+  # SimpleCacheClient does not use exceptions to report errors.
+  # Instead it returns an error response. Please see {file:README.md#label-Error+Handling}.
+  #
   # @example
   #   token = ...your Momento JWT...
   #   client = Momento::SimpleCacheClient.new(
@@ -40,6 +43,8 @@ module Momento
   #   elsif response.error?
   #     raise response.error
   #   end
+  #
+  # @see Momento::Response
   class SimpleCacheClient
     # This gem's version.
     VERSION = Momento::VERSION
