@@ -12,8 +12,10 @@ TOKEN = ENV.fetch('MOMENTO_AUTH_TOKEN')
 TTL = 12.5
 
 # The name of the cache to create *and delete*
-CACHE_NAME = 'test_cache'.freeze
+CACHE_NAME = ENV.fetch('MOMENTO_CACHE_NAME')
 
+# So it can be run from the top of the repo
+# or from the examples directory.
 FILE_LOCATIONS = [
   "spec/support/assets/test.jpg",
   "../spec/support/assets/test.jpg"
