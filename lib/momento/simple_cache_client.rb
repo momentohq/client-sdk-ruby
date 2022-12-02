@@ -6,6 +6,8 @@ require_relative 'ttl'
 require_relative 'exceptions'
 
 module Momento
+  # rubocop:disable Metrics/ClassLength
+
   # A simple client for Momento.
   #
   # @example
@@ -39,8 +41,6 @@ module Momento
   #   elsif response.error?
   #     raise response.error
   #   end
-  #
-  # rubocop:disable Metrics/ClassLength
   class SimpleCacheClient
     # This gem's version.
     VERSION = Momento::VERSION
