@@ -9,7 +9,7 @@ require 'momento'
 TOKEN = ENV.fetch('MOMENTO_AUTH_TOKEN')
 
 # Cached items will be deleted after 12.5 seconds.
-TTL = 12.5
+TTL_SECONDS = 12.5
 
 # The name of the cache to create *and delete*
 CACHE_NAME = ENV.fetch('MOMENTO_CACHE_NAME')
@@ -24,7 +24,7 @@ FILE_LOCATIONS = [
 # Instantiate a Momento client.
 client = Momento::SimpleCacheClient.new(
   auth_token: TOKEN,
-  default_ttl: TTL
+  default_ttl: TTL_SECONDS
 )
 
 # Create a cache for testing, or use an already existing one.
