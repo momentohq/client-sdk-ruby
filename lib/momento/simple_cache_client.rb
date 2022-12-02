@@ -214,6 +214,8 @@ module Momento
 
     # List a page of your caches.
     #
+    # This is a low-level method. You probably want to use {#caches} instead.
+    #
     # The next_token indicates which page to fetch.
     # If nil or "" it will fetch the first page. Default is to fetch the first page.
     #
