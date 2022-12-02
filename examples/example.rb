@@ -1,3 +1,6 @@
+# An example of the basic functionality of
+# Momento::SimpleCacheClient.
+
 require 'momento'
 
 # Get your Momento token from an environment variable.
@@ -18,12 +21,15 @@ client = Momento::SimpleCacheClient.new(
 # Create a cache to play with.
 response = client.create_cache(CACHE_NAME)
 if response.success?
-  puts "Created the cache"
+  puts "Created the cache."
 elsif response.already_exists?
   puts "Cache already exists."
 elsif response.error?
   raise "Couldn't create a cache: #{response.error}"
 end
+
+# List our caches.
+puts "Caches: #{client.caches.to_a.join(", ")}"
 
 # Put an item in the cache.
 response = client.set(CACHE_NAME, "key", "You cached something!")
@@ -41,4 +47,20 @@ elsif response.miss?
   puts "The item wasn't found in the cache."
 elsif response.error?
   raise "Couldn't get an item from the cache: #{response.error}"
+end
+
+# Now delete it.
+response = client.delete(CACHE_NAME, "key")
+if response.success?
+  puts "Key/value deleted."
+elsif response.error?
+  raise "Couldn't delete an item from the cache: #{response.error}"
+end
+
+# And delete our test cache.
+response = client.delete_cache(CACHE_NAME)
+if response.success?
+  puts "Deleted the cache."
+elsif response.error?
+  raise "Couldn't create a cache: #{response.error}"
 end
