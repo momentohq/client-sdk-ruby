@@ -11,7 +11,6 @@ module Momento
   # A simple client for Momento.
   #
   # @example
-  #
   #   token = ...your Momento JWT...
   #   client = Momento::SimpleCacheClient.new(
   #     auth_token: token,
@@ -48,7 +47,7 @@ module Momento
     CONTROL_CLIENT_STUB_CLASS = ControlClient::ScsControl::Stub
     private_constant :CACHE_CLIENT_STUB_CLASS, :CONTROL_CLIENT_STUB_CLASS
 
-    # @return [Numeric] the default time-to-live, in seconds.
+    # @return [Numeric] how long items should remain in the cache, in seconds.
     attr_accessor :default_ttl
 
     # @param auth_token [String] the JWT for your Momento account
@@ -62,8 +61,18 @@ module Momento
 
     # Get a value in a cache.
     #
-    # Momento only stores bytes; the returned value will be encoded as ASCII-8BIT.
+    # The value can be retrieved as either bytes or a string.
+    # @example
+    #   response = client.get("my_cache", "key")
+    #   if response.hit?
+    #     puts "We got #{response.value_string}"
+    #   elsif response.miss?
+    #     puts "It's not in the cache"
+    #   elsif response.error?
+    #     raise response.error
+    #   end
     #
+    # @see Momento::GetResponse
     # @param cache_name [String]
     # @param key [String] must only contain ASCII characters
     # @return [Momento::GetResponse]
@@ -86,7 +95,11 @@ module Momento
     # Set a value in a cache.
     #
     # If ttl is not set, it will use the default_ttl.
+    # @example
+    #   response = client.set("my_cache", "key", "value")
+    #   raise response.error if response.error?
     #
+    # @see Momento::SetResponse
     # @param cache_name [String]
     # @param key [String] must only contain ASCII characters
     # @param value [String] the value to cache
@@ -116,6 +129,12 @@ module Momento
 
     # Delete a key in a cache.
     #
+    # If the key does not exist, delete will still succeed.
+    # @example
+    #   response = client.delete("my_cache", "key")
+    #   raise response.error if response.error?
+    #
+    # @see Momento::DeleteResponse
     # @param cache_name [String]
     # @param key [String] must only contain ASCII characters
     # @return [Momento::DeleteResponse]
@@ -136,7 +155,17 @@ module Momento
     end
 
     # Create a new Momento cache.
+    # @example
+    #   response = client.create_cache("my_cache")
+    #   if response.success?
+    #     puts "my_cache was created"
+    #   elsif response.already_exists?
+    #     puts "my_cache already exists"
+    #   elsif response.error?
+    #     raise response.error
+    #   end
     #
+    # @see Momento::CreateCacheResponse
     # @param cache_name [String] the name of the cache to create.
     # @return [Momento::CreateCacheResponse] the response from Momento.
     # @raise [TypeError] when the cache_name is not a String
@@ -156,6 +185,11 @@ module Momento
 
     # Delete an existing Momento cache.
     #
+    # @example
+    #   response = client.delete_cache("my_cache")
+    #   raise response.error if response.error?
+    #
+    # @see Momento::DeleteCacheResponse
     # @param cache_name [String] the name of the cache to delete.
     # @return [Momento::DeleteCacheResponse] the response from Momento.
     # @raise [TypeError] when the cache_name is not a String
@@ -175,11 +209,12 @@ module Momento
 
     # List a page of your caches.
     #
-    # @note Consider using `caches` instead.
-    #
     # The next_token indicates which page to fetch.
     # If nil or "" it will fetch the first page. Default is to fetch the first page.
     #
+    # @see #caches
+    # @see Momento::ListCachesResponse
+    # @note Consider using `caches` instead.
     # @param next_token [String, nil] the token of the page to request
     # @return [Momento::ListCachesResponse]
     def list_caches(next_token: "")
@@ -193,11 +228,13 @@ module Momento
       end
     end
 
-    # Lists the names of all your caches.
+    # Lists the names of all your caches, as a lazy Enumerator.
+    # @example
+    #   cache_names = client.caches
+    #   cache_names.each { |name| puts name }
     #
     # @note Unlike other methods, this will raise if there is a problem
     #   with the client or service.
-    #
     # @return [Enumerator::Lazy<String>] the cache names
     # @raise [Momento::Error] when there is an error listing caches.
     def caches
