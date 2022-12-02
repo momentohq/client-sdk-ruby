@@ -42,7 +42,7 @@ If you're using an M1 or M2 Mac, you may have trouble installing the `grpc` gem;
 
 ### Error Handling
 
-Momento::SimpleCacheClient follows the philosophy that when working with a service,
+[Momento::SimpleCacheClient](https://github.com/momentohq/client-sdk-ruby/blob/main/lib/momento/simple_cache_client.rb) follows the philosophy that when working with a service,
 [exceptions are bugs](https://www.gomomento.com/blog/exceptions-are-bugs). Minor outages are a fact of life; they are normal rather than exceptional.
 
 When there is a problem, Momento::SimpleCacheClient methods return an error response, the same as any other response. This makes errors more visible, allows your IDE to be more helpful in ensuring that you've handled the responses you care about.
@@ -50,6 +50,7 @@ When there is a problem, Momento::SimpleCacheClient methods return an error resp
 Check if a response is an error with `response.error?`, get the error with `response.error`, and it can be raised as an exception with `raise response.error`. Generally, printing `response.error` tell you what you need to know, but you might want more details. Here's a contrived example.
 
 ```ruby
+# This is an invalid cache name. They must be ASCII-only.
 cache_name = 'çåché nåme'
 response = client.create_cache(cache_name)
 if response.success?
@@ -70,7 +71,7 @@ end
 
 Momento::SimpleCacheClient *will* raise exceptions for programmer mistakes such as passing the wrong type, typically an ArgumentError or TypeError. The exceptions are documented for each method.
 
-See Momento::Response for more about working with with error responses, and Momento::Error for more about using errors.
+See [Momento::Response](https://github.com/momentohq/client-sdk-ruby/blob/main/lib/momento/response.rb) for more about working with with error responses, and [Momento::Error](https://github.com/momentohq/client-sdk-ruby/blob/main/lib/momento/error.rb) for more about using errors.
 
 ### Tuning
 
