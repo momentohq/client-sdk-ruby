@@ -19,7 +19,20 @@ require_relative 'set_response'
 require_relative 'set_response_builder'
 
 module Momento
-  # A superclass for all Momento responses.
+  # The response from a Momento service request.
+  #
+  # {Momento::SimpleCacheClient} returns a response for both success
+  # and error, as well as other states. See the documenation for each
+  # type of response for more.
+  #
+  # You can always check for an error response with
+  # `response.error?` and get the error itself with `response.error`.
+  #
+  # `response.error` is an Exception and can be raised. It contains
+  # additional information about the error, see {Momento::Error} for
+  # more information.
+  #
+  # @see Momento::Error
   class Response
     MAX_STRING_DISPLAY_LENGTH = 32
     private_constant :MAX_STRING_DISPLAY_LENGTH
