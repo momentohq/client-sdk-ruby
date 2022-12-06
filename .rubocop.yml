@@ -11,12 +11,21 @@ AllCops:
     - 'lib/**/*_pb.rb'
     - 'vendor/**/*'
 
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
+
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
+
+Layout/MultilineMethodCallBraceLayout:
+  EnforcedStyle: new_line
 
 Lint/AmbiguousBlockAssociation:
   # For rspec
   AllowedPatterns: ['change']
+
+Metrics/MethodLength:
+  Max: 15
 
 # The rspec defaults are way too tight.
 RSpec/ExampleLength:
@@ -25,6 +34,9 @@ RSpec/MultipleExpectations:
   Max: 4
 RSpec/MultipleMemoizedHelpers:
   Max: 10
+# I disagree with this one. It should be clear you're using the subject.
+RSpec/NamedSubject:
+  Enabled: false
 RSpec/NestedGroups:
   Max: 4
 

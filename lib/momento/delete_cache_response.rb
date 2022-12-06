@@ -1,35 +1,20 @@
-require 'grpc'
-require 'momento/controlclient_pb'
+require_relative 'response/error'
 
 module Momento
-  # Responses specific to delete_cache
+  # A response from deleting a cache.
   class DeleteCacheResponse < Response
-    # Build a Momento::DeleteCacheResponse from a block of code
-    # which returns a Momento::ControlClient::DeleteCacheResponse..
-    #
-    # @return [Momento::DeleteCacheResponse]
-    # @raise [StandardError] when the exception is not recognized.
-    # @raise [TypeError] when the response is not recognized.
-    def self.from_block
-      response = yield
-    rescue GRPC::BadStatus => e
-      Error.new(grpc_exception: e)
-    else
-      raise TypeError unless response.is_a?(Momento::ControlClient::DeleteCacheResponse)
-
-      return Success.new
-    end
-
+    # Was the cache deleted?
+    # @return [Boolean]
     def success?
       false
     end
 
-    # There was an error deleting the cache.
+    # @private
     class Error < DeleteCacheResponse
       include ::Momento::Response::Error
     end
 
-    # The cache was deleted.
+    # @private
     class Success < DeleteCacheResponse
       def success?
         true

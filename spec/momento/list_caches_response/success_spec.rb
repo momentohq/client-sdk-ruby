@@ -15,18 +15,43 @@ RSpec.describe Momento::ListCachesResponse::Success do
   }
 
   it_behaves_like Momento::ListCachesResponse do
-    let(:types) do { success?: true } end
+    let(:subclass_attributes) do
+      {
+        success?: true,
+        cache_names: cache_names,
+        next_token: next_token
+      }
+    end
   end
 
-  describe '#cache_names' do
-    subject { response.cache_names }
+  describe '#to_s' do
+    subject { response.to_s }
 
-    it { is_expected.to eq cache_names }
-  end
+    let(:displayed_names) {
+      cache_names.first(
+        described_class.const_get(:CACHE_NAMES_TO_DISPLAY)
+      )
+    }
 
-  describe '#next_token' do
-    subject { response.next_token }
+    context 'when there are few caches' do
+      let(:cache_names) { ["foo", "bar"] }
 
-    it { is_expected.to eq next_token }
+      it { is_expected.to include cache_names.join(", ") }
+    end
+
+    context 'when there are many caches' do
+      let(:cache_names) {
+        [
+          "secrets", "top secret", "double top secret",
+          "a garden shed at the country club",
+          "dragon hoard", "under the mattress",
+          "on the Moon", "on the secret Moon"
+        ]
+      }
+
+      it {
+        is_expected.to include(", ...").and include(*displayed_names)
+      }
+    end
   end
 end

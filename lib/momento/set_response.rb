@@ -1,37 +1,37 @@
-require 'grpc'
-require 'momento/cacheclient_pb'
+require_relative 'response/error'
 
 module Momento
-  # Responses specific to set.
+  # A response from setting a key.
   class SetResponse < Response
-    # Build a Momento::SetResponse from a block of code
-    # which returns a Momento::ControlClient::SetResponse.
-    #
-    # @return [Momento::SetResponse]
-    # @raise [StandardError] when the exception is not recognized.
-    # @raise [TypeError] when the response is not recognized.
-    def self.from_block
-      response = yield
-    rescue GRPC::BadStatus => e
-      Error.new(grpc_exception: e)
-    else
-      raise TypeError unless response.is_a?(Momento::CacheClient::SetResponse)
-
-      Success.new
-    end
-
+    # Was the key/value pair added to the cache?
+    # @return [Boolean]
     def success?
       false
     end
 
-    # The item was set.
+    # @private
     class Success < SetResponse
+      attr_accessor :key, :value
+
+      # rubocop:disable Lint/MissingSuper
+      def initialize(key:, value:)
+        @key = key
+        @value = value
+
+        return
+      end
+      # rubocop:enable Lint/MissingSuper
+
       def success?
         true
       end
+
+      def to_s
+        "#{super}: '#{display_string(key)}' = '#{display_string(value)}'"
+      end
     end
 
-    # There was an error setting the item.
+    # @private
     class Error < SetResponse
       include Momento::Response::Error
     end

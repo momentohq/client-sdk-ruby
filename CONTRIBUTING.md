@@ -36,7 +36,7 @@ This will install both the runtime and development dependencies.
 
 ## Trying it out
 
-You can run code from the repository's `lib/` directory by adding `-Ilib` to your ruby commands. For example, `ruby -Ilib examples/basic.rb` or `irb -Ilib`. This will use the repository's code even if you have the gem installed.
+You can run code from the repository's `lib/` directory by adding `-Ilib` to your ruby commands. For example, `ruby -Ilib examples/example.rb` or `irb -Ilib`. This will use the repository's code even if you have the gem installed.
 
 You can also build a gem from local sources and install it. Run `bundle exec rake install`.
 

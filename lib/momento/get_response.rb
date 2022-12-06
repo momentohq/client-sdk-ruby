@@ -1,49 +1,43 @@
-require 'grpc'
-require 'momento/cacheclient_pb'
+require_relative 'response/error'
 
 module Momento
-  # Responses specific to get.
+  # A response containing the value retrieved from a cache.
   class GetResponse < Response
-    class << self
-      # Build a Momento::GetResponse from a block of code
-      # which returns a Momento::ControlClient::GetResponse.
-      #
-      # @return [Momento::GetResponse]
-      # @raise [StandardError] when the exception is not recognized.
-      # @raise [TypeError] when the response is not recognized.
-      def from_block
-        response = yield
-      rescue GRPC::BadStatus => e
-        Error.new(grpc_exception: e)
-      else
-        from_response(response)
-      end
-
-      private
-
-      def from_response(response)
-        raise TypeError unless response.is_a?(Momento::CacheClient::GetResponse)
-
-        case response.result
-        when :Hit
-          Hit.new(grpc_response: response)
-        when :Miss
-          Miss.new
-        else
-          raise "Unknown get result: #{response.result}"
-        end
-      end
-    end
-
+    # There was a value for the key.
+    # @return [Boolean]
     def hit?
       false
     end
 
+    # There was no value for the key.
+    # @return [Boolean]
     def miss?
       false
     end
 
-    # Successfully got an item from the cache.
+    # The gotten value, if any, as binary data: an ASCII_8BIT encoded frozen String.
+    #
+    # @return [String,nil] the value, if any, frozen and ASCII_8BIT encoded
+    def value_bytes
+      nil
+    end
+
+    # The gotten value, if any, as a string using your default encoding or specified one.
+    #
+    # @param encoding [Encoding] defaults to Encoding.default_external
+    # @return [String,nil] the value, if any, re-encoded
+    # rubocop:disable Lint/UnusedMethodArgument
+    def value_string(encoding = Encoding.default_external)
+      nil
+    end
+    # rubocop:enable Lint/UnusedMethodArgument
+
+    # @!method to_s
+    #   Displays the response and the value, if any.
+    #   A long value will be truncated.
+    #   @return [String]
+
+    # @private
     class Hit < GetResponse
       # rubocop:disable Lint/MissingSuper
       def initialize(grpc_response:)
@@ -55,24 +49,27 @@ module Momento
         true
       end
 
-      # @return [String] the value from the cache
-      def value
+      def value_bytes
         @grpc_response.cache_body
       end
 
+      def value_string(encoding = Encoding.default_external)
+        value_bytes.dup.force_encoding(encoding)
+      end
+
       def to_s
-        value
+        "#{super}: #{display_string(value_string)}"
       end
     end
 
-    # The key had no value stored in the cache.
+    # @private
     class Miss < GetResponse
       def miss?
         true
       end
     end
 
-    # There was a problem getting the value from the cache.
+    # @private
     class Error < GetResponse
       include Momento::Response::Error
     end

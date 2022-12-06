@@ -1,31 +1,39 @@
-require 'grpc'
-require 'momento/controlclient_pb'
+require_relative 'response/error'
 
 module Momento
-  # Responses specific to list_caches.
+  # A response from listing the caches.
+  #
+  # Each response is a single page of caches, there may be additional pages.
+  # Use Momento::SimpleCacheClient#caches to efficiently get the whole list.
   class ListCachesResponse < Response
-    # Build a Momento::ListCachesResponse from a block of code
-    # which returns a Momento::ControlClient::ListCachesResponse.
-    #
-    # @return [Momento::ListCachesResponse]
-    # @raise [StandardError] when the exception is not recognized.
-    # @raise [TypeError] when the response is not recognized.
-    def self.from_block
-      response = yield
-    rescue GRPC::BadStatus => e
-      Error.new(grpc_exception: e)
-    else
-      raise TypeError unless response.is_a?(Momento::ControlClient::ListCachesResponse)
-
-      return Success.new(grpc_response: response)
-    end
-
+    # Did it get a page of caches?
+    # @return [Boolean]
     def success?
       false
     end
 
-    # A Momento resposne with a page of caches.
+    # The names of the caches in this page.
+    # @return [Array,nil]
+    def cache_names
+      nil
+    end
+
+    # A token to fetch the next page.
+    # The last page will have a blank token.
+    # @return [String,nil]
+    def next_token
+      nil
+    end
+
+    # @!method to_s
+    #   Displays the response and the list of cache names.
+    #   The list of cache names will be truncated.
+    #   @return [String]
+
+    # @private
     class Success < ListCachesResponse
+      CACHE_NAMES_TO_DISPLAY = 5
+
       # rubocop:disable Lint/MissingSuper
       def initialize(grpc_response:)
         @grpc_response = grpc_response
@@ -43,9 +51,25 @@ module Momento
       def next_token
         @grpc_response.next_token
       end
+
+      def to_s
+        "#{super}: #{display_cache_names}"
+      end
+
+      private
+
+      def display_cache_names
+        display = cache_names.first(CACHE_NAMES_TO_DISPLAY).join(", ")
+
+        if cache_names.size > CACHE_NAMES_TO_DISPLAY
+          "#{display}, ..."
+        else
+          display
+        end
+      end
     end
 
-    # There was an error listing the caches.
+    # @private
     class Error < ListCachesResponse
       include ::Momento::Response::Error
     end

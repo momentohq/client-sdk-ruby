@@ -6,7 +6,7 @@ RSpec.describe Momento::GetResponse::Miss do
   }
 
   it_behaves_like Momento::GetResponse do
-    let(:types) do
+    let(:subclass_attributes) do
       { miss?: true }
     end
   end
