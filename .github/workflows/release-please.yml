@@ -41,10 +41,11 @@ jobs:
           bundle config unset deployment
           bundle install
 
+      # Only commit if there are changes.
       - name: Commit bumps and updates.
         if: ${{ success() }}
         run: |
-          git commit -a -m "chore: Update Gemfile.lock"
+          git diff --exit-code --name-only || git commit -a -m "chore: Update Gemfile.lock"
 
       - name: Publish to Rubygems
         uses: cadwallion/publish-rubygems-action@master
