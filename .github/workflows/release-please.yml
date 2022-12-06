@@ -15,10 +15,6 @@ jobs:
           command: manifest
           token: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
 
-      - name: Show PR JSON
-        run: |
-          echo ${{ steps.release.outputs.pr }}
-
       - uses: actions/checkout@v3
         if: ${{ success() }}
 
@@ -34,18 +30,10 @@ jobs:
         with:
           token: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
 
-      - name: Get PR branch
-        uses: ashley-taylor/read-json-property-action@v1.0
-        if: ${{ success() }}
-        id: release_pr
-        with:
-            json: ${{ steps.release.outputs.pr }}
-            property: headBranchName
-
       - name: Checkout PR branch
         if: ${{ success() }}
         run: |
-          git checkout ${{ steps.release_pr.outputs.value }}
+          git checkout release-please--branches--main--components--momento
 
       # Tests are run in deployment mode, so we need to update
       # the Gemfile.lock for tests to pass. Also we want the
