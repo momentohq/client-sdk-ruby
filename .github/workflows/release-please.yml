@@ -30,6 +30,19 @@ jobs:
         with:
           token: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
 
+      - name: Get PR branch
+        uses: muchaszewski/read-json-action@release
+        if: ${{ success() }}
+        id: release_pr
+        with:
+            json: ${{ steps.release.outputs.pr }}
+            properties: headBranchName
+
+      - name: Checkout PR branch
+        if: ${{ success() }}
+        run: |
+          git checkout ${{ steps.release_pr.headBranchName }}
+
       # Tests are run in deployment mode, so we need to update
       # the Gemfile.lock for tests to pass. Also we want the
       # Gemfile.lock updates part of the PR.
@@ -41,11 +54,12 @@ jobs:
           bundle config unset deployment
           bundle install
 
-      # Only commit if there are changes.
+      # Commit and push our Gemfile.lock changes (if any) to the PR.
       - name: Commit bumps and updates.
         if: ${{ success() }}
         run: |
-          git diff --exit-code --name-only || git commit -a -m "chore: Update Gemfile.lock"
+          git commit -a -m "chore: Update Gemfile.lock"
+          git push
 
       - name: Publish to Rubygems
         uses: cadwallion/publish-rubygems-action@master
