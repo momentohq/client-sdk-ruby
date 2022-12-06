@@ -7,7 +7,8 @@
       "bump-patch-for-minor-pre-major": false,
       "draft": false,
       "prerelease": false,
-      "package-name": "momento"
+      "package-name": "momento",
+      "bootstrap-sha": "ddb1cf2711fc1c7a29c0b48fe7f3aa12527c528c"
     }
   },
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
