@@ -1,0 +1,43 @@
+# If a PR changes the version or Gemfile, this
+# will update the Gemfile.lock.
+#
+# Mostly useful for release PRs.
+name: update-gemfile-lock
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - lib/momento/version.rb
+      - Gemfile
+      - '!Gemfile.lock'
+
+jobs:
+  update-gemfile-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Configure git
+        uses: oleksiyrudenko/gha-git-credentials@v2-latest
+        with:
+          token: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
+
+      - name: Update Gemfile.lock.
+        run: |
+          # `bundler-cache: true` puts us in deployment mode.
+          # We can't update the Gemfile.lock in deployment mode.
+          bundle config unset deployment
+          bundle install
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: chore: Updated Gemfile.lock
