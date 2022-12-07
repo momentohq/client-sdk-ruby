@@ -8,7 +8,7 @@
       "draft": false,
       "prerelease": false,
       "package-name": "momento",
-      "bootstrap-sha": "ddb1cf2711fc1c7a29c0b48fe7f3aa12527c528c"
+      "bootstrap-sha": "dd1ff65ceee97237bc75f75477cda6243df5c9e8"
     }
   },
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
