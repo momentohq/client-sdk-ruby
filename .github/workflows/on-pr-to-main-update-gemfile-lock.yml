@@ -24,8 +24,6 @@ jobs:
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
 
       - name: Configure git
         uses: oleksiyrudenko/gha-git-credentials@v2-latest
