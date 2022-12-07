@@ -32,8 +32,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler', "~> 2.3"
   spec.add_development_dependency 'factory_bot', "~> 6.2.1"
   spec.add_development_dependency 'faker', "~> 3.0"
+  spec.add_development_dependency 'pry-byebug', '~> 3'
+  spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency "rspec", "~> 3.12"
-  spec.add_development_dependency "rubocop", "~> 3.18"
+  spec.add_development_dependency "rubocop", "~> 1.38"
   spec.add_development_dependency 'rubocop-performance', '~> 1.15'
   spec.add_development_dependency 'rubocop-rake', '~> 0.6.0'
   spec.add_development_dependency 'rubocop-rspec', '~> 2.15'
