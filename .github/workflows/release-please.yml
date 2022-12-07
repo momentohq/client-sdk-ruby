@@ -16,42 +16,11 @@ jobs:
           token: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
 
       - uses: actions/checkout@v3
-        if: ${{ success() }}
+        if: ${{ steps.release.outputs.release_created }}
 
       - name: Set up Ruby
-        if: ${{ success() }}
+        if: ${{ steps.release.outputs.release_created }}
         uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-
-      - name: Configure git
-        if: ${{ success() }}
-        uses: oleksiyrudenko/gha-git-credentials@v2-latest
-        with:
-          token: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
-
-      - name: Checkout PR branch
-        if: ${{ success() }}
-        run: |
-          git checkout release-please--branches--main--components--momento
-
-      # Tests are run in deployment mode, so we need to update
-      # the Gemfile.lock for tests to pass. Also we want the
-      # Gemfile.lock updates part of the PR.
-      - name: Update Gemfile.lock.
-        if: ${{ success() }}
-        run: |
-          # `bundler-cache: true` puts us in deployment mode.
-          # We can't update the Gemfile.lock in deployment mode.
-          bundle config unset deployment
-          bundle install
-
-      # Commit and push our Gemfile.lock changes (if any) to the PR.
-      - name: Commit bumps and updates.
-        if: ${{ success() }}
-        run: |
-          git commit -a -m "chore: Update Gemfile.lock"
-          git push
 
       - name: Publish to Rubygems
         uses: cadwallion/publish-rubygems-action@master
