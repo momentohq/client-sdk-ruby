@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
+  spec.add_development_dependency 'brakeman'
   spec.add_development_dependency 'bundler', "~> 2.3"
   spec.add_development_dependency 'factory_bot', "~> 6.2.1"
   spec.add_development_dependency 'faker', "~> 3.0"
