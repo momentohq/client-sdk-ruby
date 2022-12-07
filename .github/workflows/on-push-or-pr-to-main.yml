@@ -11,6 +11,13 @@ permissions:
   pull-requests: write
 
 jobs:
+  momento-shared-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: momentohq/standards-and-practices/github-actions/shared-build@gh-actions-v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   rubocop:
     runs-on: ubuntu-latest
     steps:
