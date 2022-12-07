@@ -10,6 +10,7 @@ on:
       - main
     paths:
       - lib/momento/version.rb
+      - Gemfile
       - '*.gemspec'
       - '!Gemfile.lock'
 
