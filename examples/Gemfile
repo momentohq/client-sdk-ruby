@@ -2,4 +2,4 @@
 
 source "https://rubygems.org"
 
-gem 'momento', '~> 0.1.0'
+gem 'momento', '~> 0.2.0'
