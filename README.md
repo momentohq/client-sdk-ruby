@@ -9,12 +9,6 @@
 # Momento Ruby Client Library
 
 
-:warning: Alpha SDK :warning:
-
-This is an official Momento SDK, but the API is in an alpha stage and may be subject to backward-incompatible
-changes.  For more info, click on the alpha badge above.
-
-
 Ruby client SDK for Momento Serverless Cache: a fast, simple, pay-as-you-go caching solution without
 any of the operational overhead required by traditional caching solutions!
 
@@ -24,7 +18,8 @@ any of the operational overhead required by traditional caching solutions!
 
 ### Requirements
 
-- A Momento Auth Token is required. You can get one from the [Momento Console](https://console.gomomento.com).
+- A Momento Auth Token is required, you can generate one using
+  the [Momento CLI](https://github.com/momentohq/momento-cli).
 - Ruby 2.7 or newer.
 
 An IDE with good Ruby support, such as [RubyMine](https://www.jetbrains.com/ruby/), is recommended.
