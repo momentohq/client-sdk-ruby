@@ -18,8 +18,7 @@ any of the operational overhead required by traditional caching solutions!
 
 ### Requirements
 
-- A Momento Auth Token is required, you can generate one using
-  the [Momento CLI](https://github.com/momentohq/momento-cli).
+- A Momento API key is required, you can generate one using the [Momento Console](https://console.gomomento.com)
 - Ruby 2.7 or newer.
 
 An IDE with good Ruby support, such as [RubyMine](https://www.jetbrains.com/ruby/), is recommended.
@@ -57,7 +56,7 @@ If you're using an M1 or M2 Mac, you may have trouble installing the `grpc` gem;
 require 'momento'
 
 # Get your Momento token from an environment variable.
-TOKEN = ENV.fetch('MOMENTO_AUTH_TOKEN')
+TOKEN = ENV.fetch('MOMENTO_API_KEY')
 
 # Cached items will be deleted after 12.5 seconds.
 TTL_SECONDS = 12.5
