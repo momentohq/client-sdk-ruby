@@ -38,6 +38,6 @@ jobs:
     - name: Run tests
       run: bundle exec rspec
       env:
-        TEST_AUTH_TOKEN: ${{ secrets.auth-token }}
+        TEST_AUTH_TOKEN: ${{ secrets.ALPHA_TEST_AUTH_TOKEN }}
         TEST_CACHE_NAME: ${{ inputs.cache-name }}-${{ matrix.ruby-version }}-${{github.sha}}
         MOMENTO_TEST_LIVE: ${{ inputs.live }}
