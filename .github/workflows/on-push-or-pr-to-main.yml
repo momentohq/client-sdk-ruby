@@ -54,6 +54,6 @@ jobs:
     needs: [readme]
     uses: ./.github/workflows/test.yml
     secrets:
-      auth-token: ${{ secrets.ALPHA_TEST_AUTH_TOKEN }}
+      auth-token: ${{ secrets.ALPHA_LEGACY_TEST_AUTH_TOKEN }}
     with:
       live: true
