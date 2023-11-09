@@ -17,7 +17,7 @@ bundle
 Then, set the required environment variables:
 
 ```bash
-export MOMENTO_AUTH_TOKEN=<YOUR_AUTH_TOKEN>
+export MOMENTO_API_KEY=<YOUR_API_KEY>
 export CACHE_NAME=<YOUR_CACHE_NAME>
 ```
 
@@ -27,7 +27,7 @@ And now you can run the example programs.
 * compact.rb - the same, written in a compact style
 * file.rb - demonstrates how to cache a file
 
-If you wish to use the version of momento in this repository, include the lib directory when you run the examples.
+If you wish to use the version of Momento in this repository, include the lib directory when you run the examples.
 
 ```sh
 ruby -I../lib example.rb
