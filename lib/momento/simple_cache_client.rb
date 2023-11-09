@@ -60,9 +60,8 @@ module Momento
     # @param default_ttl [Numeric] time-to-live, in seconds
     # @raise [ArgumentError] if the default_ttl or auth_token is invalid
     def initialize(auth_token:, default_ttl:)
-      @auth_token = auth_token
       @default_ttl = Momento::Ttl.to_ttl(default_ttl)
-      load_endpoints_from_token
+      load_endpoints_from_token(auth_token)
     end
 
     # Get a value in a cache.
@@ -278,15 +277,17 @@ module Momento
       @combined_credentials ||= make_combined_credentials
     end
 
-    def load_endpoints_from_token
-      if is_base64?(@auth_token)
-        decoded_token = decode_base64_token(@auth_token)
+    def load_endpoints_from_token(auth_token)
+      if is_base64?(auth_token)
+        decoded_token = decode_base64_token(auth_token)
         @control_endpoint = "control.#{decoded_token['endpoint']}"
         @cache_endpoint = "cache.#{decoded_token['endpoint']}"
+        @auth_token = decoded_token['api_key']
       else
-        claim = JWT.decode(@auth_token, nil, false).first
+        claim = JWT.decode(auth_token, nil, false).first
         @control_endpoint = claim["cp"]
         @cache_endpoint = claim["c"]
+        @auth_token = auth_token
       end
     rescue JWT::DecodeError
       raise ArgumentError, "Invalid Momento auth token."
@@ -298,7 +299,7 @@ module Momento
     rescue JSON::ParserError
       raise ArgumentError, "Invalid base64 encoded token."
     end
-    
+
     def is_base64?(str)
       Base64.strict_encode64(Base64.decode64(str)) == str
     rescue ArgumentError
