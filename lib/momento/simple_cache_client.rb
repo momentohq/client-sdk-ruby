@@ -1,4 +1,5 @@
 require 'jwt'
+require 'base64'
 require_relative 'cacheclient_services_pb'
 require_relative 'controlclient_services_pb'
 require_relative 'response'
@@ -278,13 +279,32 @@ module Momento
     end
 
     def load_endpoints_from_token
-      claim = JWT.decode(@auth_token, nil, false).first
-
-      @control_endpoint = claim["cp"]
-      @cache_endpoint = claim["c"]
+      if is_base64?(@auth_token)
+        decoded_token = decode_base64_token(@auth_token)
+        @control_endpoint = "control.#{decoded_token['endpoint']}"
+        @cache_endpoint = "cache.#{decoded_token['endpoint']}"
+      else
+        claim = JWT.decode(@auth_token, nil, false).first
+        @control_endpoint = claim["cp"]
+        @cache_endpoint = claim["c"]
+      end
     rescue JWT::DecodeError
       raise ArgumentError, "Invalid Momento auth token."
     end
+
+    def decode_base64_token(token)
+      base64_decoded_json = Base64.decode64(token)
+      JSON.parse(base64_decoded_json)
+    rescue JSON::ParserError
+      raise ArgumentError, "Invalid base64 encoded token."
+    end
+    
+    def is_base64?(str)
+      Base64.strict_encode64(Base64.decode64(str)) == str
+    rescue ArgumentError
+      false
+    end
+
 
     def make_combined_credentials
       # :nocov:
