@@ -68,7 +68,7 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
       is_expected.to have_attributes(
         error?: true,
         error: have_attributes(
-          error_code: :INVALID_ARGUMENT_ERROR
+          error_code: :NOT_FOUND_ERROR
         )
       )
     end
