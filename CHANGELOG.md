@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/momentohq/client-sdk-ruby/compare/momento-v0.2.0...momento/v0.3.0) (2023-11-09)
+
+
+### Features
+
+* add support for v1 tokens ([0a98c34](https://github.com/momentohq/client-sdk-ruby/commit/0a98c3404972966a7c4c2017908f2c204532712d))
+
 ## [0.2.0](https://github.com/momentohq/client-sdk-ruby/compare/momento-v0.1.0...momento/v0.2.0) (2022-12-07)
 
 ### Breaking Changes
