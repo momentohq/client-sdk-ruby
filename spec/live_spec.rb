@@ -63,12 +63,23 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
     }
   end
 
+  shared_examples 'it handles invalid cache names control plane' do
+    it "responds with InvalidArgumentError", :include_empty_cache_name do
+      is_expected.to have_attributes(
+                       error?: true,
+                       error: have_attributes(
+                         error_code: :INVALID_ARGUMENT_ERROR
+                       )
+                     )
+    end
+  end
+
   shared_examples 'it handles invalid cache names' do
     it "responds with InvalidArgumentError", :include_empty_cache_name do
       is_expected.to have_attributes(
         error?: true,
         error: have_attributes(
-          error_code: :INVALID_ARGUMENT_ERROR
+          error_code: :NOT_FOUND_ERROR
         )
       )
     end
@@ -170,7 +181,7 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
     end
 
     it_behaves_like 'it handles server failures'
-    it_behaves_like 'it handles invalid cache names'
+    it_behaves_like 'it handles invalid cache names control plane'
   end
 
   describe '#delete_cache' do
@@ -189,7 +200,7 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
     end
 
     it_behaves_like 'it handles server failures'
-    it_behaves_like 'it handles invalid cache names'
+    it_behaves_like 'it handles invalid cache names control plane'
   end
 
   describe '#get' do

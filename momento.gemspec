@@ -42,6 +42,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov', '~> 0.21'
   spec.add_development_dependency 'yard', '~> 0.9'
 
-  spec.add_dependency "grpc", '~> 1'
+  spec.add_dependency "grpc", '~> 1.58'
   spec.add_dependency 'jwt', '~> 2'
 end

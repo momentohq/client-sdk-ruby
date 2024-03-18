@@ -6,7 +6,7 @@
 require 'momento'
 
 # Get your Momento token from an environment variable.
-TOKEN = ENV.fetch('MOMENTO_AUTH_TOKEN')
+TOKEN = ENV.fetch('MOMENTO_API_KEY')
 
 # Cached items will be deleted after 12.5 seconds.
 TTL_SECONDS = 12.5
