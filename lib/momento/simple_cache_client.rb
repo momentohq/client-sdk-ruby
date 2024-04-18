@@ -306,7 +306,6 @@ module Momento
       false
     end
 
-
     def make_combined_credentials
       # :nocov:
       auth_proc = proc do

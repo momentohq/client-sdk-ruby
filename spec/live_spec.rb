@@ -66,11 +66,11 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
   shared_examples 'it handles invalid cache names control plane' do
     it "responds with InvalidArgumentError", :include_empty_cache_name do
       is_expected.to have_attributes(
-                       error?: true,
-                       error: have_attributes(
-                         error_code: :INVALID_ARGUMENT_ERROR
-                       )
-                     )
+        error?: true,
+        error: have_attributes(
+          error_code: :INVALID_ARGUMENT_ERROR
+        )
+      )
     end
   end
 

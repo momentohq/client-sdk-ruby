@@ -81,3 +81,6 @@ Style/Documentation:
 Metrics/ModuleLength:
   Exclude:
     - 'lib/momento/generated/**/*'
+
+RSpec/FactoryBot/FactoryClassName:
+  Enabled: false
