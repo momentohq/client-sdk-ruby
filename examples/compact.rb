@@ -2,18 +2,18 @@
 
 require 'momento'
 
-# Get your Momento token from an environment variable.
-TOKEN = ENV.fetch('MOMENTO_API_KEY')
-
 # Cached items will be deleted after 12.5 seconds.
 TTL_SECONDS = 12.5
 
 # The name of the cache to create *and delete*
 CACHE_NAME = ENV.fetch('MOMENTO_CACHE_NAME')
 
+# Create a credential provider that loads a Momento API Key from an environment variable.
+credential_provider = Momento::CredentialProvider.from_env_var('MOMENTO_API_KEY')
+
 # Instantiate a Momento client.
 client = Momento::SimpleCacheClient.new(
-  auth_token: TOKEN,
+  credential_provider: credential_provider,
   default_ttl: TTL_SECONDS
 )
 

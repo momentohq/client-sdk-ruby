@@ -3,7 +3,6 @@ PATH
   specs:
     momento (0.3.0)
       grpc (~> 1.58)
-      jwt (~> 2)
 
 GEM
   remote: https://rubygems.org/
@@ -104,6 +103,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-22
+  arm64-darwin-23
   x86_64-darwin-20
   x86_64-darwin-21
   x86_64-linux
@@ -112,6 +112,7 @@ DEPENDENCIES
   bundler (~> 2.3)
   factory_bot (~> 6.2.1)
   faker (~> 3.0)
+  jwt (~> 2)
   momento!
   pry-byebug (~> 3)
   rake (~> 13.0)

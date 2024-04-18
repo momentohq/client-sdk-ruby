@@ -13,12 +13,15 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
   let(:auth_token) {
     ENV.fetch('TEST_AUTH_TOKEN')
   }
+  let(:credential_provider) {
+    Momento::Auth::CredentialProvider.from_string(auth_token)
+  }
   let(:cache_name) {
     ENV.fetch('TEST_CACHE_NAME')
   }
   let(:client) {
     Momento::SimpleCacheClient.new(
-      auth_token: auth_token,
+      credential_provider: credential_provider,
       default_ttl: 10
     )
   }
