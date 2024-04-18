@@ -17,7 +17,7 @@ module Momento
         exception: e, context: context
       )
     else
-      raise TypeError unless response.is_a?(::Momento::ControlClient::DeleteCacheResponse)
+      raise TypeError unless response.is_a?(::MomentoProtos::ControlClient::PB__DeleteCacheResponse)
 
       return DeleteCacheResponse::Success.new
     end

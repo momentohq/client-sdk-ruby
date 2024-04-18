@@ -1,14 +1,14 @@
 FactoryBot.define do
   factory(
     :momento_control_client_cache,
-    class: "Momento::ControlClient::Cache"
+    class: MomentoProtos::ControlClient::PB__Cache
   ) do
     cache_name { Faker::Lorem.word }
   end
 
   factory(
     :momento_control_client_list_caches_response,
-    class: "Momento::ControlClient::ListCachesResponse"
+    class: MomentoProtos::ControlClient::PB__ListCachesResponse
   ) do
     transient do
       num_caches { 3 }
@@ -26,7 +26,7 @@ FactoryBot.define do
     next_token { "" }
 
     initialize_with do
-      Momento::ControlClient::ListCachesResponse.new(
+      MomentoProtos::ControlClient::PB__ListCachesResponse.new(
         cache: cache, next_token: next_token
       )
     end

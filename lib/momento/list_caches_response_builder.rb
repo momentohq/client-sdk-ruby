@@ -17,7 +17,7 @@ module Momento
         exception: e, context: context
       )
     else
-      raise TypeError unless response.is_a?(::Momento::ControlClient::ListCachesResponse)
+      raise TypeError unless response.is_a?(::MomentoProtos::ControlClient::PB__ListCachesResponse)
 
       return ListCachesResponse::Success.new(grpc_response: response)
     end

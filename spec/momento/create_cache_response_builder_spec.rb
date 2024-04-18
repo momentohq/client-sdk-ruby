@@ -22,7 +22,7 @@ RSpec.describe Momento::CreateCacheResponseBuilder do
 
     context 'when it returns a CreateCacheResponse' do
       let(:response) {
-        Momento::ControlClient::CreateCacheResponse.new
+        MomentoProtos::ControlClient::PB__CreateCacheResponse.new
       }
       let(:response_class) {
         Momento::CreateCacheResponse::Success

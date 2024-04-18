@@ -159,11 +159,11 @@ RSpec.describe Momento::SimpleCacheClient do
 
     it 'sends a CreateCacheRequest with the cache name' do
       allow(control_stub).to receive(:create_cache)
-        .and_return(Momento::ControlClient::CreateCacheResponse.new)
+        .and_return(MomentoProtos::ControlClient::PB__CreateCacheResponse.new)
 
       subject
 
-      expected_request = be_a(Momento::ControlClient::CreateCacheRequest).and have_attributes(
+      expected_request = be_a(MomentoProtos::ControlClient::PB__CreateCacheRequest).and have_attributes(
         cache_name: cache_name
       )
 
@@ -173,7 +173,7 @@ RSpec.describe Momento::SimpleCacheClient do
     context 'when the response is success' do
       before do
         allow(control_stub).to receive(:create_cache)
-          .and_return(Momento::ControlClient::CreateCacheResponse.new)
+          .and_return(MomentoProtos::ControlClient::PB__CreateCacheResponse.new)
       end
 
       it 'returns the appropriate Response' do
@@ -224,11 +224,11 @@ RSpec.describe Momento::SimpleCacheClient do
 
     it 'sends a DeleteCacheRequest with the cache name' do
       allow(control_stub).to receive(:delete_cache)
-        .and_return(Momento::ControlClient::DeleteCacheResponse.new)
+        .and_return(MomentoProtos::ControlClient::PB__DeleteCacheResponse.new)
 
       subject
 
-      expected_request = be_a(Momento::ControlClient::DeleteCacheRequest).and have_attributes(
+      expected_request = be_a(MomentoProtos::ControlClient::PB__DeleteCacheRequest).and have_attributes(
         cache_name: cache_name
       )
 
@@ -238,7 +238,7 @@ RSpec.describe Momento::SimpleCacheClient do
     context 'when the response is success' do
       before do
         allow(control_stub).to receive(:delete_cache)
-          .and_return(Momento::ControlClient::DeleteCacheResponse.new)
+          .and_return(MomentoProtos::ControlClient::PB__DeleteCacheResponse.new)
       end
 
       it 'returns the appropriate Response' do
@@ -289,7 +289,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
       client.list_caches(next_token: next_token)
 
-      expected_request = be_a(Momento::ControlClient::ListCachesRequest)
+      expected_request = be_a(MomentoProtos::ControlClient::PB__ListCachesRequest)
         .and have_attributes(next_token: next_token)
 
       expect(control_stub).to have_received(:list_caches)
@@ -302,7 +302,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
       client.list_caches(next_token: "")
 
-      expected_request = be_a(Momento::ControlClient::ListCachesRequest)
+      expected_request = be_a(MomentoProtos::ControlClient::PB__ListCachesRequest)
         .and have_attributes(next_token: "")
 
       expect(control_stub).to have_received(:list_caches)
@@ -413,7 +413,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
       expect(cache_stub).to have_received(:get)
         .with(
-          be_a(Momento::CacheClient::GetRequest).and(have_attributes(cache_key: key)),
+          be_a(MomentoProtos::CacheClient::PB__GetRequest).and(have_attributes(cache_key: key)),
           metadata: { cache: cache_name }
         )
     end
@@ -527,7 +527,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
         set_call
 
-        request_expectation = be_a(Momento::CacheClient::SetRequest).and have_attributes(
+        request_expectation = be_a(MomentoProtos::CacheClient::PB__SetRequest).and have_attributes(
           cache_key: key, cache_body: value, ttl_milliseconds: expected_ttl
         )
 
@@ -658,7 +658,7 @@ RSpec.describe Momento::SimpleCacheClient do
 
       expect(cache_stub).to have_received(:delete)
         .with(
-          be_a(Momento::CacheClient::DeleteRequest).and(have_attributes(cache_key: key)),
+          be_a(MomentoProtos::CacheClient::PB__DeleteRequest).and(have_attributes(cache_key: key)),
           metadata: { cache: cache_name }
         )
     end

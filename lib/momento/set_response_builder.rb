@@ -17,7 +17,7 @@ module Momento
     rescue *RESCUED_EXCEPTIONS => e
       SetResponse::Error.new(exception: e, context: context)
     else
-      raise TypeError unless response.is_a?(::Momento::CacheClient::SetResponse)
+      raise TypeError unless response.is_a?(::MomentoProtos::CacheClient::PB__SetResponse)
 
       SetResponse::Success.new(key: context[:key], value: context[:value])
     end

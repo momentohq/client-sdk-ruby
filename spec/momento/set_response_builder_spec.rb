@@ -15,7 +15,7 @@ RSpec.describe Momento::SetResponseBuilder do
 
     context 'when it returns a SetResponse' do
       let(:response) {
-        Momento::CacheClient::SetResponse.new
+        MomentoProtos::CacheClient::PB__SetResponse.new
       }
       let(:response_class) {
         Momento::SetResponse::Success

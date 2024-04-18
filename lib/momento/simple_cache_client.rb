@@ -91,7 +91,7 @@ module Momento
         validate_cache_name(cache_name)
 
         cache_stub.get(
-          CacheClient::GetRequest.new(cache_key: to_bytes(key)),
+          MomentoProtos::CacheClient::PB__GetRequest.new(cache_key: to_bytes(key)),
           metadata: { cache: cache_name }
         )
       end
@@ -122,7 +122,7 @@ module Momento
       return builder.from_block do
         validate_cache_name(cache_name)
 
-        req = CacheClient::SetRequest.new(
+        req = MomentoProtos::CacheClient::PB__SetRequest.new(
           cache_key: to_bytes(key),
           cache_body: to_bytes(value),
           ttl_milliseconds: ttl.milliseconds
@@ -153,7 +153,7 @@ module Momento
         validate_cache_name(cache_name)
 
         cache_stub.delete(
-          CacheClient::DeleteRequest.new(cache_key: to_bytes(key)),
+          MomentoProtos::CacheClient::PB__DeleteRequest.new(cache_key: to_bytes(key)),
           metadata: { cache: cache_name }
         )
       end
@@ -183,7 +183,7 @@ module Momento
         validate_cache_name(cache_name)
 
         control_stub.create_cache(
-          ControlClient::CreateCacheRequest.new(cache_name: cache_name)
+          MomentoProtos::ControlClient::PB__CreateCacheRequest.new(cache_name: cache_name)
         )
       end
     end
@@ -207,7 +207,7 @@ module Momento
         validate_cache_name(cache_name)
 
         control_stub.delete_cache(
-          ControlClient::DeleteCacheRequest.new(cache_name: cache_name)
+          MomentoProtos::ControlClient::PB__DeleteCacheRequest.new(cache_name: cache_name)
         )
       end
     end
@@ -230,7 +230,7 @@ module Momento
       )
       return builder.from_block do
         control_stub.list_caches(
-          ControlClient::ListCachesRequest.new(next_token: next_token)
+          MomentoProtos::ControlClient::PB__ListCachesRequest.new(next_token: next_token)
         )
       end
     end

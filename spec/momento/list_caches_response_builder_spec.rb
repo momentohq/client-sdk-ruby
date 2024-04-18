@@ -15,7 +15,7 @@ RSpec.describe Momento::ListCachesResponseBuilder do
 
     context 'when it returns a ListCachesResponse' do
       let(:response) {
-        Momento::ControlClient::ListCachesResponse.new
+        MomentoProtos::ControlClient::PB__ListCachesResponse.new
       }
       let(:response_class) {
         Momento::ListCachesResponse::Success

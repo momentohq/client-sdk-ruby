@@ -15,7 +15,7 @@ RSpec.describe Momento::DeleteResponseBuilder do
 
     context 'when it returns a DeleteResponse' do
       let(:response) {
-        Momento::CacheClient::DeleteResponse.new
+        MomentoProtos::CacheClient::PB__DeleteResponse.new
       }
       let(:response_class) {
         Momento::DeleteResponse::Success

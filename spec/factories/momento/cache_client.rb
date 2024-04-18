@@ -1,14 +1,14 @@
 FactoryBot.define do
   factory(
     :momento_cache_client_delete_response,
-    class: "Momento::CacheClient::DeleteResponse"
+    class: MomentoProtos::CacheClient::PB__DeleteResponse
   ) do
     initialize_with { new(**attributes) }
   end
 
   factory(
     :momento_cache_client_get_response,
-    class: "Momento::CacheClient::GetResponse"
+    class: MomentoProtos::CacheClient::PB__GetResponse
   ) do
     cache_body { "" }
     message { "" }
@@ -32,7 +32,7 @@ FactoryBot.define do
 
   factory(
     :momento_cache_client_set_response,
-    class: "Momento::CacheClient::SetResponse"
+    class: MomentoProtos::CacheClient::PB__SetResponse
   ) do
     result { :Ok }
     message { "" }

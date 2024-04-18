@@ -19,7 +19,7 @@ module Momento
         exception: e, context: context
       )
     else
-      raise TypeError unless response.is_a?(::Momento::ControlClient::CreateCacheResponse)
+      raise TypeError unless response.is_a?(::MomentoProtos::ControlClient::PB__CreateCacheResponse)
 
       return CreateCacheResponse::Success.new
     end

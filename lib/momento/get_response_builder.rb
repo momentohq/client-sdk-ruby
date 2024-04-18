@@ -22,7 +22,7 @@ module Momento
     private
 
     def from_response(response)
-      raise TypeError unless response.is_a?(Momento::CacheClient::GetResponse)
+      raise TypeError unless response.is_a?(MomentoProtos::CacheClient::PB__GetResponse)
 
       case response.result
       when :Hit
