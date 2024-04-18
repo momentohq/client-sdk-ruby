@@ -1,5 +1,5 @@
 require 'grpc'
-require_relative 'controlclient_pb'
+require_relative 'generated/controlclient_pb'
 
 module Momento
   # @private

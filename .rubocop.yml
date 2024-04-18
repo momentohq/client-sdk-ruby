@@ -8,7 +8,7 @@ AllCops:
   TargetRubyVersion: 2.7
   Exclude:
     # Generated protobuf files
-    - 'lib/**/*_pb.rb'
+    - 'lib/momento/generated/**/*'
     - 'vendor/**/*'
 
 Layout/ArgumentAlignment:
@@ -71,3 +71,13 @@ Style/WordArray:
 
 Layout/LineLength:
   Max: 120
+  Exclude:
+    - 'lib/momento/generated/**/*'
+
+Style/Documentation:
+  Exclude:
+    - 'lib/momento/generated/**/*'
+
+Metrics/ModuleLength:
+  Exclude:
+    - 'lib/momento/generated/**/*'

@@ -1,7 +1,7 @@
 require 'jwt'
 require 'base64'
-require_relative 'cacheclient_services_pb'
-require_relative 'controlclient_services_pb'
+require_relative 'generated/cacheclient_services_pb'
+require_relative 'generated/controlclient_services_pb'
 require_relative 'response'
 require_relative 'ttl'
 require_relative 'exceptions'
@@ -49,8 +49,8 @@ module Momento
   class SimpleCacheClient
     # This gem's version.
     VERSION = Momento::VERSION
-    CACHE_CLIENT_STUB_CLASS = CacheClient::Scs::Stub
-    CONTROL_CLIENT_STUB_CLASS = ControlClient::ScsControl::Stub
+    CACHE_CLIENT_STUB_CLASS = MomentoProtos::CacheClient::Scs::Stub
+    CONTROL_CLIENT_STUB_CLASS = MomentoProtos::ControlClient::ScsControl::Stub
     private_constant :CACHE_CLIENT_STUB_CLASS, :CONTROL_CLIENT_STUB_CLASS
 
     # @return [Numeric] how long items should remain in the cache, in seconds.

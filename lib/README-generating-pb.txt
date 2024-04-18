@@ -25,4 +25,4 @@ Put them in their own namespace.
 1. Wrap the modules in `module Momento`.
 2. In the *_services_pb.rb files, change the module names.
   * rename ::ControlClient to ::Momento::ControlClient
-  * rename ::CacheClient to ::Momento::CacheClient
+  * rename ::CacheClient to ::MomentoProtos::CacheClient

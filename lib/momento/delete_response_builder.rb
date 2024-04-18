@@ -1,5 +1,5 @@
 require 'grpc'
-require_relative 'cacheclient_pb'
+require_relative 'generated/cacheclient_pb'
 
 module Momento
   # @private

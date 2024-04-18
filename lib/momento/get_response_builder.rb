@@ -1,5 +1,5 @@
 require_relative 'response_builder'
-require_relative 'cacheclient_pb'
+require_relative 'generated/cacheclient_pb'
 require_relative 'get_response'
 
 module Momento
