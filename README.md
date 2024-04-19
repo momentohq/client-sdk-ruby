@@ -58,7 +58,7 @@ You can find this example code and more in [the examples directory](./examples) 
 
 ```ruby
 # An example of the basic functionality of
-# Momento::SimpleCacheClient.
+# Momento::CacheClient.
 
 require 'momento'
 
@@ -72,7 +72,7 @@ CACHE_NAME = ENV.fetch('MOMENTO_CACHE_NAME')
 credential_provider = Momento::CredentialProvider.from_env_var('MOMENTO_API_KEY')
 
 # Instantiate a Momento client.
-client = Momento::SimpleCacheClient.new(
+client = Momento::CacheClient.new(
   credential_provider: credential_provider,
   default_ttl: TTL_SECONDS
 )
@@ -136,10 +136,10 @@ Check out full working code in the [example](./example/) directory of this repos
 
 ## Error Handling
 
-[Momento::SimpleCacheClient](https://github.com/momentohq/client-sdk-ruby/blob/main/lib/momento/simple_cache_client.rb) follows the philosophy that when working with a service,
+[Momento::CacheClient](https://github.com/momentohq/client-sdk-ruby/blob/main/lib/momento/cache_client.rb) follows the philosophy that when working with a service,
 [exceptions are bugs](https://www.gomomento.com/blog/exceptions-are-bugs). Minor outages are a fact of life; they are normal rather than exceptional.
 
-When there is a problem, Momento::SimpleCacheClient methods return an error response, the same as any other response. This makes errors more visible, allows your IDE to be more helpful in ensuring that you've handled the responses you care about.
+When there is a problem, Momento::CacheClient methods return an error response, the same as any other response. This makes errors more visible, allows your IDE to be more helpful in ensuring that you've handled the responses you care about.
 
 Check if a response is an error with `response.error?`, get the error with `response.error`, and it can be raised as an exception with `raise response.error`. Generally, printing `response.error` tell you what you need to know, but you might want more details. Here's a contrived example.
 
@@ -163,7 +163,7 @@ elsif response.error?
 end
 ```
 
-Momento::SimpleCacheClient *will* raise exceptions for programmer mistakes such as passing the wrong type, typically an ArgumentError or TypeError. The exceptions are documented for each method.
+Momento::CacheClient *will* raise exceptions for programmer mistakes such as passing the wrong type, typically an ArgumentError or TypeError. The exceptions are documented for each method.
 
 See [Momento::Response](https://github.com/momentohq/client-sdk-ruby/blob/main/lib/momento/response.rb) for more about working with with error responses, and [Momento::Error](https://github.com/momentohq/client-sdk-ruby/blob/main/lib/momento/error.rb) for more about using errors.
 
