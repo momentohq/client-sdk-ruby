@@ -1,33 +1,36 @@
 <head>
-  <meta name="Momento Ruby Client Library Documentation" content="Ruby client software development kit for Momento Serverless Cache">
+  <meta name="Momento Ruby Client Library Documentation" content="Ruby client software development kit for Momento Cache">
 </head>
-<img src="https://docs.momentohq.com/img/logo.svg" alt="logo" width="400"/>
+<img src="https://docs.momentohq.com/img/momento-logo-forest.svg" alt="logo" width="400"/>
 
 [![project status](https://momentohq.github.io/standards-and-practices/badges/project-status-official.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md)
-[![project stability](https://momentohq.github.io/standards-and-practices/badges/project-stability-alpha.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md) 
+[![project stability](https://momentohq.github.io/standards-and-practices/badges/project-stability-beta.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md)
 
 # Momento Ruby Client Library
 
+Momento Cache is a fast, simple, pay-as-you-go caching solution without any of the operational overhead
+required by traditional caching solutions.  This repo contains the source code for the Momento Ruby client library.
 
-Ruby client SDK for Momento Serverless Cache: a fast, simple, pay-as-you-go caching solution without
-any of the operational overhead required by traditional caching solutions!
+To get started with Momento you will need a Momento Auth Token. You can get one from the [Momento Console](https://console.gomomento.com).
 
+* Website: [https://www.gomomento.com/](https://www.gomomento.com/)
+* Momento Documentation: [https://docs.momentohq.com/](https://docs.momentohq.com/)
+* Getting Started: [https://docs.momentohq.com/getting-started](https://docs.momentohq.com/getting-started)
+* Ruby SDK Documentation: [https://docs.momentohq.com/sdks/ruby](https://docs.momentohq.com/sdks/ruby)
+* Discuss: [Momento Discord](https://discord.gg/3HkAKjUZGq)
 
+# Momento Ruby SDK
 
-## Getting Started :running:
+To get started with Momento you will need a Momento API key. You can get one from the [Momento Console](https://console.gomomento.com/api-keys).
 
-### Requirements
+* Website: [https://www.gomomento.com/](https://www.gomomento.com/)
+* Momento Documentation: [https://docs.momentohq.com/](https://docs.momentohq.com/)
+* Getting Started: [https://docs.momentohq.com/getting-started](https://docs.momentohq.com/getting-started)
+* Discuss: [Momento Discord](https://discord.gg/3HkAKjUZGq)
 
-- A Momento API key is required, you can generate one using the [Momento Console](https://console.gomomento.com)
-- Ruby 2.7 or newer.
+## Packages
 
-An IDE with good Ruby support, such as [RubyMine](https://www.jetbrains.com/ruby/), is recommended.
-
-### Examples
-
-You can find this example code and more in [the examples directory](https://github.com/momentohq/client-sdk-ruby/tree/main/examples) of this repository.
-
-### Installation
+The Momento Ruby SDK is available on [RubyGems](https://rubygems.org/gems/momento) 
 
 Install the gem and add to an application's Gemfile by executing:
 
@@ -41,13 +44,17 @@ If bundler is not being used to manage dependencies, install the gem by executin
 gem install momento
 ```
 
-#### Note: M1 or M2 Macs
+You will need Ruby 2.7 or newer.
 
-If you're using an M1 or M2 Mac, you may have trouble installing the `grpc` gem; [see this issue for more information](https://github.com/grpc/grpc/issues/31215).
+An IDE with good Ruby support, such as [RubyMine](https://www.jetbrains.com/ruby/), is recommended.
+
+**Note: M1 or M2 Macs**: If you're using an M1 or M2 Mac, you may have trouble installing the `grpc` gem; [see this issue for more information](https://github.com/grpc/grpc/issues/31215).
 
 [A work around](https://github.com/grpc/grpc/pull/31151#issuecomment-1310321807) is to run `bundle config build.grpc --with-ldflags="-Wl,-undefined,dynamic_lookup"` before doing `bundle install`.
 
-### Usage
+## Usage
+
+You can find this example code and more in [the examples directory](./examples) of this repository.
 
 ```ruby
 # An example of the basic functionality of
@@ -119,7 +126,15 @@ end
 
 ```
 
-### Error Handling
+## Getting Started and Documentation
+
+General documentation on Momento and the Momento SDKs is available on the [Momento Docs website](https://docs.momentohq.com/). Specific usage examples for the Ruby SDK are coming soon!
+
+## Examples
+
+Check out full working code in the [example](./example/) directory of this repository!
+
+## Error Handling
 
 [Momento::SimpleCacheClient](https://github.com/momentohq/client-sdk-ruby/blob/main/lib/momento/simple_cache_client.rb) follows the philosophy that when working with a service,
 [exceptions are bugs](https://www.gomomento.com/blog/exceptions-are-bugs). Minor outages are a fact of life; they are normal rather than exceptional.
@@ -152,17 +167,13 @@ Momento::SimpleCacheClient *will* raise exceptions for programmer mistakes such 
 
 See [Momento::Response](https://github.com/momentohq/client-sdk-ruby/blob/main/lib/momento/response.rb) for more about working with with error responses, and [Momento::Error](https://github.com/momentohq/client-sdk-ruby/blob/main/lib/momento/error.rb) for more about using errors.
 
-### Tuning
-
-Coming soon.
-
 ## Issues
 
 Please report any bugs, issues, requests, and feedback via this repo's [issue tracker](https://github.com/momentohq/client-sdk-ruby/issues).
 
-## Contributing
+## Developing
 
-See our [instructions for CONTRIBUTING](https://github.com/momentohq/client-sdk-ruby/blob/main/CONTRIBUTING.md).
+If you are interested in contributing to the SDK, please see the [CONTRIBUTING](./CONTRIBUTING.md) docs.
 
 ----------------------------------------------------------------------------------------
 For more info, visit our website at [https://gomomento.com](https://gomomento.com)!
