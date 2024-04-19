@@ -27,7 +27,7 @@ rm -f ./*.proto
 # In the *_pb.rb files, replace the require with require_relative
 sed -i '' -E "s/require '(.*)_pb'/require_relative '\1_pb'/g" *_pb.rb
 
-# Wrap the generated code in a module named MomentoProtos but only if not "module Scs"
+# Wrap the generated code in a module named MomentoProtos, but only the top-level modules
 for file in *_pb.rb; do
   sed -i '' -E 's/^module (.*)/module MomentoProtos::\1/g' $file
 done
