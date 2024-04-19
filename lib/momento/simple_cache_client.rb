@@ -1,5 +1,3 @@
-require 'jwt'
-require 'base64'
 require_relative 'generated/cacheclient_services_pb'
 require_relative 'generated/controlclient_services_pb'
 require_relative 'response'
@@ -15,9 +13,9 @@ module Momento
   # Instead it returns an error response. Please see {file:README.md#label-Error+Handling}.
   #
   # @example
-  #   token = ...your Momento JWT...
+  #   credential_provider = Momento::CredentialProvider.from_env_var('MOMENTO_API_KEY')
   #   client = Momento::SimpleCacheClient.new(
-  #     auth_token: token,
+  #     credential_provider: credential_provider,
   #     # cached items will be deleted after 100 seconds
   #     default_ttl: 100
   #   )
@@ -56,12 +54,15 @@ module Momento
     # @return [Numeric] how long items should remain in the cache, in seconds.
     attr_accessor :default_ttl
 
-    # @param auth_token [String] the JWT for your Momento account
+    # @param credential_provider [Momento::CredentialProvider] the provider for the
+    # credentials required to connect to Momento
     # @param default_ttl [Numeric] time-to-live, in seconds
-    # @raise [ArgumentError] if the default_ttl or auth_token is invalid
-    def initialize(auth_token:, default_ttl:)
+    # @raise [ArgumentError] if the default_ttl or credential_provider is invalid
+    def initialize(credential_provider:, default_ttl:)
       @default_ttl = Momento::Ttl.to_ttl(default_ttl)
-      load_endpoints_from_token(auth_token)
+      @api_key = credential_provider.api_key
+      @control_endpoint = credential_provider.control_endpoint
+      @cache_endpoint = credential_provider.cache_endpoint
     end
 
     # Get a value in a cache.
@@ -277,39 +278,10 @@ module Momento
       @combined_credentials ||= make_combined_credentials
     end
 
-    def load_endpoints_from_token(auth_token)
-      if is_base64?(auth_token)
-        decoded_token = decode_base64_token(auth_token)
-        @control_endpoint = "control.#{decoded_token['endpoint']}"
-        @cache_endpoint = "cache.#{decoded_token['endpoint']}"
-        @auth_token = decoded_token['api_key']
-      else
-        claim = JWT.decode(auth_token, nil, false).first
-        @control_endpoint = claim["cp"]
-        @cache_endpoint = claim["c"]
-        @auth_token = auth_token
-      end
-    rescue JWT::DecodeError
-      raise ArgumentError, "Invalid Momento auth token."
-    end
-
-    def decode_base64_token(token)
-      base64_decoded_json = Base64.decode64(token)
-      JSON.parse(base64_decoded_json)
-    rescue JSON::ParserError
-      raise ArgumentError, "Invalid base64 encoded token."
-    end
-
-    def is_base64?(str)
-      Base64.strict_encode64(Base64.decode64(str)) == str
-    rescue ArgumentError
-      false
-    end
-
     def make_combined_credentials
       # :nocov:
       auth_proc = proc do
-        { authorization: @auth_token, agent: "ruby:#{VERSION}" }
+        { authorization: @api_key, agent: "ruby:#{VERSION}" }
       end
       # :nocov:
 
