@@ -29,7 +29,7 @@ You will need Ruby 2.7 or newer.
 
 An IDE with good Ruby support, such as [RubyMine](https://www.jetbrains.com/ruby/), is recommended.
 
-#### Note: M1 or M2 Macs
+**Note: M1 or M2 Macs**
 
 If you're using an M1 or M2 Mac, you may have trouble installing the `grpc` gem; [see this issue for more information](https://github.com/grpc/grpc/issues/31215).
 
