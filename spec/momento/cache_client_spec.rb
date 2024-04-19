@@ -21,7 +21,29 @@ RSpec.describe Momento::CacheClient do
     end
   end
 
-  shared_examples 'a gRPC stub' do
+  shared_examples 'a gRPC stub for a data client' do
+    subject(:stub) { client.send(stub_method) }
+
+    let(:client) {
+      build(:momento_cache_client, credential_provider: build(:credential_provider, api_key: token),
+        configuration: build(:configuration)
+      )
+    }
+    let(:endpoint) { Faker::Internet.domain_name }
+
+    it { is_expected.to be_a stub_class }
+
+    it 'creates a stub with the endpoint' do
+      allow(stub_class).to receive(:new).and_call_original
+
+      stub
+
+      expect(stub_class).to have_received(:new)
+        .with(endpoint, instance_of(GRPC::Core::ChannelCredentials), { timeout: 5000 })
+    end
+  end
+
+  shared_examples 'a gRPC stub for a control client' do
     subject(:stub) { client.send(stub_method) }
 
     let(:client) {
@@ -127,7 +149,7 @@ RSpec.describe Momento::CacheClient do
     let(:stub_method) { :cache_stub }
     let(:token) { build(:auth_token, c: endpoint) }
 
-    it_behaves_like 'a gRPC stub'
+    it_behaves_like 'a gRPC stub for a data client'
   end
 
   describe '#control_stub' do
@@ -135,7 +157,7 @@ RSpec.describe Momento::CacheClient do
     let(:stub_method) { :control_stub }
     let(:token) { build(:auth_token, cp: endpoint) }
 
-    it_behaves_like 'a gRPC stub'
+    it_behaves_like 'a gRPC stub for a control client'
   end
 
   describe '#create_cache' do

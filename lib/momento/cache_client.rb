@@ -271,7 +271,9 @@ module Momento
     private
 
     def cache_stub
-      @cache_stub ||= CACHE_CLIENT_STUB_CLASS.new(@cache_endpoint, combined_credentials)
+      @cache_stub ||= CACHE_CLIENT_STUB_CLASS.new(@cache_endpoint, combined_credentials,
+        timeout: @configuration.transport_strategy.grpc_configuration.deadline
+      )
     end
 
     def control_stub

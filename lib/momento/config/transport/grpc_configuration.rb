@@ -1,7 +1,7 @@
 module Momento
   # Encapsulates gRPC configuration tunables
   class GrpcConfiguration
-    # Number of seconds the client is willing to wait for an RPC to
+    # Number of milliseconds the client is willing to wait for an RPC to
     # complete before it is terminated with a DeadlineExceeded error
     attr_reader :deadline
 
