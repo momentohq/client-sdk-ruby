@@ -1,5 +1,5 @@
 require 'grpc'
-require_relative 'controlclient_pb'
+require_relative 'generated/controlclient_pb'
 
 module Momento
   # @private
@@ -17,7 +17,7 @@ module Momento
         exception: e, context: context
       )
     else
-      raise TypeError unless response.is_a?(::Momento::ControlClient::ListCachesResponse)
+      raise TypeError unless response.is_a?(::MomentoProtos::ControlClient::PB__ListCachesResponse)
 
       return ListCachesResponse::Success.new(grpc_response: response)
     end

@@ -1,5 +1,5 @@
 require 'grpc'
-require_relative 'cacheclient_pb'
+require_relative 'generated/cacheclient_pb'
 
 module Momento
   # Builds SetResponses
@@ -17,7 +17,7 @@ module Momento
     rescue *RESCUED_EXCEPTIONS => e
       SetResponse::Error.new(exception: e, context: context)
     else
-      raise TypeError unless response.is_a?(::Momento::CacheClient::SetResponse)
+      raise TypeError unless response.is_a?(::MomentoProtos::CacheClient::PB__SetResponse)
 
       SetResponse::Success.new(key: context[:key], value: context[:value])
     end

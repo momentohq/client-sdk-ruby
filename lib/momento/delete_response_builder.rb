@@ -1,5 +1,5 @@
 require 'grpc'
-require_relative 'cacheclient_pb'
+require_relative 'generated/cacheclient_pb'
 
 module Momento
   # @private
@@ -15,7 +15,7 @@ module Momento
     rescue *RESCUED_EXCEPTIONS => e
       DeleteResponse::Error.new(exception: e, context: context)
     else
-      raise TypeError unless response.is_a?(::Momento::CacheClient::DeleteResponse)
+      raise TypeError unless response.is_a?(::MomentoProtos::CacheClient::PB__DeleteResponse)
 
       DeleteResponse::Success.new
     end
