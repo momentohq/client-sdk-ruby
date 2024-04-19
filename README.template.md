@@ -29,9 +29,7 @@ You will need Ruby 2.7 or newer.
 
 An IDE with good Ruby support, such as [RubyMine](https://www.jetbrains.com/ruby/), is recommended.
 
-**Note: M1 or M2 Macs**
-
-If you're using an M1 or M2 Mac, you may have trouble installing the `grpc` gem; [see this issue for more information](https://github.com/grpc/grpc/issues/31215).
+**Note: M1 or M2 Macs**: If you're using an M1 or M2 Mac, you may have trouble installing the `grpc` gem; [see this issue for more information](https://github.com/grpc/grpc/issues/31215).
 
 [A work around](https://github.com/grpc/grpc/pull/31151#issuecomment-1310321807) is to run `bundle config build.grpc --with-ldflags="-Wl,-undefined,dynamic_lookup"` before doing `bundle install`.
 
