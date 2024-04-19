@@ -21,7 +21,7 @@ require_relative 'set_response_builder'
 module Momento
   # The response from a Momento service request.
   #
-  # {Momento::SimpleCacheClient} returns a response for both success
+  # {Momento::CacheClient} returns a response for both success
   # and error, as well as other states. See the documenation for each
   # type of response for more.
   #

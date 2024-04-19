@@ -12,7 +12,7 @@ CACHE_NAME = ENV.fetch('MOMENTO_CACHE_NAME')
 credential_provider = Momento::CredentialProvider.from_env_var('MOMENTO_API_KEY')
 
 # Instantiate a Momento client.
-client = Momento::SimpleCacheClient.new(
+client = Momento::CacheClient.new(
   credential_provider: credential_provider,
   default_ttl: TTL_SECONDS
 )
