@@ -1,14 +1,8 @@
-name: On push or PR to main
+name: Pull Request
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
-
-permissions:
-  contents: read
-  pull-requests: write
+    branches: [ "main" ]
 
 jobs:
   momento-shared-build:
@@ -33,22 +27,6 @@ jobs:
           rubocop_extensions: rubocop-performance:gemfile rubocop-rake:gemfile rubocop-rspec:gemfile
           reporter: github-pr-review
 
-  readme:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
-
-      - name: Generate README
-        uses: momentohq/standards-and-practices/github-actions/generate-and-commit-oss-readme@gh-actions-v1
-        with:
-          project_status: official
-          project_stability: alpha
-          project_type: sdk
-          sdk_language: Ruby
-          usage_example_path: ./examples/example.rb
-
   test:
     # Don't test until all code is generated.
     needs: [readme]
@@ -57,3 +35,19 @@ jobs:
       auth-token: ${{ secrets.ALPHA_TEST_AUTH_TOKEN }}
     with:
       live: true
+
+  readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Verify README generation
+        uses: momentohq/standards-and-practices/github-actions/oss-readme-template@gh-actions-v2
+        with:
+          project_status: official
+          project_stability: beta
+          project_type: sdk
+          sdk_language: Ruby
+          template_file: ./README.template.md
+          output_file: ./README.md
+          dev_docs_slug: ruby
