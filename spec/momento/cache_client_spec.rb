@@ -1,7 +1,7 @@
 require 'momento'
 
 RSpec.describe Momento::CacheClient do
-  let(:client) { build(:momento_simple_cache_client) }
+  let(:client) { build(:momento_cache_client) }
   let(:cache_stub) { client.send(:cache_stub) }
   let(:control_stub) { client.send(:control_stub) }
 
@@ -12,7 +12,7 @@ RSpec.describe Momento::CacheClient do
 
     context 'with a bad ttl' do
       let(:client) {
-        build(:momento_simple_cache_client, default_ttl: "whatever")
+        build(:momento_cache_client, default_ttl: "whatever")
       }
 
       it {
@@ -25,7 +25,7 @@ RSpec.describe Momento::CacheClient do
     subject(:stub) { client.send(stub_method) }
 
     let(:client) {
-      build(:momento_simple_cache_client, credential_provider: build(:credential_provider, api_key: token))
+      build(:momento_cache_client, credential_provider: build(:credential_provider, api_key: token))
     }
     let(:endpoint) { Faker::Internet.domain_name }
 
