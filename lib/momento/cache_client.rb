@@ -14,7 +14,9 @@ module Momento
   #
   # @example
   #   credential_provider = Momento::CredentialProvider.from_env_var('MOMENTO_API_KEY')
+  #   config = Momento::Configurations::Laptop.latest
   #   client = Momento::CacheClient.new(
+  #     configuration: config,
   #     credential_provider: credential_provider,
   #     # cached items will be deleted after 100 seconds
   #     default_ttl: 100
@@ -54,15 +56,17 @@ module Momento
     # @return [Numeric] how long items should remain in the cache, in seconds.
     attr_accessor :default_ttl
 
+    # @param configuration [Momento::Configuration] the configuration for the client
     # @param credential_provider [Momento::CredentialProvider] the provider for the
     # credentials required to connect to Momento
     # @param default_ttl [Numeric] time-to-live, in seconds
     # @raise [ArgumentError] if the default_ttl or credential_provider is invalid
-    def initialize(credential_provider:, default_ttl:)
+    def initialize(configuration:, credential_provider:, default_ttl:)
       @default_ttl = Momento::Ttl.to_ttl(default_ttl)
       @api_key = credential_provider.api_key
       @control_endpoint = credential_provider.control_endpoint
       @cache_endpoint = credential_provider.cache_endpoint
+      @configuration = configuration
     end
 
     # Get a value in a cache.

@@ -1,0 +1,7 @@
+module Momento
+  class GrpcConfiguration
+    def self.with_deadline: -> GrpcConfiguration
+
+    attr_reader deadline: Integer
+  end
+end

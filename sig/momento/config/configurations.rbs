@@ -1,0 +1,7 @@
+module Momento
+  module Configurations
+    class Laptop
+      self.latest: -> Configuration
+    end
+  end
+end

@@ -25,7 +25,9 @@ RSpec.describe Momento::CacheClient do
     subject(:stub) { client.send(stub_method) }
 
     let(:client) {
-      build(:momento_cache_client, credential_provider: build(:credential_provider, api_key: token))
+      build(:momento_cache_client, credential_provider: build(:credential_provider, api_key: token),
+        configuration: build(:configuration)
+      )
     }
     let(:endpoint) { Faker::Internet.domain_name }
 

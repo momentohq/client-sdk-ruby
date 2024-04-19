@@ -1,0 +1,7 @@
+module Momento
+  class Configuration
+    def self.with_transport_strategy: -> Configuration
+
+    attr_reader transport_strategy: TransportStrategy
+  end
+end
