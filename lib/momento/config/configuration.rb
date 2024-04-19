@@ -4,7 +4,7 @@ module Momento
     attr_reader :transport_strategy
 
     def self.with_transport_strategy(transport_strategy)
-      return Configuration.new(transport_strategy: transport_strategy)
+      return Configuration.new(transport_strategy)
     end
 
     def initialize(transport_strategy)

@@ -8,11 +8,7 @@ module Momento
     # Default Laptop configuration with 5000ms client timeout
     class Laptop < Configuration
       def self.latest
-        return Configuration.new(
-          transport_strategy: StaticTransportStrategy.new(
-            grpc_configuration: GrpcConfiguration.new(deadline: 5000)
-          )
-        )
+        return Configuration.new(StaticTransportStrategy.new(GrpcConfiguration.new(5000)))
       end
     end
   end
