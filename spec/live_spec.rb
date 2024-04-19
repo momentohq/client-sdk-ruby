@@ -1,6 +1,6 @@
 # Live tests against the real server.
 #
-# Only runs whem MOMENTO_TEST_LIVE set.
+# Only runs when MOMENTO_TEST_LIVE set.
 #
 # Needs TEST_AUTH_TOKEN and TEST_CACHE_NAME.
 
@@ -14,7 +14,7 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
     ENV.fetch('TEST_AUTH_TOKEN')
   }
   let(:credential_provider) {
-    Momento::Auth::CredentialProvider.from_string(auth_token)
+    Momento::CredentialProvider.from_string(auth_token)
   }
   let(:cache_name) {
     ENV.fetch('TEST_CACHE_NAME')

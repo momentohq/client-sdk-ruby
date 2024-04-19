@@ -13,7 +13,7 @@ module Momento
   # Instead it returns an error response. Please see {file:README.md#label-Error+Handling}.
   #
   # @example
-  #   credential_provider = Momento::Auth::CredentialProvider.from_env_var('MOMENTO_API_KEY')
+  #   credential_provider = Momento::CredentialProvider.from_env_var('MOMENTO_API_KEY')
   #   client = Momento::SimpleCacheClient.new(
   #     credential_provider: credential_provider,
   #     # cached items will be deleted after 100 seconds
@@ -54,7 +54,7 @@ module Momento
     # @return [Numeric] how long items should remain in the cache, in seconds.
     attr_accessor :default_ttl
 
-    # @param credential_provider [Momento::Auth::CredentialProvider] the provider for the
+    # @param credential_provider [Momento::CredentialProvider] the provider for the
     # credentials required to connect to Momento
     # @param default_ttl [Numeric] time-to-live, in seconds
     # @raise [ArgumentError] if the default_ttl or credential_provider is invalid
