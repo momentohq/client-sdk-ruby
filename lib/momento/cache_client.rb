@@ -9,12 +9,12 @@ module Momento
 
   # A simple client for Momento.
   #
-  # SimpleCacheClient does not use exceptions to report errors.
+  # CacheClient does not use exceptions to report errors.
   # Instead it returns an error response. Please see {file:README.md#label-Error+Handling}.
   #
   # @example
   #   credential_provider = Momento::CredentialProvider.from_env_var('MOMENTO_API_KEY')
-  #   client = Momento::SimpleCacheClient.new(
+  #   client = Momento::CacheClient.new(
   #     credential_provider: credential_provider,
   #     # cached items will be deleted after 100 seconds
   #     default_ttl: 100
@@ -44,7 +44,7 @@ module Momento
   #   end
   #
   # @see Momento::Response
-  class SimpleCacheClient
+  class CacheClient
     # This gem's version.
     VERSION = Momento::VERSION
     CACHE_CLIENT_STUB_CLASS = MomentoProtos::CacheClient::Scs::Stub

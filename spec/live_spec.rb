@@ -20,7 +20,7 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
     ENV.fetch('TEST_CACHE_NAME')
   }
   let(:client) {
-    Momento::SimpleCacheClient.new(
+    Momento::CacheClient.new(
       credential_provider: credential_provider,
       default_ttl: 10
     )

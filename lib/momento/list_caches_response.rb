@@ -4,7 +4,7 @@ module Momento
   # A response from listing the caches.
   #
   # Each response is a single page of caches, there may be additional pages.
-  # Use Momento::SimpleCacheClient#caches to efficiently get the whole list.
+  # Use Momento::CacheClient#caches to efficiently get the whole list.
   class ListCachesResponse < Response
     # Did it get a page of caches?
     # @return [Boolean]
