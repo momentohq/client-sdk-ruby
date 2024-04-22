@@ -74,6 +74,13 @@ RSpec.describe 'Momento::Error subclasses' do
     end
   end
 
+  describe Momento::Error::ConnectionError do
+    it_behaves_like Momento::Error do
+      let(:error_code) { :CONNECTION_ERROR }
+      let(:message_re) { /Error connecting to Momento servers/ }
+    end
+  end
+
   describe Momento::Error::FailedPreconditionError do
     it_behaves_like Momento::Error do
       let(:error_code) { :FAILED_PRECONDITION_ERROR }

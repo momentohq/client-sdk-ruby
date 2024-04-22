@@ -77,6 +77,21 @@ module Momento
       end
     end
 
+    # Error connecting to Momento servers.
+    class ConnectionError < RuntimeError
+      include Momento::Error
+
+      # (see Momento::Error#error_code)
+      def error_code
+        :CONNECTION_ERROR
+      end
+
+      # (see Momento::Error#message)
+      def message
+        "Error connecting to Momento servers."
+      end
+    end
+
     # System is not in a state required for the operation\'s execution
     class FailedPreconditionError < RuntimeError
       include Momento::Error
