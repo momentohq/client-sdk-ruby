@@ -2,7 +2,7 @@ require "momento/config/configuration"
 require "momento/config/transport/static_transport_strategy"
 require "momento/config/transport/grpc_configuration"
 
-RSpec.describe Momento::Configuration do
+RSpec.describe Momento::Cache::Configuration do
   describe "cache configuration" do
     context "when given a negative client timeout" do
       it "raises an InvalidArgumentError" do

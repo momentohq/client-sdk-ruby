@@ -17,7 +17,7 @@ RSpec.describe 'live acceptance tests', if: ENV.fetch('MOMENTO_TEST_LIVE', nil) 
     Momento::CredentialProvider.from_string(auth_token)
   }
   let(:configuration) {
-    Momento::Configurations::Laptop.latest
+    Momento::Cache::Configurations::Laptop.latest
   }
   let(:cache_name) {
     ENV.fetch('TEST_CACHE_NAME')

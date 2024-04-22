@@ -14,7 +14,7 @@ module Momento
   #
   # @example
   #   credential_provider = Momento::CredentialProvider.from_env_var('MOMENTO_API_KEY')
-  #   config = Momento::Configurations::Laptop.latest
+  #   config = Momento::Cache::Configurations::Laptop.latest
   #   client = Momento::CacheClient.new(
   #     configuration: config,
   #     credential_provider: credential_provider,
@@ -56,7 +56,7 @@ module Momento
     # @return [Numeric] how long items should remain in the cache, in seconds.
     attr_accessor :default_ttl
 
-    # @param configuration [Momento::Configuration] the configuration for the client
+    # @param configuration [Momento::Cache::Configuration] the configuration for the client
     # @param credential_provider [Momento::CredentialProvider] the provider for the
     # credentials required to connect to Momento
     # @param default_ttl [Numeric] time-to-live, in seconds

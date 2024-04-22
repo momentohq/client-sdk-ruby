@@ -1,7 +1,9 @@
 module Momento
-  module Configurations
-    class Laptop
-      self.latest: -> Configuration
+  module Cache
+    module Configurations
+      class Laptop
+        self.latest: -> Cache::Configuration
+      end
     end
   end
 end
