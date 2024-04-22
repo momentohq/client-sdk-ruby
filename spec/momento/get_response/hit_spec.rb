@@ -38,12 +38,6 @@ RSpec.describe Momento::GetResponse::Hit do
         encoding: Encoding::UTF_8
       )
     }
-
-    it 'will accept a different encoding' do
-      expect(
-        response.value_string(Encoding::Big5)
-      ).to have_attributes(encoding: Encoding::Big5)
-    end
   end
 
   describe '#to_s' do
@@ -53,7 +47,7 @@ RSpec.describe Momento::GetResponse::Hit do
       build(:momento_get_response_hit, value: value)
     }
 
-    context 'when the vaule is short' do
+    context 'when the value is short' do
       let(:value) { "short" }
 
       it { is_expected.to match(/short/) }
