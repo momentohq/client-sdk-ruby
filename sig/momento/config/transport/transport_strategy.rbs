@@ -1,0 +1,7 @@
+module Momento
+  class TransportStrategy
+    def self.with_grpc_configuration: -> TransportStrategy
+
+    attr_reader grpc_configuration: GrpcConfiguration
+  end
+end

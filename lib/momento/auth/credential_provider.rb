@@ -1,3 +1,6 @@
+require "base64"
+require "json"
+
 module Momento
   # Contains the information required for a Momento client to connect to and authenticate with Momento services.
   class CredentialProvider
@@ -32,9 +35,9 @@ module Momento
     AuthTokenData = Struct.new(:api_key, :cache_endpoint, :control_endpoint)
 
     def decode_api_key(api_key)
-      decode_legacy_key(api_key)
-    rescue StandardError
       decode_v1_key(api_key)
+    rescue StandardError
+      decode_legacy_key(api_key)
     end
 
     def decode_legacy_key(api_key)

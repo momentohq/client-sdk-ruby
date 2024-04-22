@@ -18,7 +18,7 @@ Then, set the required environment variables:
 
 ```bash
 export MOMENTO_API_KEY=<YOUR_API_KEY>
-export CACHE_NAME=<YOUR_CACHE_NAME>
+export MOMENTO_CACHE_NAME=<YOUR_CACHE_NAME>
 ```
 
 And now you can run the example programs.
