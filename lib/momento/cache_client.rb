@@ -296,6 +296,10 @@ module Momento
     # So we do the re-encoding ourselves in a way that treats the String as
     # bytes and will not raise. The data is not changed.
     #
+    # If the input String is ASCII, we treat it as binary data. Otherwise,
+    # we ensure it is encoded as UTF-8 to stop the SDK from being able to
+    # write non-UTF-8 strings to the server.
+    #
     # A duplicate String is returned, but since Ruby is copy-on-write it
     # does not copy the data.
     #
@@ -305,9 +309,12 @@ module Momento
     def to_bytes(string)
       raise TypeError, "expected a String, got a #{string.class}" unless string.is_a?(String)
 
-      # dup in case the value is frozen and to avoid changing the value's encoding
-      # for the caller.
-      return string.dup.force_encoding(Encoding::ASCII_8BIT)
+      if string.encoding == Encoding::ASCII_8BIT
+        string.dup
+      else
+        utf8_encoded = string.encode('UTF-8')
+        utf8_encoded.force_encoding(Encoding::ASCII_8BIT)
+      end
     end
 
     # This is not a complete validation of the cache name, just

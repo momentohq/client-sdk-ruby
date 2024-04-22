@@ -22,15 +22,12 @@ module Momento
       nil
     end
 
-    # The gotten value, if any, as a string using your default encoding or specified one.
+    # The gotten value, if any, as a UTF-8 string.
     #
-    # @param encoding [Encoding] defaults to Encoding.default_external
-    # @return [String,nil] the value, if any, re-encoded
-    # rubocop:disable Lint/UnusedMethodArgument
-    def value_string(encoding = Encoding.default_external)
+    # @return [String,nil] the value, if any.
+    def value_string
       nil
     end
-    # rubocop:enable Lint/UnusedMethodArgument
 
     # @!method to_s
     #   Displays the response and the value, if any.
@@ -53,8 +50,8 @@ module Momento
         @grpc_response.cache_body
       end
 
-      def value_string(encoding = Encoding.default_external)
-        value_bytes.dup.force_encoding(encoding)
+      def value_string
+        value_bytes.dup.force_encoding('UTF-8')
       end
 
       def to_s
