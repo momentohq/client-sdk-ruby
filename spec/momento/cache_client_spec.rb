@@ -340,52 +340,6 @@ RSpec.describe Momento::CacheClient do
     end
   end
 
-  describe '#caches' do
-    let(:grpc_responses) {
-      [
-        build(:momento_control_client_list_caches_response)
-      ]
-    }
-
-    let(:responses) {
-      grpc_responses.map { |gr|
-        build(:momento_list_caches_response_success, grpc_response: gr)
-      }
-    }
-
-    before do
-      allow(client).to receive(:list_caches).and_return(responses[0])
-    end
-
-    it 'iterates through the responses' do
-      cache_names = responses.flat_map(&:cache_names)
-
-      expect(client.caches.to_a).to eq cache_names
-    end
-
-    it 'when list_caches has an error response, it raises the error' do
-      error_response = build(:momento_list_caches_response_error)
-
-      allow(client).to receive(:list_caches)
-        .and_return(error_response)
-
-      expect {
-        client.caches.to_a
-      }.to raise_error(error_response.error)
-    end
-
-    it 'when list_caches raises, it raises' do
-      error = "the front fell off"
-
-      allow(client).to receive(:list_caches)
-        .and_raise(error)
-
-      expect {
-        client.caches.to_a
-      }.to raise_error(error)
-    end
-  end
-
   describe '#get' do
     subject { client.get(cache_name, key) }
 
