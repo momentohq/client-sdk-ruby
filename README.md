@@ -89,7 +89,9 @@ elsif response.error?
 end
 
 # List our caches.
-puts "Caches: #{client.caches.to_a.join(", ")}"
+response = client.list_caches
+raise response.error if response.error?
+puts "Caches: #{response.cache_names&.join(", ")}"
 
 # Put an item in the cache.
 response = client.set(CACHE_NAME, "key", "You cached something!")
