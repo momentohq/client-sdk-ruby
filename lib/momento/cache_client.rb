@@ -92,7 +92,7 @@ module Momento
         context: { cache_name: cache_name, key: key }
       )
 
-      return builder.from_block do
+      builder.from_block do
         validate_cache_name(cache_name)
 
         cache_stub.get(
@@ -124,7 +124,7 @@ module Momento
         context: { cache_name: cache_name, key: key, value: value, ttl: ttl }
       )
 
-      return builder.from_block do
+      builder.from_block do
         validate_cache_name(cache_name)
 
         req = MomentoProtos::CacheClient::PB__SetRequest.new(
@@ -154,7 +154,7 @@ module Momento
         context: { cache_name: cache_name, key: key }
       )
 
-      return builder.from_block do
+      builder.from_block do
         validate_cache_name(cache_name)
 
         cache_stub.delete(
@@ -184,7 +184,7 @@ module Momento
         context: { cache_name: cache_name }
       )
 
-      return builder.from_block do
+      builder.from_block do
         validate_cache_name(cache_name)
 
         control_stub.create_cache(
@@ -208,7 +208,7 @@ module Momento
         context: { cache_name: cache_name }
       )
 
-      return builder.from_block do
+      builder.from_block do
         validate_cache_name(cache_name)
 
         control_stub.delete_cache(
@@ -221,51 +221,35 @@ module Momento
     #
     # This is a low-level method. You probably want to use {#caches} instead.
     #
-    # The next_token indicates which page to fetch.
-    # If nil or "" it will fetch the first page. Default is to fetch the first page.
-    #
     # @see #caches
     # @see Momento::ListCachesResponse
     # @note Consider using `caches` instead.
-    # @param next_token [String, nil] the token of the page to request
     # @return [Momento::ListCachesResponse]
-    def list_caches(next_token: "")
+    def list_caches
       builder = ListCachesResponseBuilder.new(
-        context: { next_token: next_token }
+        context: {}
       )
-      return builder.from_block do
+      builder.from_block do
         control_stub.list_caches(
-          MomentoProtos::ControlClient::PB__ListCachesRequest.new(next_token: next_token)
+          MomentoProtos::ControlClient::PB__ListCachesRequest.new
         )
       end
     end
 
-    # Lists the names of all your caches, as a lazy Enumerator.
+    # Lists the names of all your caches.
     # @example
     #   cache_names = client.caches
     #   cache_names.each { |name| puts name }
     #
     # @note Unlike other methods, this will raise if there is a problem
     #   with the client or service.
-    # @return [Enumerator::Lazy<String>] the cache names
+    # @return [Array<String>] the cache names
     # @raise [Momento::Error] when there is an error listing caches.
     def caches
-      Enumerator.new do |yielder|
-        next_token = ""
+      response = list_caches
+      raise response.error if response.is_a? Momento::Response::Error
 
-        loop do
-          response = list_caches(next_token: next_token)
-          raise response.error if response.is_a? Momento::Response::Error
-
-          response.cache_names.each do |name|
-            yielder << name
-          end
-
-          break if response.next_token == ''
-
-          next_token = response.next_token
-        end
-      end.lazy
+      response.cache_names || []
     end
 
     private
@@ -293,7 +277,7 @@ module Momento
 
       call_creds = GRPC::Core::CallCredentials.new(auth_proc)
 
-      return GRPC::Core::ChannelCredentials.new.compose(call_creds)
+      GRPC::Core::ChannelCredentials.new.compose(call_creds)
     end
 
     # Ruby uses String for bytes. GRPC wants a String encoded as ASCII.
@@ -333,8 +317,6 @@ module Momento
     def validate_cache_name(name)
       raise TypeError, "Cache name must be a String, got a #{name.class}" unless name.is_a?(String)
       raise Momento::CacheNameError, "Cache name must be ASCII, got '#{name}'" if name.match?(/[^[:ascii:]]/)
-
-      return
     end
   end
   # rubocop:enable Metrics/ClassLength

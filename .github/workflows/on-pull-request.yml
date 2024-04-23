@@ -32,9 +32,7 @@ jobs:
     needs: [readme]
     uses: ./.github/workflows/test.yml
     secrets:
-      auth-token: ${{ secrets.ALPHA_TEST_AUTH_TOKEN }}
-    with:
-      live: true
+      api-key: ${{ secrets.ALPHA_TEST_AUTH_TOKEN }}
 
   readme:
     runs-on: ubuntu-latest
