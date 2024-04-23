@@ -2,17 +2,14 @@ require_relative 'response/error'
 
 module Momento
   # A response from listing the caches.
-  #
-  # Each response is a single page of caches, there may be additional pages.
-  # Use Momento::CacheClient#caches to efficiently get the whole list.
   class ListCachesResponse < Response
-    # Did it get a page of caches?
+    # Did it get a list of caches?
     # @return [Boolean]
     def success?
       false
     end
 
-    # The names of the caches in this page.
+    # The names of the caches.
     # @return [Array,nil]
     def cache_names
       nil
@@ -48,13 +45,8 @@ module Momento
       private
 
       def display_cache_names
-        display = cache_names.first(CACHE_NAMES_TO_DISPLAY).join(", ")
-
-        if cache_names.size > CACHE_NAMES_TO_DISPLAY
-          "#{display}, ..."
-        else
-          display
-        end
+        display = cache_names&.take(CACHE_NAMES_TO_DISPLAY)&.join(", ")
+        cache_names&.size&.>(CACHE_NAMES_TO_DISPLAY) ? "#{display}, ..." : display.to_s
       end
     end
 

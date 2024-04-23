@@ -1,0 +1,7 @@
+module Momento
+  class ListCachesResponse
+    def success?: -> bool
+
+    def cache_names: -> (Array[String] | nil)
+  end
+end

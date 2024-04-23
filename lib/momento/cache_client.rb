@@ -217,13 +217,9 @@ module Momento
       end
     end
 
-    # List a page of your caches.
+    # Lists your caches.
     #
-    # This is a low-level method. You probably want to use {#caches} instead.
-    #
-    # @see #caches
     # @see Momento::ListCachesResponse
-    # @note Consider using `caches` instead.
     # @return [Momento::ListCachesResponse]
     def list_caches
       builder = ListCachesResponseBuilder.new(
@@ -234,22 +230,6 @@ module Momento
           MomentoProtos::ControlClient::PB__ListCachesRequest.new
         )
       end
-    end
-
-    # Lists the names of all your caches.
-    # @example
-    #   cache_names = client.caches
-    #   cache_names.each { |name| puts name }
-    #
-    # @note Unlike other methods, this will raise if there is a problem
-    #   with the client or service.
-    # @return [Array<String>] the cache names
-    # @raise [Momento::Error] when there is an error listing caches.
-    def caches
-      response = list_caches
-      raise response.error if response.is_a? Momento::Response::Error
-
-      response.cache_names || []
     end
 
     private
