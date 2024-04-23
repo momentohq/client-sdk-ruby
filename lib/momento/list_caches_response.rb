@@ -18,13 +18,6 @@ module Momento
       nil
     end
 
-    # A token to fetch the next page.
-    # The last page will have a blank token.
-    # @return [String,nil]
-    def next_token
-      nil
-    end
-
     # @!method to_s
     #   Displays the response and the list of cache names.
     #   The list of cache names will be truncated.
@@ -46,10 +39,6 @@ module Momento
 
       def cache_names
         @grpc_response.cache.map(&:cache_name)
-      end
-
-      def next_token
-        @grpc_response.next_token
       end
 
       def to_s

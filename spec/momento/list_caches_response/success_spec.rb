@@ -2,12 +2,10 @@ require 'momento/response'
 
 RSpec.describe Momento::ListCachesResponse::Success do
   let(:cache_names) { ["foo", "bar", "baz"] }
-  let(:next_token) { "abcd123" }
   let(:grpc_list_caches_response) {
     build(
       :momento_control_client_list_caches_response,
-      cache_names: cache_names,
-      next_token: next_token
+      cache_names: cache_names
     )
   }
   let(:response) {
@@ -18,8 +16,7 @@ RSpec.describe Momento::ListCachesResponse::Success do
     let(:subclass_attributes) do
       {
         success?: true,
-        cache_names: cache_names,
-        next_token: next_token
+        cache_names: cache_names
       }
     end
   end

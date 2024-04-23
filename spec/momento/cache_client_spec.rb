@@ -291,29 +291,13 @@ RSpec.describe Momento::CacheClient do
   end
 
   describe '#list_caches' do
-    let(:next_token) { "abc123" }
-
-    it 'sends a ListCachesRequest with the token' do
+    it 'sends a ListCachesRequest' do
       allow(control_stub).to receive(:list_caches)
         .and_return(build(:momento_control_client_list_caches_response))
 
-      client.list_caches(next_token: next_token)
+      client.list_caches
 
       expected_request = be_a(MomentoProtos::ControlClient::PB__ListCachesRequest)
-        .and have_attributes(next_token: next_token)
-
-      expect(control_stub).to have_received(:list_caches)
-        .with(expected_request)
-    end
-
-    it 'defaults to the first page' do
-      allow(control_stub).to receive(:list_caches)
-        .and_return(build(:momento_control_client_list_caches_response))
-
-      client.list_caches(next_token: "")
-
-      expected_request = be_a(MomentoProtos::ControlClient::PB__ListCachesRequest)
-        .and have_attributes(next_token: "")
 
       expect(control_stub).to have_received(:list_caches)
         .with(expected_request)
@@ -339,7 +323,7 @@ RSpec.describe Momento::CacheClient do
 
         expect(response.error?).to be true
         expect(response.error).to be_a_momento_error
-          .with_context({ next_token: '' })
+          .with_context({})
           .with_grpc_exception(grpc_error)
       end
     end
@@ -359,8 +343,7 @@ RSpec.describe Momento::CacheClient do
   describe '#caches' do
     let(:grpc_responses) {
       [
-        build(:momento_control_client_list_caches_response, next_token: "abc123"),
-        build(:momento_control_client_list_caches_response, next_token: "")
+        build(:momento_control_client_list_caches_response)
       ]
     }
 
@@ -371,10 +354,7 @@ RSpec.describe Momento::CacheClient do
     }
 
     before do
-      allow(client).to receive(:list_caches)
-        .with(next_token: "").and_return(responses[0])
-      allow(client).to receive(:list_caches)
-        .with(next_token: responses[0].next_token).and_return(responses[1])
+      allow(client).to receive(:list_caches).and_return(responses[0])
     end
 
     it 'iterates through the responses' do

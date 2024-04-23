@@ -5,8 +5,7 @@ RSpec.shared_examples Momento::ListCachesResponse do
     let(:superclass_attributes) do
       {
         success?: false,
-        cache_names: nil,
-        next_token: nil
+        cache_names: nil
       }
     end
   end

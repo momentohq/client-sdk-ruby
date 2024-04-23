@@ -23,12 +23,8 @@ FactoryBot.define do
       end
     end
 
-    next_token { "" }
-
     initialize_with do
-      MomentoProtos::ControlClient::PB__ListCachesResponse.new(
-        cache: cache, next_token: next_token
-      )
+      MomentoProtos::ControlClient::PB__ListCachesResponse.new(cache: cache)
     end
   end
 end

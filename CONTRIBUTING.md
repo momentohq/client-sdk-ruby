@@ -40,13 +40,12 @@ You can run code from the repository's `lib/` directory by adding `-Ilib` to you
 
 You can also build a gem from local sources and install it. Run `bundle exec rake install`.
 
-## Running unit tests
+## Running tests
 
-Run `rspec`. These tests will make no network calls and do not require a Momento account.
-
-## Running integration tests
-
-TODO
+You will need a momento API key that you can generate on the [Momento Console](https://console.gomomento.com/api-keys).
+1. Set the environment variable `MOMENTO_API_KEY` to your Momento API key.
+2. Optionally set the environment variable `TEST_CACHE_NAME` to a cache that is safe to test with and delete. If you don't do this, the cache 'ruby-test-cache' will be used by default.
+3. Run `rspec` from the command line to execute the tests.
 
 ## Bug reports
 
