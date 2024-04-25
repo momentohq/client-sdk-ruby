@@ -232,6 +232,124 @@ module Momento
       end
     end
 
+    # Put an element in a sorted set
+    #
+    # If collection_ttl is not set, it will use the default_ttl.
+    # @example
+    #   response = client.sorted_set_put_element('my_cache', 'my_set', 'value', 1.0)
+    #   raise response.error if response.error?
+    #
+    # @see Momento::SortedSetPutElementResponse
+    # @param cache_name [String]
+    # @param sorted_set_name [String]
+    # @param value [String] the value to add to the sorted set.
+    # @param score [Float] the score of the value. Determines its place in the set.
+    # @param collection_ttl [Momento::CollectionTtl] time-to-live, in seconds.
+    # @raise [ArgumentError] if the ttl is invalid
+    # @return [Momento::SortedSetPutElementResponse]
+    # @raise [TypeError] when the cache_name, sorted_set_name, or value is not a String
+    def sorted_set_put_element(cache_name, sorted_set_name, value, score, collection_ttl: CollectionTtl.from_cache_ttl)
+      collection_ttl = collection_ttl.with_ttl_if_absent(default_ttl.seconds)
+      builder = SortedSetPutElementResponseBuilder.new(
+        context: { cache_name: cache_name, set_name: sorted_set_name, value: value, score: score,
+                   collection_ttl: collection_ttl }
+      )
+
+      builder.from_block do
+        validate_cache_name(cache_name)
+
+        req = MomentoProtos::CacheClient::PB__SortedSetPutRequest.new(
+          set_name: to_bytes(sorted_set_name),
+          elements: [{ value: to_bytes(value), score: score }],
+          ttl_milliseconds: collection_ttl.ttl_milliseconds,
+          refresh_ttl: collection_ttl.refresh_ttl
+        )
+
+        # noinspection RubyResolve
+        cache_stub.sorted_set_put(req, metadata: { cache: cache_name })
+      end
+    end
+
+    # Put multiple elements in a sorted set
+    #
+    # If collection_ttl is not set, it will use the default_ttl.
+    # @example
+    #   response = client.sorted_set_put_element('my_cache', 'my_set', [['value', 1.0]])
+    #   raise response.error if response.error?
+    #
+    # @see Momento::SortedSetPutElementsResponse
+    # @param cache_name [String]
+    # @param sorted_set_name [String]
+    # @param elements [Hash, Array] the elements to add. Must be a hash of String values to Float scores,
+    # an array of arrays [["value", 1.0]], or an array of hashes of value and score [{value: "value", score: 1.0}].
+    # @param collection_ttl [Integer] time-to-live, in seconds.
+    # @raise [ArgumentError] if the ttl is invalid
+    # @return [Momento::SortedSetPutElementsResponse]
+    # @raise [TypeError] when the cache_name, or sorted_set_name is not a String, or if elements is not
+    # an Array or Hash
+    def sorted_set_put_elements(cache_name, sorted_set_name, elements, collection_ttl = CollectionTtl.from_cache_ttl)
+      collection_ttl = collection_ttl.with_ttl_if_absent(default_ttl.seconds)
+      builder = SortedSetPutElementsResponseBuilder.new(
+        context: { cache_name: cache_name, set_name: sorted_set_name, elements: elements,
+                   collection_ttl: collection_ttl }
+      )
+
+      builder.from_block do
+        validate_cache_name(cache_name)
+
+        req = MomentoProtos::CacheClient::PB__SortedSetPutRequest.new(
+          set_name: to_bytes(sorted_set_name),
+          elements: to_sorted_set_elements(elements),
+          ttl_milliseconds: collection_ttl.ttl_milliseconds,
+          refresh_ttl: collection_ttl.refresh_ttl
+        )
+
+        # noinspection RubyResolve
+        cache_stub.sorted_set_put(req, metadata: { cache: cache_name })
+      end
+    end
+
+    # Fetch the elements a sorted set by score.
+    #
+    # @example
+    #   response = client.sorted_set_fetch_by_score("my_cache", "sorted_set", min_score: 0.0, max_score: 1.0)
+    #   raise response.error if response.error?
+    #
+    # @see Momento::SortedSetFetchResponse
+    # @param cache_name [String]
+    # @param sorted_set_name [String]
+    # @param min_score [Float] The minimum score (inclusive) of the elements to fetch. Defaults to negative infinity.
+    # @param max_score [Float] The maximum score (inclusive) of the elements to fetch. Defaults to positive infinity.
+    # @param sort_order [SortOrder] The order to fetch the elements in. Defaults to ascending.
+    # @param offset [Integer] The number of elements to skip before returning the first element. Defaults to 0.
+    # @param count [Integer] The maximum number of elements to return. Defaults to all elements.
+    # @return [Momento::SortedSetFetchResponse]
+    # @raise [TypeError] when the cache_name, or sorted_set_name is not a String.
+    def sorted_set_fetch_by_score(cache_name, sorted_set_name, min_score: nil, max_score: nil,
+                                  sort_order: SortOrder::ASCENDING, offset: 0, count: -1)
+      builder = SortedSetFetchResponseBuilder.new(
+        context: { cache_name: cache_name, set_name: sorted_set_name, min_score: min_score, max_score: max_score,
+                   sort_order: sort_order, offset: offset, count: count }
+      )
+
+      builder.from_block do
+        validate_cache_name(cache_name)
+
+        order = to_grpc_order(sort_order)
+        by_score = build_sorted_set_by_score(min_score, max_score, offset, count)
+
+        req = MomentoProtos::CacheClient::PB__SortedSetFetchRequest.new(
+          set_name: to_bytes(sorted_set_name),
+          order: order,
+          with_scores: true,
+          by_score: by_score
+        )
+
+        # noinspection RubyResolve
+        cache_stub.sorted_set_fetch(req, metadata: { cache: cache_name })
+      end
+    end
+
     private
 
     def cache_stub
@@ -258,6 +376,68 @@ module Momento
       call_creds = GRPC::Core::CallCredentials.new(auth_proc)
 
       GRPC::Core::ChannelCredentials.new.compose(call_creds)
+    end
+
+    def to_grpc_order(sort_order)
+      case sort_order
+      when SortOrder::ASCENDING
+        MomentoProtos::CacheClient::PB__SortedSetFetchRequest::Order::ASCENDING
+      when SortOrder::DESCENDING
+        MomentoProtos::CacheClient::PB__SortedSetFetchRequest::Order::DESCENDING
+      else
+        raise TypeError, "Invalid sort order: #{sort_order}"
+      end
+    end
+
+    # Momento accepts sorted sets as an array of hashes. This will transform an array of arrays [["value", 1.0]],
+    # an array of hashes [{value: "value", score: 1.0}], or a hash of values to scores to the correct format.
+    # @param elements [Hash, Array] A hash of string values to scores or an array of tuples (value, score)
+    # # @return [Array<Hash>] An array of sorted set elements, where each element is a hash of :value and :score
+    def to_sorted_set_elements(elements)
+      case elements
+      when Hash
+        elements.map { |value, score| { value: to_bytes(value), score: score.to_f } }
+      when Array
+        if elements.first.is_a?(Hash)
+          elements.map { |element| { value: to_bytes(element[:value]), score: element[:score].to_f } }
+        else
+          elements.map { |value, score| { value: to_bytes(value), score: score.to_f } }
+        end
+      else
+        raise ArgumentError, "Sorted set elements must be a Hash or an Array of tuples"
+      end
+    end
+
+    def build_sorted_set_by_score(min_score, max_score, offset, count)
+      by_score = MomentoProtos::CacheClient::PB__SortedSetFetchRequest::PB__ByScore.new
+
+      if min_score
+        # noinspection RubyResolve
+        by_score.min_score = MomentoProtos::CacheClient::PB__SortedSetFetchRequest::PB__ByScore::PB__Score.new(
+          score: min_score,
+          exclusive: false
+        )
+      else
+        # noinspection RubyResolve
+        by_score.unbounded_min = MomentoProtos::Common::PB__Unbounded.new
+      end
+
+      if max_score
+        # noinspection RubyResolve
+        by_score.max_score = MomentoProtos::CacheClient::PB__SortedSetFetchRequest::PB__ByScore::PB__Score.new(
+          score: max_score,
+          exclusive: false
+        )
+      else
+        # noinspection RubyResolve
+        by_score.unbounded_max = MomentoProtos::Common::PB__Unbounded.new
+      end
+
+      # noinspection RubyResolve
+      by_score.offset = offset
+      by_score.count = count
+
+      by_score
     end
 
     # Ruby uses String for bytes. GRPC wants a String encoded as ASCII.

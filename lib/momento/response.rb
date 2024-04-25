@@ -17,6 +17,9 @@ require_relative 'list_caches_response'
 require_relative 'list_caches_response_builder'
 require_relative 'set_response'
 require_relative 'set_response_builder'
+require_relative 'response/sorted_set/sorted_set_put_element_response'
+require_relative 'response/sorted_set/sorted_set_put_elements_response'
+require_relative 'response/sorted_set/sorted_set_fetch_response'
 
 module Momento
   # The response from a Momento service request.
