@@ -1,0 +1,20 @@
+module Momento
+  class CollectionTtl
+    def self.from_cache_ttl: -> CollectionTtl
+
+    def self.of: -> CollectionTtl
+
+    def self.refresh_ttl_if_provided: -> CollectionTtl
+
+    attr_reader refresh_ttl: bool
+    attr_reader ttl_seconds: (Integer | nil)
+
+    def ttl_milliseconds: -> (Integer | nil)
+
+    def with_no_refresh_ttl_on_updates: -> CollectionTtl
+
+    def with_refresh_ttl_on_updates: -> CollectionTtl
+
+    def with_ttl_if_absent: -> CollectionTtl
+  end
+end

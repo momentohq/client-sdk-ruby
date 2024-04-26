@@ -31,8 +31,11 @@ end
 
 # List our caches.
 response = client.list_caches
-raise response.error if response.error?
-puts "Caches: #{response.cache_names&.join(", ")}"
+if response.success?
+  puts "Caches: #{response.cache_names&.join(", ")}"
+elsif response.error?
+  raise "Couldn't list the caches: #{response.error}"
+end
 
 # Put an item in the cache.
 response = client.set(CACHE_NAME, "key", "You cached something!")

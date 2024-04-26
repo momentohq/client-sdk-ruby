@@ -1,0 +1,11 @@
+module Momento
+  class SortedSetFetchResponse
+    def hit?: -> bool
+
+    def miss?: -> bool
+
+    def value_bytes_elements: -> (Array[{ value: String, score: Float }] | nil)
+
+    def value_string_elements: -> (Array[{ value: String, score: Float }] | nil)
+  end
+end

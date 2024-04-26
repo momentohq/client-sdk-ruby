@@ -1,0 +1,5 @@
+module Momento
+  class SortedSetPutElementsResponse
+    def success?: -> bool
+  end
+end

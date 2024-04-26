@@ -2,8 +2,8 @@
 
 require 'momento'
 
-# Cached items will be deleted after 12.5 seconds.
-TTL_SECONDS = 12.5
+# Cached items will be deleted after 10 seconds.
+TTL_SECONDS = 10
 
 # The name of the cache to create *and delete*
 CACHE_NAME = ENV.fetch('MOMENTO_CACHE_NAME')
@@ -26,6 +26,7 @@ raise response.error if response.error?
 # List our caches.
 response = client.list_caches
 raise response.error if response.error?
+
 puts "Caches: #{response.cache_names&.join(", ")}"
 
 # Put an item in the cache.
