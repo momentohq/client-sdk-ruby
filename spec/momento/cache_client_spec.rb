@@ -130,8 +130,8 @@ RSpec.describe Momento::CacheClient do
       }
     end
 
-    context 'with a non-ASCII cache name' do
-      let(:cache_name) { "caché" }
+    context 'with a non-UTF-8 compatible cache name' do
+      let(:cache_name) { "\xFF" }
 
       it {
         is_expected.to have_attributes(

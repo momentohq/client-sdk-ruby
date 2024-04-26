@@ -93,11 +93,9 @@ module Momento
       )
 
       builder.from_block do
-        validate_cache_name(cache_name)
-
         cache_stub.get(
           MomentoProtos::CacheClient::PB__GetRequest.new(cache_key: to_bytes(key)),
-          metadata: { cache: cache_name }
+          metadata: { cache: validate_cache_name(cache_name) }
         )
       end
     end
@@ -125,15 +123,13 @@ module Momento
       )
 
       builder.from_block do
-        validate_cache_name(cache_name)
-
         req = MomentoProtos::CacheClient::PB__SetRequest.new(
           cache_key: to_bytes(key),
           cache_body: to_bytes(value),
           ttl_milliseconds: ttl.milliseconds
         )
 
-        cache_stub.set(req, metadata: { cache: cache_name })
+        cache_stub.set(req, metadata: { cache: validate_cache_name(cache_name) })
       end
     end
 
@@ -155,11 +151,9 @@ module Momento
       )
 
       builder.from_block do
-        validate_cache_name(cache_name)
-
         cache_stub.delete(
           MomentoProtos::CacheClient::PB__DeleteRequest.new(cache_key: to_bytes(key)),
-          metadata: { cache: cache_name }
+          metadata: { cache: validate_cache_name(cache_name) }
         )
       end
     end
@@ -185,10 +179,8 @@ module Momento
       )
 
       builder.from_block do
-        validate_cache_name(cache_name)
-
         control_stub.create_cache(
-          MomentoProtos::ControlClient::PB__CreateCacheRequest.new(cache_name: cache_name)
+          MomentoProtos::ControlClient::PB__CreateCacheRequest.new(cache_name: validate_cache_name(cache_name))
         )
       end
     end
@@ -209,10 +201,8 @@ module Momento
       )
 
       builder.from_block do
-        validate_cache_name(cache_name)
-
         control_stub.delete_cache(
-          MomentoProtos::ControlClient::PB__DeleteCacheRequest.new(cache_name: cache_name)
+          MomentoProtos::ControlClient::PB__DeleteCacheRequest.new(cache_name: validate_cache_name(cache_name))
         )
       end
     end
@@ -256,8 +246,6 @@ module Momento
       )
 
       builder.from_block do
-        validate_cache_name(cache_name)
-
         req = MomentoProtos::CacheClient::PB__SortedSetPutRequest.new(
           set_name: to_bytes(sorted_set_name),
           elements: [{ value: to_bytes(value), score: score }],
@@ -266,7 +254,7 @@ module Momento
         )
 
         # noinspection RubyResolve
-        cache_stub.sorted_set_put(req, metadata: { cache: cache_name })
+        cache_stub.sorted_set_put(req, metadata: { cache: validate_cache_name(cache_name) })
       end
     end
 
@@ -295,8 +283,6 @@ module Momento
       )
 
       builder.from_block do
-        validate_cache_name(cache_name)
-
         req = MomentoProtos::CacheClient::PB__SortedSetPutRequest.new(
           set_name: to_bytes(sorted_set_name),
           elements: to_sorted_set_elements(elements),
@@ -305,7 +291,7 @@ module Momento
         )
 
         # noinspection RubyResolve
-        cache_stub.sorted_set_put(req, metadata: { cache: cache_name })
+        cache_stub.sorted_set_put(req, metadata: { cache: validate_cache_name(cache_name) })
       end
     end
 
@@ -335,8 +321,6 @@ module Momento
       )
 
       builder.from_block do
-        validate_cache_name(cache_name)
-
         by_score = build_sorted_set_by_score(min_score, max_score, offset, count)
 
         req = MomentoProtos::CacheClient::PB__SortedSetFetchRequest.new(
@@ -347,7 +331,7 @@ module Momento
         )
 
         # noinspection RubyResolve
-        cache_stub.sorted_set_fetch(req, metadata: { cache: cache_name })
+        cache_stub.sorted_set_fetch(req, metadata: { cache: validate_cache_name(cache_name) })
       end
     end
     # rubocop:enable Metrics/ParameterLists
@@ -455,16 +439,18 @@ module Momento
       end
     end
 
-    # This is not a complete validation of the cache name, just
-    # issues that might cause an exception in the client. Let the server
-    # handle the rest of the validation.
+    # Return a UTF-8 version of the cache name.
     #
     # @param name [String] the cache name to validate
     # @raise [TypeError] when the name is not a String
-    # @raise [Momento::CacheNameError] when the name is not ASCII
+    # @raise [Momento::CacheNameError] when the name is not UTF-8 compatible
     def validate_cache_name(name)
       raise TypeError, "Cache name must be a String, got a #{name.class}" unless name.is_a?(String)
-      raise Momento::CacheNameError, "Cache name must be ASCII, got '#{name}'" if name.match?(/[^[:ascii:]]/)
+
+      encoded_name = name.encode('UTF-8')
+      raise Momento::CacheNameError, "Cache name must be UTF-8 compatible" unless name.valid_encoding?
+
+      encoded_name
     end
   end
   # rubocop:enable Metrics/ClassLength
