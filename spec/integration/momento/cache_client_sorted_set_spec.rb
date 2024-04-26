@@ -148,7 +148,7 @@ RSpec.describe Momento::CacheClient do
         response = client.sorted_set_fetch_by_score(cache_name, sorted_set_name, min_score: 0.0, max_score: 9.9)
         expect(response).to have_attributes(hit?: true)
 
-        values = response.value_string_elements&.map { |hash| hash[:value] }
+        values = response.value&.map { |hash| hash[:value] }
         expect(values).to eq(%w[1 3 2 5 4])
       end
 
