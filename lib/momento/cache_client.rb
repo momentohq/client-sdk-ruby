@@ -309,6 +309,8 @@ module Momento
       end
     end
 
+    # rubocop:disable Metrics/ParameterLists
+
     # Fetch the elements a sorted set by score.
     #
     # @example
@@ -335,12 +337,11 @@ module Momento
       builder.from_block do
         validate_cache_name(cache_name)
 
-        order = to_grpc_order(sort_order)
         by_score = build_sorted_set_by_score(min_score, max_score, offset, count)
 
         req = MomentoProtos::CacheClient::PB__SortedSetFetchRequest.new(
           set_name: to_bytes(sorted_set_name),
-          order: order,
+          order: to_grpc_order(sort_order),
           with_scores: true,
           by_score: by_score
         )
@@ -349,6 +350,7 @@ module Momento
         cache_stub.sorted_set_fetch(req, metadata: { cache: cache_name })
       end
     end
+    # rubocop:enable Metrics/ParameterLists
 
     private
 
@@ -409,35 +411,21 @@ module Momento
     end
 
     def build_sorted_set_by_score(min_score, max_score, offset, count)
-      by_score = MomentoProtos::CacheClient::PB__SortedSetFetchRequest::PB__ByScore.new
+      MomentoProtos::CacheClient::PB__SortedSetFetchRequest::PB__ByScore.new(
+        min_score: min_score ? build_score(min_score) : nil,
+        unbounded_min: min_score ? nil : MomentoProtos::Common::PB__Unbounded.new,
+        max_score: max_score ? build_score(max_score) : nil,
+        unbounded_max: max_score ? nil : MomentoProtos::Common::PB__Unbounded.new,
+        offset: offset,
+        count: count
+      )
+    end
 
-      if min_score
-        # noinspection RubyResolve
-        by_score.min_score = MomentoProtos::CacheClient::PB__SortedSetFetchRequest::PB__ByScore::PB__Score.new(
-          score: min_score,
-          exclusive: false
-        )
-      else
-        # noinspection RubyResolve
-        by_score.unbounded_min = MomentoProtos::Common::PB__Unbounded.new
-      end
-
-      if max_score
-        # noinspection RubyResolve
-        by_score.max_score = MomentoProtos::CacheClient::PB__SortedSetFetchRequest::PB__ByScore::PB__Score.new(
-          score: max_score,
-          exclusive: false
-        )
-      else
-        # noinspection RubyResolve
-        by_score.unbounded_max = MomentoProtos::Common::PB__Unbounded.new
-      end
-
-      # noinspection RubyResolve
-      by_score.offset = offset
-      by_score.count = count
-
-      by_score
+    def build_score(score)
+      MomentoProtos::CacheClient::PB__SortedSetFetchRequest::PB__ByScore::PB__Score.new(
+        score: score,
+        exclusive: false
+      )
     end
 
     # Ruby uses String for bytes. GRPC wants a String encoded as ASCII.
