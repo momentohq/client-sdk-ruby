@@ -24,27 +24,27 @@ module Momento
     end
 
     def self.from_cache_ttl
-      new(nil, true)
+      new
     end
 
     def self.of(ttl_seconds)
-      new(ttl_seconds, true)
+      new(ttl_seconds)
     end
 
     def self.refresh_ttl_if_provided(ttl_seconds = nil)
-      new(ttl_seconds, !ttl_seconds.nil?)
+      new(ttl_seconds, refresh_ttl: !ttl_seconds.nil?)
     end
 
     def with_ttl_if_absent(ttl_seconds)
-      self.class.new(@ttl_seconds || ttl_seconds, @refresh_ttl)
+      self.class.new(@ttl_seconds || ttl_seconds, refresh_ttl: @refresh_ttl)
     end
 
     def with_refresh_ttl_on_updates
-      self.class.new(@ttl_seconds, true)
+      self.class.new(@ttl_seconds)
     end
 
     def with_no_refresh_ttl_on_updates
-      self.class.new(@ttl_seconds, false)
+      self.class.new(@ttl_seconds, refresh_ttl: false)
     end
 
     def to_s
