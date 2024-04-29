@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    momento (0.3.0)
+    momento (0.4.0)
       grpc (~> 1.58)
 
 GEM
