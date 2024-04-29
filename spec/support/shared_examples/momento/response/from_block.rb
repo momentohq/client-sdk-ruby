@@ -1,4 +1,4 @@
-require 'momento/response'
+require 'momento'
 
 RSpec.shared_examples 'it wraps gRPC exceptions' do
   it 'returns the approriate response' do

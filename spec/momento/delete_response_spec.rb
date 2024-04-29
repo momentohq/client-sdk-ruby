@@ -1,4 +1,4 @@
-require 'momento/response'
+require 'momento'
 
 RSpec.describe Momento::DeleteResponse do
   let(:response) { described_class.new }

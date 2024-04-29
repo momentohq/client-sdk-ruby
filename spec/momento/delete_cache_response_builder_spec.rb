@@ -1,4 +1,4 @@
-require 'momento/response'
+require 'momento'
 
 RSpec.describe Momento::DeleteCacheResponseBuilder do
   let(:builder) { described_class.new }

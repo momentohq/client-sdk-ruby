@@ -1,4 +1,5 @@
-require_relative 'response/error'
+require_relative '../error'
+require_relative '../../generated/controlclient_pb'
 
 module Momento
   # A response from listing the caches.
@@ -53,6 +54,27 @@ module Momento
     # @private
     class Error < ListCachesResponse
       include ::Momento::Response::Error
+    end
+  end
+
+  # @private
+  class ListCachesResponseBuilder < ResponseBuilder
+    # Build a Momento::ListCachesResponse from a block of code
+    # which returns a Momento::ControlClient::ListCachesResponse..
+    #
+    # @return [Momento::ListCachesResponse]
+    # @raise [StandardError] when the exception is not recognized.
+    # @raise [TypeError] when the response is not recognized.
+    def from_block
+      response = yield
+    rescue GRPC::BadStatus => e
+      ListCachesResponse::Error.new(
+        exception: e, context: context
+      )
+    else
+      raise TypeError unless response.is_a?(::MomentoProtos::ControlClient::PB__ListCachesResponse)
+
+      return ListCachesResponse::Success.new(grpc_response: response)
     end
   end
 end

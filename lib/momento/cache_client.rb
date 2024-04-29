@@ -1,6 +1,6 @@
 require_relative 'generated/cacheclient_services_pb'
 require_relative 'generated/controlclient_services_pb'
-require_relative 'response'
+require_relative 'response/response'
 require_relative 'ttl'
 require_relative 'exceptions'
 

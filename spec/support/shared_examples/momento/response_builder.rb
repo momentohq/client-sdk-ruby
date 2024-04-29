@@ -1,4 +1,4 @@
-require 'momento/response'
+require 'momento'
 
 RSpec.shared_examples Momento::ResponseBuilder do
   describe '#from_block' do

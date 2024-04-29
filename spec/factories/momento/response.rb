@@ -1,4 +1,4 @@
-require 'momento/response'
+require 'momento'
 
 FactoryBot.define do
   trait :momento_response do
