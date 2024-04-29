@@ -23,6 +23,8 @@ module Momento
       nil
     end
 
+    alias value value_string_elements
+
     # The fetched values as ASCII_8BIT Strings and their scores.
     # @return [(Array[{ value: String, score: Float }] | nil)] the ASCII_8BIT elements and their scores
     def value_bytes_elements
@@ -51,6 +53,8 @@ module Momento
           { value: element.value.dup.force_encoding('UTF-8'), score: element.score }
         end
       end
+
+      alias value value_string_elements
 
       def value_bytes_elements
         @grpc_response.elements.map do |element|

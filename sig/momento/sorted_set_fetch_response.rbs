@@ -4,6 +4,8 @@ module Momento
 
     def miss?: -> bool
 
+    alias value value_string_elements
+
     def value_bytes_elements: -> (Array[{ value: String, score: Float }] | nil)
 
     def value_string_elements: -> (Array[{ value: String, score: Float }] | nil)
