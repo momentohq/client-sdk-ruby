@@ -1,4 +1,4 @@
-require 'momento/response'
+require 'momento'
 
 RSpec.shared_examples Momento::Response do
   let(:response_attributes) do

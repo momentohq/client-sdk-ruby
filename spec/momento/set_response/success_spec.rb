@@ -1,4 +1,4 @@
-require 'momento/response'
+require 'momento'
 
 RSpec.describe Momento::SetResponse::Success do
   let(:response) {

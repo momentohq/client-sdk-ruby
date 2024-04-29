@@ -1,4 +1,4 @@
-require 'momento/response'
+require 'momento'
 
 RSpec.describe Momento::ListCachesResponse::Error do
   let(:response) {

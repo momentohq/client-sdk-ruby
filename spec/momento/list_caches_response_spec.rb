@@ -1,4 +1,4 @@
-require 'momento/response'
+require 'momento'
 
 RSpec.describe Momento::ListCachesResponse do
   it_behaves_like described_class do

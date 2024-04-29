@@ -1,4 +1,3 @@
-require 'grpc'
 require_relative '../error'
 require_relative '../../generated/cacheclient_pb'
 

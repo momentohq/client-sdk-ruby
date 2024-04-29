@@ -1,7 +1,29 @@
+require_relative 'error'
 require 'grpc'
-require_relative 'generated/cacheclient_pb'
+require_relative '../generated/cacheclient_pb'
 
 module Momento
+  # A response from deleting a key.
+  class DeleteResponse < Response
+    # Was the key deleted?
+    # @return [Boolean]
+    def success?
+      false
+    end
+
+    # @private
+    class Success < DeleteResponse
+      def success?
+        true
+      end
+    end
+
+    # @private
+    class Error < DeleteResponse
+      include Momento::Response::Error
+    end
+  end
+
   # @private
   class DeleteResponseBuilder < ResponseBuilder
     # Build a Momento::DeleteResponse from a block of code

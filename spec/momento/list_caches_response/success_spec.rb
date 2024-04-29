@@ -1,4 +1,4 @@
-require 'momento/response'
+require 'momento'
 
 RSpec.describe Momento::ListCachesResponse::Success do
   let(:cache_names) { ["foo", "bar", "baz"] }

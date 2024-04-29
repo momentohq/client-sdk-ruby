@@ -1,4 +1,4 @@
-require 'momento/response'
+require 'momento'
 
 RSpec.shared_examples Momento::SetResponse do
   it_behaves_like Momento::Response do
