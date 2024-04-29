@@ -7,6 +7,9 @@ module Momento
     attr_reader :api_key, :control_endpoint, :cache_endpoint
 
     # Creates a CredentialProvider from a Momento API key loaded from an environment variable.
+    # @param env_var_name [String] the environment variable containing the API key
+    # @return [Momento::CredentialProvider]
+    # @raise [Momento::Error::InvalidArgumentError] if the API key is invalid
     def self.from_env_var(env_var_name)
       api_key = ENV.fetch(env_var_name) {
         raise Momento::Error::InvalidArgumentError, "Env var #{env_var_name} must be set"
@@ -15,6 +18,9 @@ module Momento
     end
 
     # Creates a CredentialProvider from a Momento API key
+    # @param api_key [String] the Momento API key
+    # @return [Momento::CredentialProvider]
+    # @raise [Momento::Error::InvalidArgumentError] if the API key is invalid
     def self.from_string(api_key)
       raise Momento::Error::InvalidArgumentError, 'Auth token string cannot be empty' if api_key.empty?
 
