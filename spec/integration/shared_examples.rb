@@ -5,7 +5,7 @@ module SharedExamples
   end
 
   RSpec.shared_context 'when the cache name is invalid', :include_invalid_cache_name do
-    let(:cache_name) { "süpé® çåçhê 9ººº" }
+    let(:cache_name) { "\xFF" }
   end
 
   RSpec.shared_examples 'it handles invalid caches' do
