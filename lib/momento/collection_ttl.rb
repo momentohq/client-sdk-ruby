@@ -60,6 +60,8 @@ module Momento
       self.class.new(@ttl_seconds)
     end
 
+    # Copy constructor that uses the parent TTL and does not refresh.
+    # @return [Momento::CollectionTtl]
     def with_no_refresh_ttl_on_updates
       self.class.new(@ttl_seconds, refresh_ttl: false)
     end
