@@ -9,6 +9,8 @@ module Momento
     attr_reader refresh_ttl: bool
     attr_reader ttl_seconds: (Integer | nil)
 
+    def initialize: (ttl_seconds: (Integer | nil), refresh_ttl: bool) -> CollectionTtl
+
     def ttl_milliseconds: -> (Integer | nil)
 
     def with_no_refresh_ttl_on_updates: -> CollectionTtl
