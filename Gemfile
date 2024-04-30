@@ -2,5 +2,5 @@
 
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in momento-client.gemspec
+# Specify your gem's dependencies in momento.gemspec
 gemspec
