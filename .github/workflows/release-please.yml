@@ -43,7 +43,7 @@ jobs:
           RELEASE_COMMAND: bundle exec rake release
 
       - name: Check for changes after publish
-        if: ${{ steps.release.outputs.release_created }} && always()
+        if: failure()
         run: |
           echo "Checking for changes in the staging area:"
           git diff-index --cached HEAD
