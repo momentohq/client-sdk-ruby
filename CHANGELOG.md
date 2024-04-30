@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.3](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.4.2...momento/v0.4.3) (2024-04-30)
+
+
+### Bug Fixes
+
+* verbose rubygems publishing ([#156](https://github.com/momentohq/client-sdk-ruby/issues/156)) ([0f6ec1f](https://github.com/momentohq/client-sdk-ruby/commit/0f6ec1fc958bb9473b4f508f2cb2d1e35beaf90c))
+
 ## [0.4.2](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.4.1...momento/v0.4.2) (2024-04-30)
 
 
