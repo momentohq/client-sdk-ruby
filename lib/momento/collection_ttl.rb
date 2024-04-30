@@ -47,6 +47,7 @@ module Momento
       new(ttl_seconds, refresh_ttl: !ttl_seconds.nil?)
     end
 
+    # Copy constructor that uses the given ttl only if the parent CollectionTtl doesn't have one.
     def with_ttl_if_absent(ttl_seconds)
       self.class.new(@ttl_seconds || ttl_seconds, refresh_ttl: @refresh_ttl)
     end
