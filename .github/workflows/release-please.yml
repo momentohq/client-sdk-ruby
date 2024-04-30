@@ -17,21 +17,15 @@ jobs:
       - uses: actions/checkout@v4
         if: ${{ steps.release.outputs.release_created }}
 
-      - name: Post-checkout git status
-        run: |
-          git status
-
       - name: Set up Ruby
         if: ${{ steps.release.outputs.release_created }}
         uses: ruby/setup-ruby@v1
 
-      - name: Post-ruby setup git status
-        run: |
-          git status
-
       - name: Publish to Rubygems
         uses: cadwallion/publish-rubygems-action@master
         if: ${{ steps.release.outputs.release_created }}
+        with:
+          verbose: true
         env:
           GITHUB_TOKEN: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
           RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_PUBLISH_TOKEN}}
