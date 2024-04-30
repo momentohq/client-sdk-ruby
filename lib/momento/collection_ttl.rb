@@ -33,14 +33,14 @@ module Momento
       new
     end
 
-    # Copy constructor that makes a new CollectionTtl with the given TTL.
+    # Creates a CollectionTtl with the given TTL.
     # @param ttl_seconds [Integer | nil] the time to live of the collection. Uses the client default TTL if nil.
     # @return [Momento::CollectionTtl]
     def self.of(ttl_seconds)
       new(ttl_seconds)
     end
 
-    # Copy constructor that sets refresh to true if ttl_seconds is provided and false otherwise
+    # Creates a CollectionTtl that sets refresh to true if ttl_seconds is provided and false otherwise
     # @param ttl_seconds [Integer | nil] the time to live of the collection. If not nil, refresh is set to true.
     # @return [Momento::CollectionTtl]
     def self.refresh_ttl_if_provided(ttl_seconds = nil)
