@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.4](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.4.3...momento/v0.4.4) (2024-04-30)
+
+
+### Bug Fixes
+
+* separate 'bundle install' to see if it modifies the checkout ([#158](https://github.com/momentohq/client-sdk-ruby/issues/158)) ([dbb5d20](https://github.com/momentohq/client-sdk-ruby/commit/dbb5d20619fb556eeebec7f80ff55e02bd14c282))
+
 ## [0.4.3](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.4.2...momento/v0.4.3) (2024-04-30)
 
 
