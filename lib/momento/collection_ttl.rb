@@ -13,7 +13,7 @@ module Momento
   class CollectionTtl
     attr_reader :ttl_seconds, :refresh_ttl
 
-    # Create a CollectionTTL with optional ttl seconds and refresh.
+    # Create a CollectionTtl with optional ttl seconds and refresh.
     # @param ttl_seconds [Integer | nil] the time to live of the collection. Uses the client default TTL if nil.
     # @param refresh_ttl [Boolean] whether to refresh the collection's ttl when performing a cache operation.
     # @return [Momento::CollectionTtl]
@@ -27,6 +27,8 @@ module Momento
       @ttl_seconds.nil? ? nil : @ttl_seconds * 1000
     end
 
+    # Creates a CollectionTtl that refreshes and uses the default client TTL.
+    # @return [Momento::CollectionTtl]
     def self.from_cache_ttl
       new
     end
