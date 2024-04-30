@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.5](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.4.4...momento/v0.4.5) (2024-04-30)
+
+
+### Bug Fixes
+
+* check for local changes after publishing the gem ([#160](https://github.com/momentohq/client-sdk-ruby/issues/160)) ([cd9f242](https://github.com/momentohq/client-sdk-ruby/commit/cd9f242d224b6541d11fe06df23311d7ee6f19d0))
+
 ## [0.4.4](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.4.3...momento/v0.4.4) (2024-04-30)
 
 
