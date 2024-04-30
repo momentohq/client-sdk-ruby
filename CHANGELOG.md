@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.9](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.4.8...momento/v0.4.9) (2024-04-30)
+
+
+### Bug Fixes
+
+* remove token and specify email for the redundant tag ([#168](https://github.com/momentohq/client-sdk-ruby/issues/168)) ([c119376](https://github.com/momentohq/client-sdk-ruby/commit/c11937641acce6b55dbb7e59f87f548769ad9313))
+
 ## [0.4.8](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.4.7...momento/v0.4.8) (2024-04-30)
 
 
