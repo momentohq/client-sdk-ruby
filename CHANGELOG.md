@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.7](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.4.6...momento/v0.4.7) (2024-04-30)
+
+
+### Bug Fixes
+
+* update the grpc dependency ([#164](https://github.com/momentohq/client-sdk-ruby/issues/164)) ([00c0ee5](https://github.com/momentohq/client-sdk-ruby/commit/00c0ee578c63b2003b6de23506715447d762997a))
+
 ## [0.4.6](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.4.5...momento/v0.4.6) (2024-04-30)
 
 
