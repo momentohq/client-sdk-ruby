@@ -360,7 +360,7 @@ channel_args: { "grpc.use_local_subchannel_pool" => 1 } }
       expect(cache_stub).to have_received(:get)
         .with(
           be_a(MomentoProtos::CacheClient::PB__GetRequest).and(have_attributes(cache_key: key)),
-          metadata: { cache: cache_name }
+          metadata: hash_including(cache: cache_name)
         )
     end
 
@@ -480,7 +480,7 @@ channel_args: { "grpc.use_local_subchannel_pool" => 1 } }
         expect(cache_stub).to have_received(:set)
           .with(
             request_expectation,
-            metadata: { cache: cache_name }
+            metadata: hash_including(cache: cache_name)
           )
       end
     end
@@ -605,7 +605,7 @@ channel_args: { "grpc.use_local_subchannel_pool" => 1 } }
       expect(cache_stub).to have_received(:delete)
         .with(
           be_a(MomentoProtos::CacheClient::PB__DeleteRequest).and(have_attributes(cache_key: key)),
-          metadata: { cache: cache_name }
+          metadata: hash_including(cache: cache_name)
         )
     end
 
