@@ -66,7 +66,7 @@ require 'momento'
 TTL_SECONDS = 12.5
 
 # The name of the cache to create *and delete*
-CACHE_NAME = ENV.fetch('MOMENTO_CACHE_NAME')
+CACHE_NAME = ENV.fetch('MOMENTO_CACHE_NAME', 'ruby-examples')
 
 # Create a credential provider that loads a Momento API Key from an environment variable.
 credential_provider = Momento::CredentialProvider.from_env_var('MOMENTO_API_KEY')
