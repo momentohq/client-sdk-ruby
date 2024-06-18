@@ -452,7 +452,7 @@ module Momento
         @is_first_request = false
         {
           cache: validate_cache_name(cache_name),
-          'Agent': "ruby:cache:#{VERSION}",
+          Agent: "ruby:cache:#{VERSION}",
           'Runtime-Version': "ruby:#{RUBY_VERSION}"
         }
       else
