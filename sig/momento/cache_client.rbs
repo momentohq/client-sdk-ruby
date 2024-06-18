@@ -1,6 +1,5 @@
 module Momento
   class CacheClient
-
     def sorted_set_fetch_by_score: (cache_name: String, sorted_set_name: String, min_score: Float | nil, max_score: Float | nil, sort_order: Symbol, offset: Integer, count: Integer) -> SortedSetFetchResponse
 
     def sorted_set_put_element: (cache_name: String, sorted_set_name: String, value: String, score: Float, collection_ttl: CollectionTtl) -> SortedSetPutElementResponse

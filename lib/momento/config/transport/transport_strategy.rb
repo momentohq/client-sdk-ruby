@@ -3,7 +3,7 @@ module Momento
   class TransportStrategy
     attr_reader :grpc_configuration
 
-    def self.with_grpc_configuration(grpc_configuration)
+    def with_grpc_configuration(grpc_configuration)
       return TransportStrategy.new(grpc_configuration)
     end
 
