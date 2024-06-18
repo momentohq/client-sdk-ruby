@@ -2,6 +2,8 @@ module Momento
   class GrpcConfiguration
     def self.with_deadline: -> GrpcConfiguration
 
+    def self.with_num_grpc_channels: -> GrpcConfiguration
+
     attr_reader deadline: Integer
   end
 end
