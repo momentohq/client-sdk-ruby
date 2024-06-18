@@ -126,7 +126,7 @@ module Momento
     class InvalidArgumentError < ArgumentError
       include Momento::Error
 
-      def initialize(details)
+      def initialize(details = "")
         @details = details
         super(message)
       end
