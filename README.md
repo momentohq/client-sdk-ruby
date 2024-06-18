@@ -74,7 +74,7 @@ credential_provider = Momento::CredentialProvider.from_env_var('MOMENTO_API_KEY'
 # This is a reasonable configuration for dev work on a laptop.
 configuration = Momento::Cache::Configurations::Laptop.latest
 # This configuration might be better for a production where you want more aggressive timeouts
-# configuration = Momento::Cache::Configuration::InRegion.latest
+# configuration = Momento::Cache::Configurations::InRegion.latest
 # To set a custom timeout, you can use the with_timeout method.
 # configuration = configuration.with_timeout(10_000)
 # To increase the number of TCP connections for a client where you expect a high volume of traffic,
