@@ -1,6 +1,8 @@
 module Momento
   module Cache
     class Configuration
+      def self.with_num_connections: -> Cache::Configuration
+
       def self.with_transport_strategy: -> Cache::Configuration
 
       attr_reader transport_strategy: TransportStrategy

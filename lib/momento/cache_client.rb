@@ -67,6 +67,8 @@ module Momento
       @control_endpoint = credential_provider.control_endpoint
       @cache_endpoint = credential_provider.cache_endpoint
       @configuration = configuration
+      @next_cache_stub_index = 0
+      @num_cache_stubs = @configuration.transport_strategy.grpc_configuration.num_grpc_channels
     end
 
     # Get a value in a cache.
@@ -339,9 +341,13 @@ module Momento
     private
 
     def cache_stub
-      @cache_stub ||= CACHE_CLIENT_STUB_CLASS.new(@cache_endpoint, combined_credentials,
-        timeout: @configuration.transport_strategy.grpc_configuration.deadline
-      )
+      @cache_stubs ||= (1..@num_cache_stubs).map { CACHE_CLIENT_STUB_CLASS.new(@cache_endpoint, combined_credentials,
+        timeout: @configuration.transport_strategy.grpc_configuration.deadline,
+        channel_args: { 'grpc.use_local_subchannel_pool' => 1}
+      ) }
+      @next_cache_stub_index = (@next_cache_stub_index + 1) % @num_cache_stubs
+      puts "Next cache stub index: #{@next_cache_stub_index}"
+      @cache_stubs[@next_cache_stub_index]
     end
 
     def control_stub
