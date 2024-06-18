@@ -24,7 +24,7 @@ configuration = Momento::Cache::Configurations::Laptop.latest
 
 # Instantiate a Momento client.
 client = Momento::CacheClient.new(
-  configuration: Momento::Cache::Configurations::Laptop.latest,
+  configuration: configuration,
   credential_provider: credential_provider,
   default_ttl: TTL_SECONDS
 )
