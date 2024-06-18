@@ -1,7 +1,21 @@
 # Changelog
 
-## [0.4.9](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.4.8...momento/v0.4.9) (2024-04-30)
+## [0.5.0](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.4.9...momento/v0.5.0) (2024-06-18)
 
+
+### Features
+
+* add InRegion pre-built config ([#180](https://github.com/momentohq/client-sdk-ruby/issues/180)) ([6dd2ef4](https://github.com/momentohq/client-sdk-ruby/commit/6dd2ef47443dbbd0cae28e1d4451c74352310aa3))
+* add runtime version header, only send agent headers on first request ([#177](https://github.com/momentohq/client-sdk-ruby/issues/177)) ([2292a35](https://github.com/momentohq/client-sdk-ruby/commit/2292a3575c551a2a36c9c3f1a31f0c6870e1c4d1))
+* add support for multiple grpc channels, fix configuration modifiers ([#176](https://github.com/momentohq/client-sdk-ruby/issues/176)) ([5753247](https://github.com/momentohq/client-sdk-ruby/commit/57532472d418db54c6eadd046ea6cbf0a53e4e96))
+
+
+### Bug Fixes
+
+* add Gemfile.lock to .gitignore ([45e0b6c](https://github.com/momentohq/client-sdk-ruby/commit/45e0b6cdfb19a337f6cb6c17afe2f21fd86b1eb5))
+* improve error handling for env var cred provider, other fixes ([#173](https://github.com/momentohq/client-sdk-ruby/issues/173)) ([c0b691b](https://github.com/momentohq/client-sdk-ruby/commit/c0b691b8c925d99b6a95a9cecee160b777b9dfab))
+
+## [0.4.9](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.4.8...momento/v0.4.9) (2024-04-30)
 
 ### Bug Fixes
 

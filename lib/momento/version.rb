@@ -2,5 +2,5 @@
 
 module Momento
   # This gem's version.
-  VERSION = "0.4.9"
+  VERSION = "0.5.0"
 end
