@@ -69,6 +69,7 @@ module Momento
       @configuration = configuration
       @next_cache_stub_index = 0
       @num_cache_stubs = @configuration.transport_strategy.grpc_configuration.num_grpc_channels
+      @is_first_request = true
     end
 
     # Get a value in a cache.
@@ -97,7 +98,7 @@ module Momento
       builder.from_block do
         cache_stub.get(
           MomentoProtos::CacheClient::PB__GetRequest.new(cache_key: to_bytes(key)),
-          metadata: { cache: validate_cache_name(cache_name) }
+          metadata: grpc_metadata(cache_name)
         )
       end
     end
@@ -131,7 +132,7 @@ module Momento
           ttl_milliseconds: ttl.milliseconds
         )
 
-        cache_stub.set(req, metadata: { cache: validate_cache_name(cache_name) })
+        cache_stub.set(req, metadata: grpc_metadata(cache_name))
       end
     end
 
@@ -155,7 +156,7 @@ module Momento
       builder.from_block do
         cache_stub.delete(
           MomentoProtos::CacheClient::PB__DeleteRequest.new(cache_key: to_bytes(key)),
-          metadata: { cache: validate_cache_name(cache_name) }
+          metadata: grpc_metadata(cache_name)
         )
       end
     end
@@ -256,7 +257,7 @@ module Momento
         )
 
         # noinspection RubyResolve
-        cache_stub.sorted_set_put(req, metadata: { cache: validate_cache_name(cache_name) })
+        cache_stub.sorted_set_put(req, metadata: grpc_metadata(cache_name))
       end
     end
 
@@ -293,7 +294,7 @@ module Momento
         )
 
         # noinspection RubyResolve
-        cache_stub.sorted_set_put(req, metadata: { cache: validate_cache_name(cache_name) })
+        cache_stub.sorted_set_put(req, metadata: grpc_metadata(cache_name))
       end
     end
 
@@ -333,7 +334,7 @@ module Momento
         )
 
         # noinspection RubyResolve
-        cache_stub.sorted_set_fetch(req, metadata: { cache: validate_cache_name(cache_name) })
+        cache_stub.sorted_set_fetch(req, metadata: grpc_metadata(cache_name))
       end
     end
     # rubocop:enable Metrics/ParameterLists
@@ -362,7 +363,7 @@ module Momento
     def make_combined_credentials
       # :nocov:
       auth_proc = proc do
-        { authorization: @api_key, agent: "ruby:#{VERSION}" }
+        { authorization: @api_key }
       end
       # :nocov:
 
@@ -445,6 +446,22 @@ module Momento
         utf8_encoded.force_encoding(Encoding::ASCII_8BIT)
       end
     end
+
+    def grpc_metadata(cache_name)
+      metadata = if @is_first_request
+        @is_first_request = false
+        {
+          cache: validate_cache_name(cache_name),
+          agent: "ruby:cache:#{VERSION}",
+          "runtime-version": "ruby:#{RUBY_VERSION}",
+        }
+      else
+        { cache: validate_cache_name(cache_name) }
+      end
+      puts "Using metadata: #{metadata}"
+      metadata
+    end
+
 
     # Return a UTF-8 version of the cache name.
     #
