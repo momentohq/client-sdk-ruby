@@ -346,7 +346,6 @@ module Momento
         channel_args: { 'grpc.use_local_subchannel_pool' => 1}
       ) }
       @next_cache_stub_index = (@next_cache_stub_index + 1) % @num_cache_stubs
-      puts "Next cache stub index: #{@next_cache_stub_index}"
       @cache_stubs[@next_cache_stub_index]
     end
 
