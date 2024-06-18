@@ -448,18 +448,16 @@ module Momento
     end
 
     def grpc_metadata(cache_name)
-      metadata = if @is_first_request
-                   @is_first_request = false
-                   {
-                     cache: validate_cache_name(cache_name),
-                     agent: "ruby:cache:#{VERSION}",
-                     'runtime-version': "ruby:#{RUBY_VERSION}"
-                   }
-                 else
-                   { cache: validate_cache_name(cache_name) }
-                 end
-      puts "Using metadata: #{metadata}"
-      metadata
+      if @is_first_request
+        @is_first_request = false
+        {
+          cache: validate_cache_name(cache_name),
+          agent: "ruby:cache:#{VERSION}",
+          'runtime-version': "ruby:#{RUBY_VERSION}"
+        }
+      else
+        { cache: validate_cache_name(cache_name) }
+      end
     end
 
     # Return a UTF-8 version of the cache name.
