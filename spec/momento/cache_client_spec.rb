@@ -39,7 +39,9 @@ RSpec.describe Momento::CacheClient do
       stub
 
       expect(stub_class).to have_received(:new)
-        .with(endpoint, instance_of(GRPC::Core::ChannelCredentials), { timeout: 5000 })
+        .with(endpoint, instance_of(GRPC::Core::ChannelCredentials), { timeout: 5000,
+channel_args: { "grpc.use_local_subchannel_pool" => 1 } }
+        )
     end
   end
 

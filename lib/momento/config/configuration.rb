@@ -6,7 +6,7 @@ module Momento
 
       # Copy constructor; creates a new Configuration with the specified transport strategy
       def with_transport_strategy(transport_strategy)
-        return Configuration.new(transport_strategy)
+        Configuration.new(transport_strategy)
       end
 
       # Convenience function to set the number of TCP connections for the client. Each connection can multiplex up
@@ -15,7 +15,11 @@ module Momento
       def with_num_connections(num_connections)
         transport_strategy = @transport_strategy
         grpc_config = transport_strategy.grpc_configuration
-        return Configuration.new(transport_strategy.with_grpc_configuration(grpc_config.with_num_grpc_channels(num_connections)))
+        Configuration.new(
+          transport_strategy.with_grpc_configuration(
+            grpc_config.with_num_grpc_channels(num_connections)
+          )
+        )
       end
 
       def initialize(transport_strategy)

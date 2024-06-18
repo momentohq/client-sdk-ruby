@@ -341,10 +341,12 @@ module Momento
     private
 
     def cache_stub
-      @cache_stubs ||= (1..@num_cache_stubs).map { CACHE_CLIENT_STUB_CLASS.new(@cache_endpoint, combined_credentials,
-        timeout: @configuration.transport_strategy.grpc_configuration.deadline,
-        channel_args: { 'grpc.use_local_subchannel_pool' => 1}
-      ) }
+      @cache_stubs ||= (1..@num_cache_stubs).map {
+        CACHE_CLIENT_STUB_CLASS.new(@cache_endpoint, combined_credentials,
+          timeout: @configuration.transport_strategy.grpc_configuration.deadline,
+          channel_args: { 'grpc.use_local_subchannel_pool' => 1 }
+        )
+      }
       @next_cache_stub_index = (@next_cache_stub_index + 1) % @num_cache_stubs
       @cache_stubs[@next_cache_stub_index]
     end
