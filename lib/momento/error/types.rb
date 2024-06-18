@@ -126,9 +126,18 @@ module Momento
     class InvalidArgumentError < ArgumentError
       include Momento::Error
 
+      def initialize(details)
+        @details = details
+        super(message)
+      end
+
       # (see Momento::Error#error_code)
       def error_code
         :INVALID_ARGUMENT_ERROR
+      end
+
+      def details
+        @details
       end
 
       # (see Momento::Error#message)

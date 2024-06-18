@@ -1,0 +1,20 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    google-protobuf (3.25.3-arm64-darwin)
+    googleapis-common-protos-types (1.15.0)
+      google-protobuf (>= 3.18, < 5.a)
+    grpc (1.64.0-arm64-darwin)
+      google-protobuf (~> 3.25)
+      googleapis-common-protos-types (~> 1.0)
+    momento (0.4.9)
+      grpc (~> 1.62)
+
+PLATFORMS
+  arm64-darwin-23
+
+DEPENDENCIES
+  momento (~> 0.4.9)
+
+BUNDLED WITH
+   2.4.10
