@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.5.0...momento/v0.5.1) (2024-06-18)
+
+
+### Bug Fixes
+
+* headers must be lower case ([#181](https://github.com/momentohq/client-sdk-ruby/issues/181)) ([6067002](https://github.com/momentohq/client-sdk-ruby/commit/606700265113c06c36ea6c603418c606101ddbb6))
+
 ## [0.5.0](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.4.9...momento/v0.5.0) (2024-06-18)
 
 
