@@ -136,9 +136,7 @@ module Momento
         :INVALID_ARGUMENT_ERROR
       end
 
-      def details
-        @details
-      end
+      attr_reader :details
 
       # (see Momento::Error#message)
       def message
