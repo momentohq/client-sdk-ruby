@@ -39,7 +39,9 @@ RSpec.describe Momento::CacheClient do
       stub
 
       expect(stub_class).to have_received(:new)
-        .with(endpoint, instance_of(GRPC::Core::ChannelCredentials), { timeout: 5000 })
+        .with(endpoint, instance_of(GRPC::Core::ChannelCredentials), { timeout: 5000,
+channel_args: { "grpc.use_local_subchannel_pool" => 1 } }
+        )
     end
   end
 
@@ -358,7 +360,7 @@ RSpec.describe Momento::CacheClient do
       expect(cache_stub).to have_received(:get)
         .with(
           be_a(MomentoProtos::CacheClient::PB__GetRequest).and(have_attributes(cache_key: key)),
-          metadata: { cache: cache_name }
+          metadata: hash_including(cache: cache_name)
         )
     end
 
@@ -478,7 +480,7 @@ RSpec.describe Momento::CacheClient do
         expect(cache_stub).to have_received(:set)
           .with(
             request_expectation,
-            metadata: { cache: cache_name }
+            metadata: hash_including(cache: cache_name)
           )
       end
     end
@@ -603,7 +605,7 @@ RSpec.describe Momento::CacheClient do
       expect(cache_stub).to have_received(:delete)
         .with(
           be_a(MomentoProtos::CacheClient::PB__DeleteRequest).and(have_attributes(cache_key: key)),
-          metadata: { cache: cache_name }
+          metadata: hash_including(cache: cache_name)
         )
     end
 

@@ -47,15 +47,21 @@ module Momento
       new(ttl_seconds, refresh_ttl: !ttl_seconds.nil?)
     end
 
-    # Copy constructor that uses the given ttl only if the parent CollectionTtl doesn't have one.
+    # Copy constructor that uses the given TTL only if the parent CollectionTtl doesn't have one.
+    # @param ttl_seconds [Integer | nil] the time to live of the collection. Will be ignored if the parent has a TTL.
+    # @return [Momento::CollectionTtl]
     def with_ttl_if_absent(ttl_seconds)
       self.class.new(@ttl_seconds || ttl_seconds, refresh_ttl: @refresh_ttl)
     end
 
+    # Copy constructor that uses the parent TTL and refreshes.
+    # @return [Momento::CollectionTtl]
     def with_refresh_ttl_on_updates
       self.class.new(@ttl_seconds)
     end
 
+    # Copy constructor that uses the parent TTL and does not refresh.
+    # @return [Momento::CollectionTtl]
     def with_no_refresh_ttl_on_updates
       self.class.new(@ttl_seconds, refresh_ttl: false)
     end

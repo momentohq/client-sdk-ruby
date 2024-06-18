@@ -21,18 +21,10 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
         uses: ruby/setup-ruby@v1
 
-      - name: Install dependencies
-        if: ${{ steps.release.outputs.release_created }}
-        run: bundle install
-
-      - name: Check for changes after bundle install
-        if: ${{ steps.release.outputs.release_created }}
+      - name: Configure Git user for redundant tag
         run: |
-          echo "Checking for changes in the staging area:"
-          git diff-index --cached HEAD
-
-          echo "Checking for changes in the working directory:"
-          git diff
+          git config --local user.email "eng-deveco@momentohq.com"
+          git config --local user.name "DevEco Engineers"
 
       - name: Publish to Rubygems
         uses: cadwallion/publish-rubygems-action@master
@@ -51,7 +43,7 @@ jobs:
           echo "Checking for changes in the working directory:"
           git diff
 
-      - name: Upload artifacts
+      - name: Upload artifacts to the GitHub Actions Run
         uses: actions/upload-artifact@v4
         if: ${{ steps.release.outputs.release_created }}
         with:

@@ -12,6 +12,13 @@ module Momento
           return Configuration.new(StaticTransportStrategy.new(GrpcConfiguration.new(5000)))
         end
       end
+
+      # Default Laptop configuration with 1100ms client timeout
+      class InRegion < Cache::Configuration
+        def self.latest
+          return Configuration.new(StaticTransportStrategy.new(GrpcConfiguration.new(1100)))
+        end
+      end
     end
   end
 end

@@ -4,7 +4,7 @@
 <img src="https://docs.momentohq.com/img/momento-logo-forest.svg" alt="logo" width="400"/>
 
 [![project status](https://momentohq.github.io/standards-and-practices/badges/project-status-official.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md)
-[![project stability](https://momentohq.github.io/standards-and-practices/badges/project-stability-beta.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md)
+[![project stability](https://momentohq.github.io/standards-and-practices/badges/project-stability-stable.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md)
 
 # Momento Ruby Client Library
 
@@ -66,14 +66,24 @@ require 'momento'
 TTL_SECONDS = 12.5
 
 # The name of the cache to create *and delete*
-CACHE_NAME = ENV.fetch('MOMENTO_CACHE_NAME')
+CACHE_NAME = ENV.fetch('MOMENTO_CACHE_NAME', 'ruby-examples')
 
 # Create a credential provider that loads a Momento API Key from an environment variable.
 credential_provider = Momento::CredentialProvider.from_env_var('MOMENTO_API_KEY')
 
+# This is a reasonable configuration for dev work on a laptop.
+configuration = Momento::Cache::Configurations::Laptop.latest
+# This configuration might be better for a production where you want more aggressive timeouts
+# configuration = Momento::Cache::Configuration::InRegion.latest
+# To set a custom timeout, you can use the with_timeout method.
+# configuration = configuration.with_timeout(10_000)
+# To increase the number of TCP connections for a client where you expect a high volume of traffic,
+# you can use the with_num_connections method.
+# configuration = configuration.with_num_connections(4)
+
 # Instantiate a Momento client.
 client = Momento::CacheClient.new(
-  configuration: Momento::Cache::Configurations::Laptop.latest,
+  configuration: configuration,
   credential_provider: credential_provider,
   default_ttl: TTL_SECONDS
 )

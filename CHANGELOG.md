@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.4.9](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.4.8...momento/v0.4.9) (2024-04-30)
+
+
+### Bug Fixes
+
+* remove token and specify email for the redundant tag ([#168](https://github.com/momentohq/client-sdk-ruby/issues/168)) ([c119376](https://github.com/momentohq/client-sdk-ruby/commit/c11937641acce6b55dbb7e59f87f548769ad9313))
+
+## [0.4.8](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.4.7...momento/v0.4.8) (2024-04-30)
+
+
+### Bug Fixes
+
+* check out the repo with the machine user token ([#166](https://github.com/momentohq/client-sdk-ruby/issues/166)) ([67845af](https://github.com/momentohq/client-sdk-ruby/commit/67845af1da172271ea0e604d4ab8d6e749a7d7c1))
+
+## [0.4.7](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.4.6...momento/v0.4.7) (2024-04-30)
+
+
+### Bug Fixes
+
+* update the grpc dependency ([#164](https://github.com/momentohq/client-sdk-ruby/issues/164)) ([00c0ee5](https://github.com/momentohq/client-sdk-ruby/commit/00c0ee578c63b2003b6de23506715447d762997a))
+
 ## [0.4.6](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.4.5...momento/v0.4.6) (2024-04-30)
 
 

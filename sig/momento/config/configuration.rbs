@@ -1,7 +1,11 @@
 module Momento
   module Cache
     class Configuration
-      def self.with_transport_strategy: -> Cache::Configuration
+      def with_timeout: -> Configuration
+
+      def with_num_connections: -> Configuration
+
+      def with_transport_strategy: -> Configuration
 
       attr_reader transport_strategy: TransportStrategy
     end
