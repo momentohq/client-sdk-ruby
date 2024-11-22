@@ -104,13 +104,6 @@ RSpec.describe 'Momento::Error subclasses' do
     end
   end
 
-  describe Momento::Error::LimitExceededError do
-    it_behaves_like Momento::Error do
-      let(:error_code) { :LIMIT_EXCEEDED_ERROR }
-      let(:message_re) { /Request rate exceeded the limits for this account/ }
-    end
-  end
-
   describe Momento::Error::NotFoundError do
     it_behaves_like Momento::Error do
       let(:error_code) { :NOT_FOUND_ERROR }

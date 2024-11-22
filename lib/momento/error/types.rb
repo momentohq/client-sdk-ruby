@@ -148,16 +148,21 @@ module Momento
     class LimitExceededError < RuntimeError
       attr_reader :details, :transport_details
 
-      def initialize(details, transport_details)
+      def initialize(details = '', transport_details = nil)
         super()
-        @details = details
+        @details = details.to_s
         @transport_details = transport_details
       end
 
       # Extract the error cause from metadata
       def error_cause
-        metadata = transport_details.grpc.metadata
+        metadata = transport_details&.grpc&.metadata || {}
         metadata[:err] || 'unknown_error'
+      end
+
+      # (see Momento::Error#error_code)
+      def error_code
+        :LIMIT_EXCEEDED_ERROR
       end
 
       class ErrorMessages
