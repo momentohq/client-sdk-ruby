@@ -149,6 +149,7 @@ module Momento
       attr_reader :details, :transport_details
 
       def initialize(details, transport_details)
+        super()
         @details = details
         @transport_details = transport_details
       end
@@ -160,13 +161,13 @@ module Momento
       end
 
       class ErrorMessages
-        TOPIC_SUBSCRIPTIONS_LIMIT_EXCEEDED = 'Topic subscriptions limit exceeded.'
-        OPERATIONS_RATE_LIMIT_EXCEEDED = 'Operations rate limit exceeded.'
-        THROUGHPUT_RATE_LIMIT_EXCEEDED = 'Throughput rate limit exceeded.'
-        REQUEST_SIZE_LIMIT_EXCEEDED = 'Request size limit exceeded.'
-        ITEM_SIZE_LIMIT_EXCEEDED = 'Item size limit exceeded.'
-        ELEMENT_SIZE_LIMIT_EXCEEDED = 'Element size limit exceeded.'
-        UNKNOWN_LIMIT_EXCEEDED = 'Limit exceeded for this account.'
+        TOPIC_SUBSCRIPTIONS_LIMIT_EXCEEDED = 'Topic subscriptions limit exceeded.'.freeze
+        OPERATIONS_RATE_LIMIT_EXCEEDED = 'Operations rate limit exceeded.'.freeze
+        THROUGHPUT_RATE_LIMIT_EXCEEDED = 'Throughput rate limit exceeded.'.freeze
+        REQUEST_SIZE_LIMIT_EXCEEDED = 'Request size limit exceeded.'.freeze
+        ITEM_SIZE_LIMIT_EXCEEDED = 'Item size limit exceeded.'.freeze
+        ELEMENT_SIZE_LIMIT_EXCEEDED = 'Element size limit exceeded.'.freeze
+        UNKNOWN_LIMIT_EXCEEDED = 'Limit exceeded for this account.'.freeze
 
         # Map error causes to the corresponding message
         ERROR_CAUSES = {
@@ -187,7 +188,7 @@ module Momento
           'item size' => ITEM_SIZE_LIMIT_EXCEEDED,
           'element size' => ELEMENT_SIZE_LIMIT_EXCEEDED
         }.freeze
-    end
+      end
 
       # Generate the appropriate message based on the error cause or details
       def message
@@ -197,16 +198,14 @@ module Momento
         # If no direct match for error cause, then check if any substring in details matches
         if message.nil?
           ErrorMessages::ERROR_SUBSTRINGS.each do |key, msg|
-            if details.include?(key)
-              return msg
-            end
+            return msg if details.include?(key)
           end
         end
 
         # Return the default message if no match is found
         message || ErrorMessages::UNKNOWN_LIMIT_EXCEEDED
-        end
       end
+    end
 
     # A cache with the specified name does not exist.
     class NotFoundError < RuntimeError
