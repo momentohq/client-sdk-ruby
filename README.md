@@ -1,22 +1,22 @@
 <head>
-  <meta name="Momento Ruby Client Library Documentation" content="Ruby client software development kit for Momento Cache">
+  <meta name="Momento Client Library Documentation for Ruby" content="Momento client software development kit for Ruby">
 </head>
 <img src="https://docs.momentohq.com/img/momento-logo-forest.svg" alt="logo" width="400"/>
 
 [![project status](https://momentohq.github.io/standards-and-practices/badges/project-status-official.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md)
 [![project stability](https://momentohq.github.io/standards-and-practices/badges/project-stability-stable.svg)](https://github.com/momentohq/standards-and-practices/blob/main/docs/momento-on-github.md)
 
-# Momento Ruby Client Library
+# Momento Client Library for Ruby
 
 Momento Cache is a fast, simple, pay-as-you-go caching solution without any of the operational overhead
-required by traditional caching solutions.  This repo contains the source code for the Momento Ruby client library.
+required by traditional caching solutions.  This repo contains the source code for the Momento client library for Ruby.
 
 To get started with Momento you will need a Momento Auth Token. You can get one from the [Momento Console](https://console.gomomento.com).
 
 * Website: [https://www.gomomento.com/](https://www.gomomento.com/)
 * Momento Documentation: [https://docs.momentohq.com/](https://docs.momentohq.com/)
 * Getting Started: [https://docs.momentohq.com/getting-started](https://docs.momentohq.com/getting-started)
-* Ruby SDK Documentation: [https://docs.momentohq.com/sdks/ruby](https://docs.momentohq.com/sdks/ruby)
+* Momento SDK Documentation for Ruby: [https://docs.momentohq.com/sdks/ruby](https://docs.momentohq.com/sdks/ruby)
 * Discuss: [Momento Discord](https://discord.gg/3HkAKjUZGq)
 
 # Momento Ruby SDK
