@@ -146,16 +146,69 @@ module Momento
 
     # Request rate exceeded the limits for this account.
     class LimitExceededError < RuntimeError
-      include Momento::Error
+      attr_reader :details, :transport_details
+
+      def initialize(details = '', transport_details = nil)
+        super()
+        @details = details.to_s
+        @transport_details = transport_details
+      end
+
+      # Extract the error cause from metadata
+      def error_cause
+        metadata = transport_details&.grpc&.metadata || {}
+        metadata[:err] || 'unknown_error'
+      end
 
       # (see Momento::Error#error_code)
       def error_code
         :LIMIT_EXCEEDED_ERROR
       end
 
-      # (see Momento::Error#message)
+      class ErrorMessages
+        TOPIC_SUBSCRIPTIONS_LIMIT_EXCEEDED = 'Topic subscriptions limit exceeded.'.freeze
+        OPERATIONS_RATE_LIMIT_EXCEEDED = 'Operations rate limit exceeded.'.freeze
+        THROUGHPUT_RATE_LIMIT_EXCEEDED = 'Throughput rate limit exceeded.'.freeze
+        REQUEST_SIZE_LIMIT_EXCEEDED = 'Request size limit exceeded.'.freeze
+        ITEM_SIZE_LIMIT_EXCEEDED = 'Item size limit exceeded.'.freeze
+        ELEMENT_SIZE_LIMIT_EXCEEDED = 'Element size limit exceeded.'.freeze
+        UNKNOWN_LIMIT_EXCEEDED = 'Limit exceeded for this account.'.freeze
+
+        # Map error causes to the corresponding message
+        ERROR_CAUSES = {
+          'topic_subscriptions_limit_exceeded' => TOPIC_SUBSCRIPTIONS_LIMIT_EXCEEDED,
+          'operations_rate_limit_exceeded' => OPERATIONS_RATE_LIMIT_EXCEEDED,
+          'throughput_rate_limit_exceeded' => THROUGHPUT_RATE_LIMIT_EXCEEDED,
+          'request_size_limit_exceeded' => REQUEST_SIZE_LIMIT_EXCEEDED,
+          'item_size_limit_exceeded' => ITEM_SIZE_LIMIT_EXCEEDED,
+          'element_size_limit_exceeded' => ELEMENT_SIZE_LIMIT_EXCEEDED
+        }.freeze
+
+        # Map substrings to the corresponding message
+        ERROR_SUBSTRINGS = {
+          'subscribers' => TOPIC_SUBSCRIPTIONS_LIMIT_EXCEEDED,
+          'operations' => OPERATIONS_RATE_LIMIT_EXCEEDED,
+          'throughput' => THROUGHPUT_RATE_LIMIT_EXCEEDED,
+          'request limit' => REQUEST_SIZE_LIMIT_EXCEEDED,
+          'item size' => ITEM_SIZE_LIMIT_EXCEEDED,
+          'element size' => ELEMENT_SIZE_LIMIT_EXCEEDED
+        }.freeze
+      end
+
+      # Generate the appropriate message based on the error cause or details
       def message
-        "Request rate exceeded the limits for this account.  To resolve this error, reduce your request rate, or contact Momento to request a limit increase."
+        # First, check for a direct match in the ERROR_CAUSES for the error cause
+        message = ErrorMessages::ERROR_CAUSES[error_cause]
+
+        # If no direct match for error cause, then check if any substring in details matches
+        if message.nil?
+          ErrorMessages::ERROR_SUBSTRINGS.each do |key, msg|
+            return msg if details.include?(key)
+          end
+        end
+
+        # Return the default message if no match is found
+        message || ErrorMessages::UNKNOWN_LIMIT_EXCEEDED
       end
     end
 
