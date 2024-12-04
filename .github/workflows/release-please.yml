@@ -9,7 +9,7 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
-      - uses: google-github-actions/release-please-action@v4
+      - uses: googleapis/release-please-action@v4
         id: release
         with:
           token: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
@@ -22,6 +22,7 @@ jobs:
         uses: ruby/setup-ruby@v1
 
       - name: Configure Git user for redundant tag
+        if: ${{ steps.release.outputs.release_created }}
         run: |
           git config --local user.email "eng-deveco@momentohq.com"
           git config --local user.name "DevEco Engineers"
@@ -33,15 +34,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
           RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_PUBLISH_TOKEN}}
           RELEASE_COMMAND: bundle exec rake release
-
-      - name: Check for changes after publish
-        if: failure()
-        run: |
-          echo "Checking for changes in the staging area:"
-          git diff-index --cached HEAD
-
-          echo "Checking for changes in the working directory:"
-          git diff
 
       - name: Upload artifacts to the GitHub Actions Run
         uses: actions/upload-artifact@v4
