@@ -64,7 +64,7 @@ channel_args: { "grpc.use_local_subchannel_pool" => 1, "grpc.service_config_disa
 
       expect(stub_class).to have_received(:new)
         .with(endpoint, instance_of(GRPC::Core::ChannelCredentials),
-              channel_args: {"grpc.service_config_disable_resolution" => 1 }
+          channel_args: {"grpc.service_config_disable_resolution" => 1 }
         )
     end
   end
