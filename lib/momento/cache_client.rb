@@ -345,7 +345,9 @@ module Momento
       @cache_stubs ||= (1..@num_cache_stubs).map {
         CACHE_CLIENT_STUB_CLASS.new(@cache_endpoint, combined_credentials,
           timeout: @configuration.transport_strategy.grpc_configuration.deadline,
-          channel_args: { 'grpc.use_local_subchannel_pool' => 1 }
+          channel_args: { 'grpc.use_local_subchannel_pool' => 1,
+                          'grpc.service_config_disable_resolution' => 1 # Disable service config resolution to avoid DNS TXT record lookups
+          }
         )
       }
       @next_cache_stub_index = (@next_cache_stub_index + 1) % @num_cache_stubs
@@ -353,7 +355,9 @@ module Momento
     end
 
     def control_stub
-      @control_stub ||= CONTROL_CLIENT_STUB_CLASS.new(@control_endpoint, combined_credentials)
+      @control_stub ||= CONTROL_CLIENT_STUB_CLASS.new(@control_endpoint, combined_credentials,
+          channel_args: { 'grpc.service_config_disable_resolution' => 1 } # Disable service config resolution here
+      )
     end
 
     def combined_credentials
