@@ -355,7 +355,7 @@ module Momento
 
     def control_stub
       @control_stub ||= CONTROL_CLIENT_STUB_CLASS.new(@control_endpoint, combined_credentials,
-            channel_args: { 'grpc.service_config_disable_resolution' => 1 } # Disable service config resolution here
+        channel_args: { 'grpc.service_config_disable_resolution' => 1 } # Disable service config resolution here
       )
     end
 
