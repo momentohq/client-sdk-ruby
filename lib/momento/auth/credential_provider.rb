@@ -27,7 +27,45 @@ module Momento
       new(api_key)
     end
 
+    # Creates a CredentialProvider from a global API key string and endpoint.
+    # Global API keys do not require parsing - they can be used directly.
+    # @param api_key [String] the global API key
+    # @param endpoint [String] the endpoint (e.g., "cell-us-east-1-1.prod.a.momentohq.com")
+    # @return [Momento::CredentialProvider]
+    # @raise [Momento::Error::InvalidArgumentError] if parameters are invalid
+    def self.global_key_from_string(api_key:, endpoint:)
+      raise Momento::Error::InvalidArgumentError, 'API key cannot be empty' if api_key.nil? || api_key.empty?
+      raise Momento::Error::InvalidArgumentError, 'Endpoint cannot be empty' if endpoint.nil? || endpoint.empty?
+
+      allocate.tap do |instance|
+        instance.send(:initialize_from_global, api_key, endpoint)
+      end
+    end
+
+    # Creates a CredentialProvider from a global API key loaded from an environment variable.
+    # Global API keys do not require parsing - they can be used directly.
+    # @param env_var_name [String] the environment variable containing the global API key
+    # @param endpoint [String] the endpoint (e.g., "cell-us-east-1-1.prod.a.momentohq.com")
+    # @return [Momento::CredentialProvider]
+    # @raise [Momento::Error::InvalidArgumentError] if parameters are invalid
+    def self.global_key_from_env_var(env_var_name, endpoint:)
+      api_key = ENV.fetch(env_var_name) {
+        raise Momento::Error::InvalidArgumentError, "Env var #{env_var_name} must be set"
+      }
+      raise Momento::Error::InvalidArgumentError, 'Endpoint cannot be empty' if endpoint.nil? || endpoint.empty?
+
+      allocate.tap do |instance|
+        instance.send(:initialize_from_global, api_key, endpoint)
+      end
+    end
+
     private
+
+    def initialize_from_global(api_key, endpoint)
+      @api_key = api_key
+      @control_endpoint = "control.#{endpoint}"
+      @cache_endpoint = "cache.#{endpoint}"
+    end
 
     def initialize(api_key)
       decoded_token = decode_api_key(api_key)
