@@ -37,6 +37,12 @@ module Momento
       raise Momento::Error::InvalidArgumentError, 'API key cannot be empty' if api_key.nil? || api_key.empty?
       raise Momento::Error::InvalidArgumentError, 'Endpoint cannot be empty' if endpoint.nil? || endpoint.empty?
 
+      unless global_api_key?(api_key)
+        raise Momento::Error::InvalidArgumentError,
+          'Provided API key is not a valid global API key. Are you using the correct key? \
+          Or did you mean to use `from_string()` instead?'
+      end
+
       allocate.tap do |instance|
         instance.send(:initialize_from_global, api_key, endpoint)
       end
@@ -54,6 +60,11 @@ module Momento
       }
       raise Momento::Error::InvalidArgumentError, 'Endpoint cannot be empty' if endpoint.nil? || endpoint.empty?
 
+      unless global_api_key?(api_key)
+        raise Momento::Error::InvalidArgumentError,
+          'Provided API key is not a valid global API key. Are you using the correct key? \
+          Or did you mean to use `from_env_var()` instead?'
+      end
       allocate.tap do |instance|
         instance.send(:initialize_from_global, api_key, endpoint)
       end
@@ -68,6 +79,12 @@ module Momento
     end
 
     def initialize(api_key)
+      if global_api_key?(api_key)
+        raise Momento::Error::InvalidArgumentError,
+          'Received a global API key. Are you using the correct key? Or did you mean to use\
+           `global_key_from_string()` or `global_key_from_environment_variable()` instead?'
+      end
+
       decoded_token = decode_api_key(api_key)
       @api_key = decoded_token.api_key
       @control_endpoint = decoded_token.control_endpoint
@@ -113,4 +130,29 @@ module Momento
         "Required fields are missing: #{missing_fields.join(', ')}"
     end
   end
+end
+
+def base64?(string)
+  return false if string.nil? || string.empty?
+
+  Base64.strict_decode64(string)
+  true
+rescue ArgumentError
+  false
+end
+
+def global_api_key?(api_key)
+  if base64?(api_key)
+    raise Momento::Error::InvalidArgumentError,
+      'Did not expect global API key to be base64 encoded. Are you using the correct key?'
+  end
+
+  key_parts = api_key.split('.')
+  raise Momento::Error::InvalidArgumentError, 'Malformed legacy API key' if key_parts.size != 3
+
+  decoded_key = Base64.decode64(key_parts[1])
+  key_json = JSON.parse(decoded_key, symbolize_names: true)
+  key_json[:t] == 'g'
+rescue ArgumentError, JSON::ParserError
+  false
 end

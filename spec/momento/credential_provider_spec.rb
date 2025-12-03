@@ -27,7 +27,8 @@ SWVVuQmFXRXBCV2pJeGFHRlhkM1ZaTWpsMFNXbDNhV1J0Vm5sSmFtOTRabEV1VW5OMk9GazVkRE5KVEM
 VRV3hhVlVsVGFrbENieUo5In0=".freeze
 
 TEST_ENDPOINT = "testEndpoint".freeze
-TEST_GLOBAL_API_KEY = "testToken".freeze
+TEST_GLOBAL_API_KEY = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ0IjoiZyIsImNwIjoiY29udHJvbC50ZXN0LmNvbSIsImMiOiJjYWNoZS5\
+0ZXN0LmNvbSJ9.T3ylW7iWLobcCsYQx92oImV2KgyBWmtFO-37uzw3qspSb18itIEH9zN49QFEm6joeIer_kXJ5R28ruF_JbUniA".freeze
 TEST_ENV_VAR_NAME = "MOMENTO_TEST_GLOBAL_API_KEY".freeze
 
 RSpec.describe Momento::CredentialProvider do
@@ -89,6 +90,14 @@ RSpec.describe Momento::CredentialProvider do
         }.to raise_error(Momento::Error::InvalidArgumentError)
       end
     end
+
+    context "when given a global API key" do
+      it 'raises an InvalidArgumentError' do
+        expect {
+          described_class.from_string(TEST_GLOBAL_API_KEY)
+        }.to raise_error(Momento::Error::InvalidArgumentError)
+      end
+    end
   end
 
   describe ".global_key_from_string" do
@@ -132,6 +141,22 @@ RSpec.describe Momento::CredentialProvider do
       it 'raises an InvalidArgumentError' do
         expect {
           described_class.global_key_from_string(api_key: TEST_GLOBAL_API_KEY, endpoint: nil)
+        }.to raise_error(Momento::Error::InvalidArgumentError)
+      end
+    end
+
+    context "when given a v1 api key" do
+      it 'raises an InvalidArgumentError' do
+        expect {
+          described_class.global_key_from_string(api_key: V1_API_KEY_VALID, endpoint: nil)
+        }.to raise_error(Momento::Error::InvalidArgumentError)
+      end
+    end
+
+    context "when given a pre-v1 api key" do
+      it 'raises an InvalidArgumentError' do
+        expect {
+          described_class.global_key_from_string(api_key: LEGACY_API_KEY_VALID, endpoint: nil)
         }.to raise_error(Momento::Error::InvalidArgumentError)
       end
     end
@@ -179,6 +204,24 @@ RSpec.describe Momento::CredentialProvider do
     context "when given a nil endpoint" do
       it 'raises an InvalidArgumentError' do
         allow(ENV).to receive(:fetch).with(TEST_ENV_VAR_NAME).and_return(TEST_GLOBAL_API_KEY)
+        expect {
+          described_class.global_key_from_env_var(TEST_ENV_VAR_NAME, endpoint: nil)
+        }.to raise_error(Momento::Error::InvalidArgumentError)
+      end
+    end
+
+    context "when given a v1 api key" do
+      it 'raises an InvalidArgumentError' do
+        allow(ENV).to receive(:fetch).with(TEST_ENV_VAR_NAME).and_return(V1_API_KEY_VALID)
+        expect {
+          described_class.global_key_from_env_var(TEST_ENV_VAR_NAME, endpoint: nil)
+        }.to raise_error(Momento::Error::InvalidArgumentError)
+      end
+    end
+
+    context "when given a pre-v1 api key" do
+      it 'raises an InvalidArgumentError' do
+        allow(ENV).to receive(:fetch).with(TEST_ENV_VAR_NAME).and_return(LEGACY_API_KEY_VALID)
         expect {
           described_class.global_key_from_env_var(TEST_ENV_VAR_NAME, endpoint: nil)
         }.to raise_error(Momento::Error::InvalidArgumentError)
