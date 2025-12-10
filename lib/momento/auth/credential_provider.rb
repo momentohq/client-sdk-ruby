@@ -10,6 +10,7 @@ module Momento
     # @param env_var_name [String] the environment variable containing the API key
     # @return [Momento::CredentialProvider]
     # @raise [Momento::Error::InvalidArgumentError] if the API key is invalid
+    # @deprecated Please use {#from_env_var_v2} instead.
     def self.from_env_var(env_var_name)
       api_key = ENV.fetch(env_var_name) {
         raise Momento::Error::InvalidArgumentError, "Env var #{env_var_name} must be set"
@@ -21,68 +22,83 @@ module Momento
     # @param api_key [String] the Momento API key
     # @return [Momento::CredentialProvider]
     # @raise [Momento::Error::InvalidArgumentError] if the API key is invalid
+    # @deprecated Please use {#from_api_key_v2} or {#from_disposable_token} instead.
     def self.from_string(api_key)
       raise Momento::Error::InvalidArgumentError, 'Auth token string cannot be empty' if api_key.empty?
 
       new(api_key)
     end
 
-    # Creates a CredentialProvider from a global API key string and endpoint.
-    # Global API keys do not require parsing - they can be used directly.
-    # @param api_key [String] the global API key
-    # @param endpoint [String] the endpoint (e.g., "cell-us-east-1-1.prod.a.momentohq.com")
+    # Creates a CredentialProvider from a Momento disposable token
+    # @param token [String] the Momento disposable token
+    # @return [Momento::CredentialProvider]
+    # @raise [Momento::Error::InvalidArgumentError] if the token is invalid
+    def self.from_disposable_token(token)
+      raise Momento::Error::InvalidArgumentError, 'Auth token string cannot be empty' if token.empty?
+
+      new(token)
+    end
+
+    # Creates a CredentialProvider from a v2 API key string an endpoint.
+    # V2 API keys do not require parsing - they can be used directly.
+    # @param api_key [String] the v2 API key
+    # @param endpoint [String] the Momento service endpoint
     # @return [Momento::CredentialProvider]
     # @raise [Momento::Error::InvalidArgumentError] if parameters are invalid
-    def self.global_key_from_string(api_key:, endpoint:)
+    def self.from_api_key_v2(api_key:, endpoint:)
       raise Momento::Error::InvalidArgumentError, 'API key cannot be empty' if api_key.nil? || api_key.empty?
       raise Momento::Error::InvalidArgumentError, 'Endpoint cannot be empty' if endpoint.nil? || endpoint.empty?
 
-      unless global_api_key?(api_key)
+      unless v2_api_key?(api_key)
         raise Momento::Error::InvalidArgumentError,
-          'Provided API key is not a valid global API key. Are you using the correct key? \
-          Or did you mean to use `from_string()` instead?'
+          'Received an invalid v2 API key. Are you using the correct key? \
+          Or did you mean to use `from_string()` with a legacy key instead?'
       end
 
       allocate.tap do |instance|
-        instance.send(:initialize_from_global, api_key, endpoint)
+        instance.send(:initialize_from_v2, api_key, endpoint)
       end
     end
 
-    # Creates a CredentialProvider from a global API key loaded from an environment variable.
-    # Global API keys do not require parsing - they can be used directly.
-    # @param env_var_name [String] the environment variable containing the global API key
-    # @param endpoint [String] the endpoint (e.g., "cell-us-east-1-1.prod.a.momentohq.com")
+    # Creates a CredentialProvider from a v2 API key and endpoint loaded from environment variables.
+    # V2 API keys do not require parsing - they can be used directly.
+    # @param api_key_env_var [String] the environment variable containing the v2 API key
+    # @param endpoint_env_var [String] the environment variable containing the endpoint
     # @return [Momento::CredentialProvider]
     # @raise [Momento::Error::InvalidArgumentError] if parameters are invalid
-    def self.global_key_from_env_var(env_var_name, endpoint:)
-      api_key = ENV.fetch(env_var_name) {
-        raise Momento::Error::InvalidArgumentError, "Env var #{env_var_name} must be set"
+    def self.from_env_var_v2(api_key_env_var, endpoint_env_var)
+      api_key = ENV.fetch(api_key_env_var) {
+        raise Momento::Error::InvalidArgumentError, "Env var #{api_key_env_var} must be set"
       }
-      raise Momento::Error::InvalidArgumentError, 'Endpoint cannot be empty' if endpoint.nil? || endpoint.empty?
-
-      unless global_api_key?(api_key)
+      endpoint = ENV.fetch(endpoint_env_var) {
+        raise Momento::Error::InvalidArgumentError, "Env var #{endpoint_env_var} must be set"
+      }
+      unless v2_api_key?(api_key)
         raise Momento::Error::InvalidArgumentError,
-          'Provided API key is not a valid global API key. Are you using the correct key? \
-          Or did you mean to use `from_env_var()` instead?'
+          'Received an invalid v2 API key. Are you using the correct key? \
+          Or did you mean to use `from_env_var()` with a legacy key instead?'
       end
       allocate.tap do |instance|
-        instance.send(:initialize_from_global, api_key, endpoint)
+        instance.send(:initialize_from_v2, api_key, endpoint)
       end
     end
 
     private
 
-    def initialize_from_global(api_key, endpoint)
+    def initialize_from_v2(api_key, endpoint)
+      raise Momento::Error::InvalidArgumentError, 'API key cannot be empty' if api_key.nil? || api_key.empty?
+      raise Momento::Error::InvalidArgumentError, 'Endpoint cannot be empty' if endpoint.nil? || endpoint.empty?
+
       @api_key = api_key
       @control_endpoint = "control.#{endpoint}"
       @cache_endpoint = "cache.#{endpoint}"
     end
 
     def initialize(api_key)
-      if global_api_key?(api_key)
+      if v2_api_key?(api_key)
         raise Momento::Error::InvalidArgumentError,
-          'Received a global API key. Are you using the correct key? Or did you mean to use\
-           `global_key_from_string()` or `global_key_from_environment_variable()` instead?'
+          'Received a v2 API key. Are you using the correct key? Or did you mean to use\
+           `from_api_key_v2()` or `from_env_var_v2()` instead?'
       end
 
       decoded_token = decode_api_key(api_key)
@@ -141,11 +157,8 @@ rescue ArgumentError
   false
 end
 
-def global_api_key?(api_key)
-  if base64?(api_key)
-    raise Momento::Error::InvalidArgumentError,
-      'Did not expect global API key to be base64 encoded. Are you using the correct key?'
-  end
+def v2_api_key?(api_key)
+  false if base64?(api_key)
 
   key_parts = api_key.split('.')
   raise Momento::Error::InvalidArgumentError, 'Malformed legacy API key' if key_parts.size != 3
