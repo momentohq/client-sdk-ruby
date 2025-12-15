@@ -60,13 +60,14 @@ module Momento
       end
     end
 
-    # Creates a CredentialProvider from a v2 API key and endpoint loaded from environment variables.
+    # Creates a CredentialProvider from a v2 API key and endpoint loaded from environment variables
+    # MOMENTO_API_KEY and MOMENTO_ENDPOINT by default.
     # V2 API keys do not require parsing - they can be used directly.
-    # @param api_key_env_var [String] the environment variable containing the v2 API key
-    # @param endpoint_env_var [String] the environment variable containing the endpoint
+    # @param api_key_env_var [String] optionally provide alternate environment variable containing the v2 API key
+    # @param endpoint_env_var [String] optionally provide alternate environment variable containing the endpoint
     # @return [Momento::CredentialProvider]
     # @raise [Momento::Error::InvalidArgumentError] if parameters are invalid
-    def self.from_env_var_v2(api_key_env_var, endpoint_env_var)
+    def self.from_env_var_v2(api_key_env_var: "MOMENTO_API_KEY", endpoint_env_var: "MOMENTO_ENDPOINT")
       api_key = ENV.fetch(api_key_env_var) {
         raise Momento::Error::InvalidArgumentError, "Env var #{api_key_env_var} must be set"
       }

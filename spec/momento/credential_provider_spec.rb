@@ -27,11 +27,10 @@ SWVVuQmFXRXBCV2pJeGFHRlhkM1ZaTWpsMFNXbDNhV1J0Vm5sSmFtOTRabEV1VW5OMk9GazVkRE5KVEM
 VRV3hhVlVsVGFrbENieUo5In0=".freeze
 
 TEST_ENDPOINT = "testEndpoint".freeze
-ENDPOINT_ENV_VAR = "MOMENTO_TEST_ENDPOINT".freeze
-TEST_V2_API_KEY = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ0IjoiZyIsImlkIjoic29tZS1pZC\
-J9.WRhKpdh7cFCXO7lAaVojtQAxK6mxMdBrvXTJL1xu94S0d6V1YSstOObRlAIMA7i_yIxO1mWEF3rlF5UNc77V\
-XQ".freeze
-API_KEY_ENV_VAR = "MOMENTO_TEST_V2_API_KEY".freeze
+ENDPOINT_ENV_VAR = "MOMENTO_ENDPOINT".freeze
+TEST_V2_API_KEY = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ0IjoiZyIsImp0aSI6InNvbWUtaWQifQ.\
+GMr9nA6HE0ttB6llXct_2Sg5-fOKGFbJCdACZFgNbN1fhT6OPg_hVc8ThGzBrWC_RlsBpLA1nzqK3SOJDXYxAw".freeze
+API_KEY_ENV_VAR = "MOMENTO_API_KEY".freeze
 
 RSpec.describe Momento::CredentialProvider do
   describe ".from_string" do
@@ -165,13 +164,26 @@ RSpec.describe Momento::CredentialProvider do
   end
 
   describe ".from_env_var_v2" do
-    context "when given valid arguments" do
-      it 'creates a CredentialProvider containing valid information' do
+    context "when using default env vars" do
+      it 'creates a CredentialProvider' do
         allow(ENV).to receive(:fetch).with(API_KEY_ENV_VAR).and_return(TEST_V2_API_KEY)
         allow(ENV).to receive(:fetch).with(ENDPOINT_ENV_VAR).and_return(TEST_ENDPOINT)
+        credential_provider = described_class.from_env_var_v2
+        expect(credential_provider.api_key).to eq(TEST_V2_API_KEY)
+        expect(credential_provider.control_endpoint).to eq("control.#{TEST_ENDPOINT}")
+        expect(credential_provider.cache_endpoint).to eq("cache.#{TEST_ENDPOINT}")
+      end
+    end
+
+    context "when given non-default env vars" do
+      alternate_api_key_env_var = "ALTERNATE_MOMENTO_API_KEY".freeze
+      alternate_endpoint_env_var = "ALTERNATE_MOMENTO_ENDPOINT".freeze
+      it 'creates a CredentialProvider' do
+        allow(ENV).to receive(:fetch).with(alternate_api_key_env_var).and_return(TEST_V2_API_KEY)
+        allow(ENV).to receive(:fetch).with(alternate_endpoint_env_var).and_return(TEST_ENDPOINT)
         credential_provider = described_class.from_env_var_v2(
-          API_KEY_ENV_VAR,
-          ENDPOINT_ENV_VAR
+          api_key_env_var: alternate_api_key_env_var,
+          endpoint_env_var: alternate_endpoint_env_var
         )
         expect(credential_provider.api_key).to eq(TEST_V2_API_KEY)
         expect(credential_provider.control_endpoint).to eq("control.#{TEST_ENDPOINT}")
@@ -184,7 +196,7 @@ RSpec.describe Momento::CredentialProvider do
         allow(ENV).to receive(:fetch).and_call_original
         allow(ENV).to receive(:fetch).with(ENDPOINT_ENV_VAR).and_return(TEST_ENDPOINT)
         expect {
-          described_class.from_env_var_v2("NONEXISTENT_ENV_VAR", ENDPOINT_ENV_VAR)
+          described_class.from_env_var_v2(api_key_env_var: "NONEXISTENT_ENV_VAR")
         }.to raise_error(Momento::Error::InvalidArgumentError)
       end
     end
@@ -194,7 +206,7 @@ RSpec.describe Momento::CredentialProvider do
         allow(ENV).to receive(:fetch).and_call_original
         allow(ENV).to receive(:fetch).with(API_KEY_ENV_VAR).and_return(TEST_V2_API_KEY)
         expect {
-          described_class.from_env_var_v2(API_KEY_ENV_VAR, "NONEXISTENT_ENV_VAR")
+          described_class.from_env_var_v2(endpoint_env_var: "NONEXISTENT_ENV_VAR")
         }.to raise_error(Momento::Error::InvalidArgumentError)
       end
     end
@@ -204,7 +216,7 @@ RSpec.describe Momento::CredentialProvider do
         allow(ENV).to receive(:fetch).with(API_KEY_ENV_VAR).and_return("")
         allow(ENV).to receive(:fetch).with(ENDPOINT_ENV_VAR).and_return(TEST_ENDPOINT)
         expect {
-          described_class.from_env_var_v2(API_KEY_ENV_VAR, ENDPOINT_ENV_VAR)
+          described_class.from_env_var_v2
         }.to raise_error(Momento::Error::InvalidArgumentError)
       end
     end
@@ -214,7 +226,7 @@ RSpec.describe Momento::CredentialProvider do
         allow(ENV).to receive(:fetch).with(API_KEY_ENV_VAR).and_return(TEST_V2_API_KEY)
         allow(ENV).to receive(:fetch).with(ENDPOINT_ENV_VAR).and_return("")
         expect {
-          described_class.from_env_var_v2(API_KEY_ENV_VAR, ENDPOINT_ENV_VAR)
+          described_class.from_env_var_v2
         }.to raise_error(Momento::Error::InvalidArgumentError)
       end
     end
@@ -224,7 +236,7 @@ RSpec.describe Momento::CredentialProvider do
         allow(ENV).to receive(:fetch).with(API_KEY_ENV_VAR).and_return(V1_API_KEY_VALID)
         allow(ENV).to receive(:fetch).with(ENDPOINT_ENV_VAR).and_return(TEST_ENDPOINT)
         expect {
-          described_class.from_env_var_v2(API_KEY_ENV_VAR, ENDPOINT_ENV_VAR)
+          described_class.from_env_var_v2
         }.to raise_error(Momento::Error::InvalidArgumentError)
       end
     end
@@ -234,7 +246,7 @@ RSpec.describe Momento::CredentialProvider do
         allow(ENV).to receive(:fetch).with(API_KEY_ENV_VAR).and_return(LEGACY_API_KEY_VALID)
         allow(ENV).to receive(:fetch).with(ENDPOINT_ENV_VAR).and_return(TEST_ENDPOINT)
         expect {
-          described_class.from_env_var_v2(API_KEY_ENV_VAR, ENDPOINT_ENV_VAR)
+          described_class.from_env_var_v2
         }.to raise_error(Momento::Error::InvalidArgumentError)
       end
     end
