@@ -39,8 +39,7 @@ module Momento
       new(token)
     end
 
-    # Creates a CredentialProvider from a v2 API key string an endpoint.
-    # V2 API keys do not require parsing - they can be used directly.
+    # Creates a CredentialProvider from a v2 API key string and endpoint.
     # @param api_key [String] the v2 API key
     # @param endpoint [String] the Momento service endpoint
     # @return [Momento::CredentialProvider]
@@ -62,7 +61,6 @@ module Momento
 
     # Creates a CredentialProvider from a v2 API key and endpoint loaded from environment variables
     # MOMENTO_API_KEY and MOMENTO_ENDPOINT by default.
-    # V2 API keys do not require parsing - they can be used directly.
     # @param api_key_env_var [String] optionally provide alternate environment variable containing the v2 API key
     # @param endpoint_env_var [String] optionally provide alternate environment variable containing the endpoint
     # @return [Momento::CredentialProvider]
