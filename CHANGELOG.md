@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.6.0](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.5.2...momento/v0.6.0) (2025-12-15)
+
+
+### Features
+
+* new credential provider methods for accepting global api keys ([eb4737f](https://github.com/momentohq/client-sdk-ruby/commit/eb4737ff608e15dad77064e40157da3b4691b2da))
+* new credential provider methods for accepting v2 api keys ([#195](https://github.com/momentohq/client-sdk-ruby/issues/195)) ([79e3777](https://github.com/momentohq/client-sdk-ruby/commit/79e37776ef9c7a8703bddc3dfbe569af8e42e888))
+
+
+### Bug Fixes
+
+* disable dynamic DNS service config ([#194](https://github.com/momentohq/client-sdk-ruby/issues/194)) ([d9a0976](https://github.com/momentohq/client-sdk-ruby/commit/d9a0976dec3c8ab68e8ed4a83d50ee97963fb4b1))
+* only configure git in release please if the repo was checked out ([#192](https://github.com/momentohq/client-sdk-ruby/issues/192)) ([d202329](https://github.com/momentohq/client-sdk-ruby/commit/d2023298b388e36616e766157d2a7ad017f07917))
+
 ## [0.5.2](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.5.1...momento/v0.5.2) (2024-11-25)
 
 
