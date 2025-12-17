@@ -54,9 +54,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
 
-      - run: bundle exec rake release --dry-run
+      - name: Dry-run publish to Rubygems
+        uses: cadwallion/publish-rubygems-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
+          RELEASE_COMMAND: bundle exec rake release --dry-run
