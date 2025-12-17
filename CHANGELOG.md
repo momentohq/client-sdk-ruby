@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.1](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.6.0...momento/v0.6.1) (2025-12-17)
+
+
+### Miscellaneous Chores
+
+* release 0.6.1 ([d857669](https://github.com/momentohq/client-sdk-ruby/commit/d857669abf0934391e61580832f713142c187a17))
+* release 0.6.1 ([#198](https://github.com/momentohq/client-sdk-ruby/issues/198)) ([ed8998e](https://github.com/momentohq/client-sdk-ruby/commit/ed8998e361068ce2100fc5b54c65c13c483a4990))
+
 ## [0.6.0](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.5.2...momento/v0.6.0) (2025-12-15)
 
 
