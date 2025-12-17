@@ -49,3 +49,14 @@ jobs:
           template_file: ./README.template.md
           output_file: ./README.md
           dev_docs_slug: ruby
+
+  dry-run-release:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+
+      - run: bundle exec rake release --dry-run
