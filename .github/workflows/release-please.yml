@@ -33,7 +33,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
           RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_PUBLISH_TOKEN}}
-          RELEASE_COMMAND: bundle exec rake release
+          RELEASE_COMMAND: bundle exec rake release --trace
 
       - name: Upload artifacts to the GitHub Actions Run
         uses: actions/upload-artifact@v4
