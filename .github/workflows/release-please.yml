@@ -31,7 +31,7 @@ jobs:
 
       - name: Build gem
         run: |
-          gem build momento.gemspec
+          rake build
 
       - name: Publish to RubyGems
         env:
