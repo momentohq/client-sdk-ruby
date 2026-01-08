@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.4](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.6.3...momento/v0.6.4) (2026-01-08)
+
+
+### Bug Fixes
+
+* run bundle install and use bundle exec to call rake build ([28615a7](https://github.com/momentohq/client-sdk-ruby/commit/28615a7834cabef92215661eb8833d468c7fd4d9))
+* run bundle install and use bundle exec to call rake build ([#206](https://github.com/momentohq/client-sdk-ruby/issues/206)) ([16256d2](https://github.com/momentohq/client-sdk-ruby/commit/16256d273ea48c61395bd1bf12fba4d8a31066af))
+
 ## [0.6.3](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.6.2...momento/v0.6.3) (2026-01-08)
 
 
