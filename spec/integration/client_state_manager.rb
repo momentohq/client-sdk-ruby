@@ -4,13 +4,21 @@ module ClientStateManager
     def cache_client
       @cache_client ||= Momento::CacheClient.new(
         configuration: Momento::Cache::Configurations::Laptop.latest,
-        credential_provider: Momento::CredentialProvider.from_env_var('MOMENTO_API_KEY'),
+        credential_provider: Momento::CredentialProvider.from_env_var('V1_API_KEY'),
         default_ttl: 60 # seconds
       )
     end
 
     def cache_name
       @cache_name ||= ENV.fetch('TEST_CACHE_NAME', 'ruby-test-cache')
+    end
+
+    def cache_client_v2
+      @cache_client_v2 ||= Momento::CacheClient.new(
+        configuration: Momento::Cache::Configurations::Laptop.latest,
+        credential_provider: Momento::CredentialProvider.from_env_var_v2,
+        default_ttl: 60 # seconds
+      )
     end
   end
 end
