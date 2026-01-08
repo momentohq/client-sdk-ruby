@@ -6,39 +6,42 @@ on:
       - main
 
 jobs:
+  # Use release-please to create release PRs and manage git tags
   release-please:
     runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      release_tag: ${{ steps.release.outputs.version }}
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
         with:
           token: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
 
+  # Avoid `rake release` in the publishing step since it might try to create a git tag again
+  publish:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v4
-        if: ${{ steps.release.outputs.release_created }}
 
       - name: Set up Ruby
-        if: ${{ steps.release.outputs.release_created }}
         uses: ruby/setup-ruby@v1
 
-      - name: Configure Git user for redundant tag
-        if: ${{ steps.release.outputs.release_created }}
+      - name: Build gem
         run: |
-          git config --local user.email "eng-deveco@momentohq.com"
-          git config --local user.name "DevEco Engineers"
+          gem build momento.gemspec
 
-      - name: Publish to Rubygems
-        uses: cadwallion/publish-rubygems-action@master
-        if: ${{ steps.release.outputs.release_created }}
+      - name: Publish to RubyGems
         env:
-          GITHUB_TOKEN: ${{ secrets.MOMENTO_MACHINE_USER_GITHUB_TOKEN }}
-          RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_PUBLISH_TOKEN}}
-          RELEASE_COMMAND: bundle exec rake release --trace
+          GEM_HOST_API_KEY: ${{ secrets.RUBYGEMS_PUBLISH_TOKEN }}
+        run: |
+          gem push pkg/*.gem
 
       - name: Upload artifacts to the GitHub Actions Run
         uses: actions/upload-artifact@v4
-        if: ${{ steps.release.outputs.release_created }}
         with:
-          name: gemfiles-v${{ needs.get_version.outputs.version }}
+          name: gemfiles-v${{ needs.release-please.outputs.release_tag }}
           path: |
             pkg/*.gem
