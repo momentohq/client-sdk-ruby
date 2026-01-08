@@ -28,10 +28,12 @@ jobs:
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
       - name: Build gem
         run: |
-          rake build
+          bundle exec rake build
 
       - name: Publish to RubyGems
         env:
