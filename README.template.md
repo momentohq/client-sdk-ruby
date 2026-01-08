@@ -47,8 +47,8 @@ General documentation on Momento and the Momento SDKs is available on the [Momen
 
 To get started with Momento you will need:
 
-- A Momento API key. You can get one from the [Momento Console](https://console.gomomento.com).
-- A Momento service endpoint is required. You can find a [list of them here](https://docs.momentohq.com/platform/regions)
+* A Momento API key. You can get one from the [Momento Console](https://console.gomomento.com).
+* A Momento service endpoint is required. You can find a [list of them here](https://docs.momentohq.com/platform/regions)
 
 ## Examples
 
