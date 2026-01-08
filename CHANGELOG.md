@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.3](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.6.2...momento/v0.6.3) (2026-01-08)
+
+
+### Bug Fixes
+
+* use rake build to package gem for publishing ([c6c8ac3](https://github.com/momentohq/client-sdk-ruby/commit/c6c8ac3e9dd293b3aa3fd3bdeaeb870870f0cf35))
+* use rake build to package gem for publishing ([#204](https://github.com/momentohq/client-sdk-ruby/issues/204)) ([a6a7105](https://github.com/momentohq/client-sdk-ruby/commit/a6a71051f99fc1805c6dcd2ed9c79770b2d5a6fc))
+
 ## [0.6.2](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.6.1...momento/v0.6.2) (2026-01-08)
 
 
