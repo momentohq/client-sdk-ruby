@@ -18,7 +18,7 @@ FILE_LOCATIONS = [
   "../spec/support/assets/test.jpg"
 ].freeze
 
-# Create a credential provider that loads a Momento API Key and endpoint from an environment variables.
+# Create a credential provider that loads a Momento API Key and endpoint from environment variables.
 credential_provider = Momento::CredentialProvider.from_env_var_v2
 
 # Instantiate a Momento client.
