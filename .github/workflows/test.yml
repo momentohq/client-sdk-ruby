@@ -6,6 +6,9 @@ on:
       api-key:
         description: 'API key used for live testing'
         required: false
+      api-key-v2:
+        description: 'v2 API key used for live testing'
+        required: false
     inputs:
       cache-name:
         description: 'The cache name to use for live testing'
@@ -34,5 +37,7 @@ jobs:
     - name: Run tests
       run: bundle exec rspec
       env:
-        MOMENTO_API_KEY: ${{ secrets.api-key }}
+        MOMENTO_ENDPOINT: "cell-alpha-dev.preprod.a.momentohq.com"
+        MOMENTO_API_KEY: ${{ secrets.api-key-v2 }}
+        V1_API_KEY: ${{ secrets.api-key }}
         TEST_CACHE_NAME: ${{ inputs.cache-name }}-${{ matrix.ruby-version }}-${{github.sha}}

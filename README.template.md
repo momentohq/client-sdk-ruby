@@ -11,7 +11,7 @@ To get started with Momento you will need a Momento API key. You can get one fro
 
 ## Packages
 
-The Momento Ruby SDK is available on [RubyGems](https://rubygems.org/gems/momento) 
+The Momento Ruby SDK is available on [RubyGems](https://rubygems.org/gems/momento)
 
 Install the gem and add to an application's Gemfile by executing:
 
@@ -43,7 +43,12 @@ You can find this example code and more in [the examples directory](./examples) 
 
 ## Getting Started and Documentation
 
-General documentation on Momento and the Momento SDKs is available on the [Momento Docs website](https://docs.momentohq.com/). Specific usage examples for the Ruby SDK are coming soon!
+General documentation on Momento and the Momento SDKs is available on the [Momento Docs website](https://docs.momentohq.com/).
+
+To get started with Momento you will need:
+
+* A Momento API key. You can get one from the [Momento Console](https://console.gomomento.com).
+* A Momento service endpoint is required. You can find a [list of them here](https://docs.momentohq.com/platform/regions)
 
 ## Examples
 

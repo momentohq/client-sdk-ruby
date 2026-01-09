@@ -18,6 +18,7 @@ Then, set the required environment variables:
 
 ```bash
 export MOMENTO_API_KEY=<YOUR_API_KEY>
+export MOMENTO_ENDPOINT=<YOUR_ENDPOINT>
 ```
 
 And now you can run the example programs.
