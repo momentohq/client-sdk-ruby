@@ -30,7 +30,7 @@ To get started with Momento you will need a Momento API key. You can get one fro
 
 ## Packages
 
-The Momento Ruby SDK is available on [RubyGems](https://rubygems.org/gems/momento) 
+The Momento Ruby SDK is available on [RubyGems](https://rubygems.org/gems/momento)
 
 Install the gem and add to an application's Gemfile by executing:
 
@@ -68,8 +68,8 @@ TTL_SECONDS = 12.5
 # The name of the cache to create *and delete*
 CACHE_NAME = ENV.fetch('MOMENTO_CACHE_NAME', 'ruby-examples')
 
-# Create a credential provider that loads a Momento API Key from an environment variable.
-credential_provider = Momento::CredentialProvider.from_env_var('MOMENTO_API_KEY')
+# Create a credential provider that loads a Momento API Key and endpoint from environment variables.
+credential_provider = Momento::CredentialProvider.from_env_var_v2
 
 # This is a reasonable configuration for dev work on a laptop.
 configuration = Momento::Cache::Configurations::Laptop.latest
@@ -144,7 +144,12 @@ end
 
 ## Getting Started and Documentation
 
-General documentation on Momento and the Momento SDKs is available on the [Momento Docs website](https://docs.momentohq.com/). Specific usage examples for the Ruby SDK are coming soon!
+General documentation on Momento and the Momento SDKs is available on the [Momento Docs website](https://docs.momentohq.com/).
+
+To get started with Momento you will need:
+
+* A Momento API key. You can get one from the [Momento Console](https://console.gomomento.com).
+* A Momento service endpoint is required. You can find a [list of them here](https://docs.momentohq.com/platform/regions)
 
 ## Examples
 
