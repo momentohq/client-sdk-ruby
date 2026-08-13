@@ -28,6 +28,9 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
+          # This job pushes the updated Gemfile.lock, and checkout's persisted
+          # credential is what git uses for that, so it has to be the app token.
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
