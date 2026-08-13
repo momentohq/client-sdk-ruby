@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.5](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.6.4...momento/v0.6.5) (2026-08-13)
+
+
+### Bug Fixes
+
+* keep the credentials these jobs actually need ([22c356b](https://github.com/momentohq/client-sdk-ruby/commit/22c356bc26c30228f93373e41a2d5744857aed0d))
+
 ## [0.6.4](https://github.com/momentohq/client-sdk-ruby/compare/momento/v0.6.3...momento/v0.6.4) (2026-01-08)
 
 
